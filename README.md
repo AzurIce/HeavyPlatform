@@ -1,0 +1,153 @@
+# 轻量化平台开发大作业
+
+主题：<s>React</s> Solid mall
+
+- [ ] 
+
+---
+
+## 目录结构
+
+- `/docs`：一些文档和笔记
+    - `assets`：存放所有文档中的资源（比如截图）
+- `/frontend`：前端项目的根目录
+
+## 使用技术
+
+- [Solid](https://www.solidjs.com/)：响应式框架
+
+    - 新的 beta 版本文档：https://docs.solidjs.com/
+
+- [Solid Router](https://github.com/solidjs/solid-router)：路由
+
+- [SUID](https://suid.io/)：Material Design 组件库
+
+    这个组件库是对 React 组件库 [MUI](https://mui.com/core/) 在 Solid 上的实现。
+
+    （可能这个组件库风格与商城内容，以及可用组件没有那么“现成”的商城组件，所以有些内容可能需要手搓）
+
+- [UnoCSS](https://unocss.dev/)
+
+    原子化 CSS 框架，简单来说，就是把常用的 css 属性组合为一个个的类，只需要根据需要往 `class` 中填对应的类就好了。
+
+    文档除了 UnoCSS 的文档，还可以查 [TailwindCSS](https://tailwindcss.com/docs/installation) 的文档。
+
+    比如：
+
+    ```css
+    .container {
+        width: 100%;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+    }
+    ```
+
+    就可以写成：
+
+    ```html
+    <div class="w-full bg-white flex flex-col"></div>
+    ```
+
+引入后端：
+
+- [Axios](https://github.com/axios/axios)：用于前端向后端发请求
+- Golang + Gin
+
+---
+
+## 有关 Solid
+
+Solid 是一个比较新的前端框架，写起来和 React 比较相似：
+
+- 基础 API `createSignal` 与 `useState`
+- 都使用 jsx/tsx
+
+区别在于：
+
+- React 的响应性实现基于运行时对「虚拟 DOM」的比较与操作，某一个属性的变化会导致整个组件的重新执行。
+- Solid 的响应性实现为 Fine-grained Reactivity（细粒度响应），无「虚拟 DOM」，因此也不需要一个庞大的运行时环境。
+
+简单来说，就是，快：
+
+![image-20240514201447862](./assets/image-20240514201447862.png)
+
+不过因为比较新，所以，相关生态没有 React 那么强。
+
+不过够用（）
+
+---
+
+## 作业内容及评分项
+
+### 作业内容
+
+#### 前台
+
+- [ ] 登陆注册
+- [ ] 商城主页面
+    - [ ] 首页
+        - [ ] 搜索框、轮播图、热门商品
+    - [ ] 分类
+        - [ ] 所有商品的分类索引
+    - [ ] 购物车
+    - [ ] 我的
+- [ ] 购买商品全程的界面
+    - [ ] 商品详细信息页面
+    - [ ] 创建订单页面
+    - [ ] 支付页面
+    - [ ] 订单详情页面
+
+#### 后台
+
+- [ ] 登录
+- [ ] 权限、角色管理
+- [ ] 商品管理
+- [ ] 分类管理
+- [ ] 订单管理
+    - [ ] 发货（？？？
+
+#### 其他
+
+可以参考 https://github.com/macrozheng/mall
+
+- 基本：借助 localStorage 实现前后台数据的联动
+- 进阶：搓个后端实现前后台数据的联动
+
+### 评分项
+
+划掉的不打算做，剩下的全做满可以做 120 分。
+
+- [x] <s>**代码质量/风格** 10</s> 送分
+
+- [x] <s>**界面美观度** 10</s> 送分
+
+- [x] <s>**答辩情况** 10</s> 送分
+
+- [ ] **基础功能** 60
+
+- [ ] **单品/满减优惠券** 5
+
+    这个比较简单，就是搓一个小组件，码量极少
+
+- [ ] **我的足迹及收藏** 5
+
+    这个也比较简单
+
+- [ ] **页面适配** 10
+
+    感觉可能全部做完最后再做好一些，
+
+    因为移动端布局的确定可能受页面元素内容影响比较大
+
+- [ ] **后端实现前后台联动** 5
+
+    直接 Golang 光速搓一个后端，也可以有
+
+- [ ] **后台统计图表** 5
+
+    也很简单，调个 echarts 或者之类的 API
+
+- [ ] <s>秒杀/抢购 5</s> 这个太抽象了
+
+- [ ] <s>退货流程 5</s> 这个太不划算了，码多分少
