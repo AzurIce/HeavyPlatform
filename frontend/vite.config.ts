@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import UnoCSS from 'unocss/vite';
 import solidPlugin from 'vite-plugin-solid';
+import suidPlugin from '@suid/vite-plugin';
 // import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
@@ -10,6 +11,7 @@ export default defineConfig({
     For more info see https://github.com/thetarnav/solid-devtools/tree/main/packages/extension#readme
     */
     // devtools(),
+    suidPlugin(),
     UnoCSS(),
     solidPlugin(),
   ],
