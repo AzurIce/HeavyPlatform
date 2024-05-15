@@ -2,7 +2,10 @@ import { Component } from "solid-js";
 
 const NotFound: Component = () => {
   return <>
-    <h1>404 Not Found</h1>
+    <div class="flex flex-col items-center">
+      <div class="i-tabler-error-404 text-9xl" />
+      <span class="text-2xl">404 Not Found</span>
+    </div>
   </>
 }
 

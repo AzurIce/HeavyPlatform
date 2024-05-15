@@ -2,6 +2,7 @@
   "name": "vite-template-solid",
   "version": "0.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -10,8 +11,11 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@iconify-json/tabler": "^1.1.111",
+    "@unocss/preset-icons": "^0.60.2",
     "solid-devtools": "^0.29.2",
     "typescript": "^5.3.3",
+    "unocss": "^0.60.2",
     "vite": "^5.0.11",
     "vite-plugin-solid": "^2.8.2"
   },
