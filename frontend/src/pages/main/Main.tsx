@@ -1,10 +1,10 @@
 import { Component } from "solid-js";
-import Hello from "../components/Hello";
+import Hello from "../../components/Hello";
 
 const Main: Component = () => {
-    return <>
-        <Hello />
-    </>
+  return <>
+    <Hello />
+  </>
 }
 
 export default Main
