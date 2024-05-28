@@ -4,10 +4,12 @@ import { LocalStoragePreset } from "lowdb/browser";
 // in this way we can make sure the id of the manager is corresponding to it's index
 type Data = {
   managers: (Manager | undefined)[]
+  menuItems: (MenuItem | undefined)[]
 }
 
 const defaultData: Data = {
-  managers: [{ id: 0, username: "admin", password: "admin" }]
+  managers: [{ id: 0, username: "admin", password: "admin" }],
+  menuItems: [{ id: 0, name: "主页", icon: "icon", url: "/", enable: true}]
 };
 
 const db = LocalStoragePreset<Data>("db", defaultData);
@@ -70,4 +72,49 @@ const managers = {
   }
 }
 
-export { managers };
+type MenuItem = {
+  id: number,
+  name: string,
+  icon: string,
+  url: string,
+  enable: boolean,
+}
+
+const menuItems = {
+  getAll: async function(): Promise<MenuItem[]> {
+    const elements = db.data.menuItems.filter((el) => el !== undefined) as MenuItem[];
+    return elements;
+  },
+  getById: async function (id: number): Promise<MenuItem | undefined> {
+    const manager = db.data.menuItems[id];
+    return manager;
+  },
+
+  create: async function (name: string, icon: string, url: string): Promise<void> {
+    let id = db.data.menuItems.find((el) => el === undefined)?.id || db.data.menuItems.length;
+
+    const element: MenuItem = { id, name, icon, url, enable: true};
+    db.data.menuItems.push(element);
+    db.write();
+  },
+
+  update: async function (id: number, name: string, icon: string, url: string, display: boolean): Promise<void> {
+    if (await this.getById(id) === undefined) {
+      return Promise.reject("menuItem not exist");
+    }
+
+    db.data.menuItems[id] = { id, name, icon, url, enable: display };
+    db.write();
+  },
+
+  delete: async function (id: number): Promise<void> {
+    if (await this.getById(id) === undefined) {
+      return Promise.reject("menuItem not exist");
+    }
+
+    db.data.menuItems[id] = undefined;
+    db.write();
+  }
+}
+
+export { managers, menuItems };

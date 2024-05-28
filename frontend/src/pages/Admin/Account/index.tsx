@@ -8,9 +8,8 @@ import CreateManagerModal from "../../../components/Manager/CreateManagerModal";
 import UpdateManagerModal from "../../../components/Manager/UpdateManagerModal";
 import { DeleteManagerModalButton } from "../../../components/Manager";
 import { resetDb } from "../../../lib/db";
-// import DeleteManagerModal from "../../../components/Manager/DeleteManagerModal";
 
-const Account: Component = () => {
+const AccountPage: Component = () => {
   const createShow = createSignal(false);
   const [getCreateShow, setCreateShow] = createShow;
   const updateTarget = createSignal<Manager | undefined>();
@@ -18,7 +17,6 @@ const Account: Component = () => {
 
   const managers = createAsync(() => getManagers());
   const { manager } = AdminLoginInfoStore();
-
   // createEffect(() => {
   //   console.log(managers())
   // })
@@ -37,7 +35,7 @@ const Account: Component = () => {
       <Typography variant="h6">用户列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加用户<Add /></Button>
-        <Button onClick={() => { resetDb() }}>重设数据库<Restore /></Button>
+        <Button onClick={() => { resetDb() }}>重制数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -85,4 +83,4 @@ const Account: Component = () => {
   </>
 };
 
-export default Account;
+export default AccountPage;

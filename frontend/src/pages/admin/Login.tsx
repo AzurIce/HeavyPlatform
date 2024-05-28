@@ -2,9 +2,9 @@ import { A, useNavigate } from "@solidjs/router";
 import { Box, Button, TextField } from "@suid/material";
 import { Component, createSignal } from "solid-js";
 import { AdminLoginInfoStore, AlertsStore } from "../../lib/store";
-import { login } from "../../lib/axios/auth";
+import { login } from "../../lib/axios/api";
 
-const Login: Component = () => {
+const LoginPage: Component = () => {
   const navigate = useNavigate();
 
   const { setManager } = AdminLoginInfoStore();
@@ -84,4 +84,4 @@ const Login: Component = () => {
   )
 }
 
-export default Login;
+export default LoginPage;

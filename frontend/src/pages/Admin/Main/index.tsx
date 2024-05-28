@@ -1,9 +1,9 @@
 import { Component } from "solid-js";
 
-const Main: Component = () => {
+const MainPage: Component = () => {
   return <>
     Main
   </>
 };
 
-export default Main;
+export default MainPage;

@@ -1,25 +1,20 @@
 import { Box, Button, Modal, TextField, Typography, useTheme } from "@suid/material"
-import { Signal, createEffect, createSignal } from "solid-js"
-import { updateManager } from "../../lib/axios/api"
+import { Signal, createSignal } from "solid-js"
+import { createMenuItem } from "../../lib/axios/api"
 import { revalidate } from "@solidjs/router"
-import { Manager, getManagers } from "../../lib/store"
+import { getMenuItems } from "../../lib/store"
 
-export default function UpdateManagerModal(props: { target: Signal<Manager | undefined> }) {
-  const [target, setTarget] = props.target
+export default function CreateManagerModal(props: { open: Signal<boolean> }) {
+  const [open, setOpen] = props.open
   const theme = useTheme()
 
-  createEffect(() => {
-    if (target() != undefined) {
-      setUsername(target()!.username)
-    }
-  })
-
-  const [username, setUsername] = createSignal("")
-  const [password, setPassword] = createSignal("")
+  const [name, setName] = createSignal("")
+  const [icon, setIcon] = createSignal("")
+  const [url, setUrl] = createSignal("")
 
   const onSubmit = () => {
-    updateManager(target()!.id, username()!, password()).then((res) => {
-      revalidate(getManagers.key)
+    createMenuItem(name(), icon(), url()).then((res) => {
+      revalidate(getMenuItems.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
@@ -28,13 +23,15 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
   }
 
   const onCancel = () => {
-    setPassword("")
-    setTarget()
+    setName("")
+    setIcon("")
+    setUrl("")
+    setOpen(false)
   }
 
   return <>
     <Modal
-      open={target() != undefined}
+      open={open()}
       onClose={() => { onCancel() }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -57,23 +54,31 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          修改管理员账号信息
+          添加菜单项
         </Typography>
 
         <div class='flex flex-col gap-2'>
           <TextField
             size='small'
-            label="用户名"
-            value={username()}
+            label="显示名称"
+            value={name()}
             onChange={(_event, value) => {
-              setUsername(value)
+              setName(value)
             }} />
           <TextField
             size='small'
-            label="密码"
-            value={password()}
+            label="图标"
+            value={icon()}
             onChange={(_event, value) => {
-              setPassword(value)
+              setIcon(value)
+            }}
+          />
+          <TextField
+            size='small'
+            label="URL"
+            value={url()}
+            onChange={(_event, value) => {
+              setUrl(value)
             }}
           />
         </div>

@@ -1,25 +1,30 @@
-import { Box, Button, Modal, TextField, Typography, useTheme } from "@suid/material"
+import { Box, Button, FormControlLabel, Modal, Switch, TextField, Typography, useTheme } from "@suid/material"
 import { Signal, createEffect, createSignal } from "solid-js"
-import { updateManager } from "../../lib/axios/api"
+import { updateMenuItem } from "../../lib/axios/api"
 import { revalidate } from "@solidjs/router"
-import { Manager, getManagers } from "../../lib/store"
+import { MenuItem, getMenuItems } from "../../lib/store"
 
-export default function UpdateManagerModal(props: { target: Signal<Manager | undefined> }) {
+export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | undefined> }) {
   const [target, setTarget] = props.target
   const theme = useTheme()
 
+  const [name, setName] = createSignal("")
+  const [icon, setIcon] = createSignal("")
+  const [url, setUrl] = createSignal("")
+  const [display, setDisplay] = createSignal(true)
+
   createEffect(() => {
     if (target() != undefined) {
-      setUsername(target()!.username)
+      setName(target()!.name)
+      setIcon(target()!.icon)
+      setUrl(target()!.url)
+      setDisplay(target()!.enable)
     }
   })
 
-  const [username, setUsername] = createSignal("")
-  const [password, setPassword] = createSignal("")
-
   const onSubmit = () => {
-    updateManager(target()!.id, username()!, password()).then((res) => {
-      revalidate(getManagers.key)
+    updateMenuItem(target()!.id, name(), icon(), url(), display()).then((res) => {
+      revalidate(getMenuItems.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
@@ -28,7 +33,10 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
   }
 
   const onCancel = () => {
-    setPassword("")
+    setName("")
+    setIcon("")
+    setUrl("")
+    setDisplay(true)
     setTarget()
   }
 
@@ -57,23 +65,35 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          修改管理员账号信息
+          修改菜单项
         </Typography>
 
         <div class='flex flex-col gap-2'>
           <TextField
             size='small'
-            label="用户名"
-            value={username()}
+            label="显示名称"
+            value={name()}
             onChange={(_event, value) => {
-              setUsername(value)
+              setName(value)
             }} />
           <TextField
             size='small'
-            label="密码"
-            value={password()}
+            label="图标"
+            value={icon()}
             onChange={(_event, value) => {
-              setPassword(value)
+              setIcon(value)
+            }}
+          />
+          <FormControlLabel
+            control={<Switch checked={display()} onChange={() => { setDisplay((x) => !x) }} />}
+            label="是否启用"
+          />
+          <TextField
+            size='small'
+            label="URL"
+            value={url()}
+            onChange={(_event, value) => {
+              setUrl(value)
             }}
           />
         </div>

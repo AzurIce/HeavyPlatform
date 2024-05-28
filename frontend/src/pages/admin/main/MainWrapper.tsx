@@ -1,4 +1,3 @@
-// import { Outlet, useNavigate } from '@solidjs/router';
 import { AppBar, Button, Icon, IconButton, Toolbar, Typography } from '@suid/material';
 import { Home, Menu } from "@suid/icons-material";
 import { AdminLoginInfoStore, LoginInfoStore } from '../../../lib/store';
@@ -6,13 +5,11 @@ import { AdminLoginInfoStore, LoginInfoStore } from '../../../lib/store';
 import { Component, createSignal, onMount } from 'solid-js';
 import { RouteSectionProps, useNavigate } from '@solidjs/router';
 import SideBar from '../../../components/SideBar';
-// import AskSpark from '../../components/AskSpark';
 
 
 const MainWrapper: Component<RouteSectionProps> = (props) => {
   const navigate = useNavigate();
   const { manager } = AdminLoginInfoStore()
-  const [submitModalOpen, setSubmitModalOpen] = createSignal(false);
 
   onMount(() => {
     console.log("[Admin/MainWrapper]: onMount")
@@ -31,9 +28,9 @@ const MainWrapper: Component<RouteSectionProps> = (props) => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/admin')}
           >
-            <Menu />
+            <Home />
           </IconButton>
 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
