@@ -1,14 +1,17 @@
-import type { Component } from 'solid-js';
+import { onMount, type Component } from 'solid-js';
 import { Router, Route } from "@solidjs/router";
 
-import Main from './pages/main/Main';
+import Main from './pages/Main';
 import NotFound from './pages/NotFound';
-import AdminRoute from './pages/admin/AdminRoute';
+import AdminRoute from './pages/Admin/AdminRoute';
 import Login from './pages/Login';
-import MainWrapper from './pages/main/MainWrapper';
+import MainWrapper from './pages/Main/MainWrapper';
+import Playground from './pages/Playground';
+import AlertList from './components/AlertList';
 
 const App: Component = () => {
   return <>
+    <AlertList />
     <Router>
       <Route path="/login" component={Login} />
       <Route path="/" component={MainWrapper}>
@@ -17,6 +20,7 @@ const App: Component = () => {
 
       <AdminRoute />
 
+      <Route path="/playground" component={Playground} />
       <Route path="*404" component={NotFound} />
     </Router>
   </>;

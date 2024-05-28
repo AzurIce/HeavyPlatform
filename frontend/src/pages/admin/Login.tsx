@@ -1,31 +1,32 @@
 import { A, useNavigate } from "@solidjs/router";
 import { Box, Button, TextField } from "@suid/material";
 import { Component, createSignal } from "solid-js";
+import { AdminLoginInfoStore, AlertsStore } from "../../lib/store";
+import { login } from "../../lib/axios/auth";
 
 const Login: Component = () => {
   const navigate = useNavigate();
 
+  const { setManager } = AdminLoginInfoStore();
   // const { setLoginInfo } = LoginInfoStore()
-  // const { newSuccessAlert, newWarningAlert, newErrorAlert } = AlertsStore()
+  const { newSuccessAlert, newWarningAlert, newErrorAlert } = AlertsStore()
 
   const [username, setUsername] = createSignal('')
   const [password, setPassword] = createSignal('')
 
   function onLogin() {
     console.log("[Login]: onLogin")
-    // login(username(), password()).then((res) => {
-    //   console.log("[Login]: login success")
-    //   const data = res.data
+    login(username(), password()).then((res) => {
+      console.log(`[Login]: login success:`, res)
 
-    //   newSuccessAlert('登录成功')
-    //   setLoginInfo(data.token, data.user)
-    //   setTimeout(() => {
-    //     navigate('/')
-    //   }, 100)
-
-    // }).catch((err) => {
-    //   console.error(err)
-    // })
+      newSuccessAlert('登录成功')
+      setManager(res)
+      setTimeout(() => {
+        navigate('/admin')
+      }, 100)
+    }).catch((err) => {
+      console.error(err)
+    })
   }
 
   return (
