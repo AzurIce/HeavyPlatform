@@ -12,6 +12,11 @@ const defaultData: Data = {
 
 const db = LocalStoragePreset<Data>("db", defaultData);
 
+export const resetDb = () => {
+  db.data = defaultData;
+  db.write();
+}
+
 // Type definations
 type Manager = {
   id: number,
@@ -20,21 +25,22 @@ type Manager = {
 }
 
 const managers = {
-  getAll: function(): Promise<Manager[]> {
-    return Promise.resolve(db.data.managers.filter((manager) => manager !== undefined) as Manager[]);
+  getAll: async function(): Promise<Manager[]> {
+    const managers = db.data.managers.filter((manager) => manager !== undefined) as Manager[];
+    return managers;
   },
-  getByUsername: function (username: string): Promise<Manager | undefined> {
+  getByUsername: async function (username: string): Promise<Manager | undefined> {
     const manager = db.data.managers.find((manager) => manager?.username == username);
-    return Promise.resolve(manager);
+    return manager;
   },
 
-  getById: function (id: number): Promise<Manager | undefined> {
+  getById: async function (id: number): Promise<Manager | undefined> {
     const manager = db.data.managers[id];
-    return Promise.resolve(manager);
+    return manager;
   },
 
-  create: function (username: string, password: string): Promise<void> {
-    if (this.getByUsername(username) !== undefined) {
+  create: async function (username: string, password: string): Promise<void> {
+    if (await this.getByUsername(username) !== undefined) {
       return Promise.reject("username already exists");
     }
 
@@ -42,24 +48,25 @@ const managers = {
 
     const manager: Manager = { id, username, password };
     db.data.managers.push(manager);
-    return Promise.resolve();
+    db.write();
   },
 
-  update: function (id: number, username: string, password: string): Promise<void> {
-    if (this.getById(id) === undefined) {
+  update: async function (id: number, username: string, password: string): Promise<void> {
+    if (await this.getById(id) === undefined) {
       return Promise.reject("manager not exist");
     }
 
     db.data.managers[id] = { id, username, password };
-    return Promise.resolve();
+    db.write();
   },
 
-  delete: function (id: number): Promise<void> {
-    if (this.getById(id) === undefined) {
+  delete: async function (id: number): Promise<void> {
+    if (await this.getById(id) === undefined) {
       return Promise.reject("manager not exist");
     }
 
-    return Promise.resolve();
+    db.data.managers[id] = undefined;
+    db.write();
   }
 }
 
