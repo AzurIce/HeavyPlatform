@@ -11,6 +11,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@iconify-icon/solid": "^2.1.1",
     "@iconify-json/tabler": "^1.1.113",
     "@unocss/preset-icons": "^0.60.3",
     "solid-devtools": "^0.29.3",

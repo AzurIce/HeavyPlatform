@@ -25,6 +25,9 @@ dependencies:
     version: 1.8.17
 
 devDependencies:
+  '@iconify-icon/solid':
+    specifier: ^2.1.1
+    version: 2.1.1(solid-js@1.8.17)
   '@iconify-json/tabler':
     specifier: ^1.1.113
     version: 1.1.113
@@ -890,6 +893,15 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@iconify-icon/solid@2.1.1(solid-js@1.8.17):
+    resolution: {integrity: sha512-1X7nt336uhilWO0iFPf5CCvYBgneiHaX2Fq254JPG9jasDW8/cXd2ZZbtmvSz7xra+Ve3uIn15n7f/8X6USmLg==}
+    peerDependencies:
+      solid-js: '>=1'
+    dependencies:
+      iconify-icon: 2.1.0
+      solid-js: 1.8.17
+    dev: true
 
   /@iconify-json/tabler@1.1.113:
     resolution: {integrity: sha512-dT34D0gyqxgK2t91+8scQ+U387yZ/zb4r7/3CHqhmvaVMsnOT8DFtX0FhJzdr6ldnVH82pGAp59GGr97IT/UfQ==}
@@ -2007,6 +2019,12 @@ packages:
   /human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
+    dev: true
+
+  /iconify-icon@2.1.0:
+    resolution: {integrity: sha512-lto4XU3bwTQnb+D/CsJ4dWAo0aDe+uPMxEtxyOodw9l7R9QnJUUab3GCehlw2M8mDHdeUu/ufx8PvRQiJphhXg==}
+    dependencies:
+      '@iconify/types': 2.0.0
     dev: true
 
   /is-binary-path@2.1.0:
