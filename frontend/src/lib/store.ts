@@ -2,6 +2,7 @@ import { cache } from "@solidjs/router";
 import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
 import { getManagerAll, getMenuItemAll } from "./axios/api";
+import { Trie } from "./trie";
 
 const adminLoginInfoStore = createStore<{manager?: Manager}>()
 const adminLoginInfoStoreInit = () => {
@@ -126,3 +127,17 @@ export type MenuItem = {
 export const getMenuItems = cache(async () => {
   return await getMenuItemAll()
 }, "menuItems");
+
+// Icons trie for icon searching
+import { icons as tablerIcons } from '@iconify-json/tabler'
+
+const iconsTrie = new Trie();
+const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);
+_icons.forEach(icon => iconsTrie.insert(icon, icon));
+
+export const searchIcons = (prefix: string): string[] => {
+  if (prefix.length == 0) {
+    return _icons;
+  }
+  return iconsTrie.search(prefix)
+}

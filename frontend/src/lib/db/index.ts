@@ -9,7 +9,7 @@ type Data = {
 
 const defaultData: Data = {
   managers: [{ id: 0, username: "admin", password: "admin" }],
-  menuItems: [{ id: 0, name: "主页", icon: "icon", url: "/", enable: true}]
+  menuItems: [{ id: 0, name: "主页", icon: "file-unknown", url: "/", enable: true}]
 };
 
 const db = LocalStoragePreset<Data>("db", defaultData);

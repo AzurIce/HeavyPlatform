@@ -3,13 +3,14 @@ import { Signal, createEffect, createSignal } from "solid-js"
 import { updateMenuItem } from "../../lib/axios/api"
 import { revalidate } from "@solidjs/router"
 import { MenuItem, getMenuItems } from "../../lib/store"
+import IconInput from "../IconInput"
 
 export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | undefined> }) {
   const [target, setTarget] = props.target
   const theme = useTheme()
 
   const [name, setName] = createSignal("")
-  const [icon, setIcon] = createSignal("")
+  const [icon, setIcon] = createSignal("tabler:file-unknown")
   const [url, setUrl] = createSignal("")
   const [display, setDisplay] = createSignal(true)
 
@@ -34,7 +35,7 @@ export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | u
 
   const onCancel = () => {
     setName("")
-    setIcon("")
+    setIcon("tabler:file-unknown")
     setUrl("")
     setDisplay(true)
     setTarget()
@@ -76,14 +77,7 @@ export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | u
             onChange={(_event, value) => {
               setName(value)
             }} />
-          <TextField
-            size='small'
-            label="图标"
-            value={icon()}
-            onChange={(_event, value) => {
-              setIcon(value)
-            }}
-          />
+          <IconInput icon={icon} setIcon={setIcon}/>
           <FormControlLabel
             control={<Switch checked={display()} onChange={() => { setDisplay((x) => !x) }} />}
             label="是否启用"

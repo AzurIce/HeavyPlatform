@@ -10,6 +10,7 @@ import CreateMenuItemModal from "../../../components/MenuItem/CreateMenuItemModa
 import UpdateMenuItemModal from "../../../components/MenuItem/UpdateMenuItemModal";
 import { DeleteMenuItemModalButton } from "../../../components/MenuItem";
 import { updateMenuItem } from "../../../lib/axios/api";
+import { Icon } from "@iconify-icon/solid";
 
 const MenuItemPage: Component = () => {
   const createShow = createSignal(false);
@@ -18,9 +19,6 @@ const MenuItemPage: Component = () => {
   const [getUpdateTarget, setUpdateTarget] = updateTarget;
 
   const menuItems = createAsync(() => getMenuItems());
-  // createEffect(() => {
-  //   console.log(menuItems())
-  // })
 
   const onToggleItemDisplay = (item: MenuItem) => {
     updateMenuItem(item.id, item.name, item.icon, item.url, !item.enable).then((res) => {
@@ -74,7 +72,7 @@ const MenuItemPage: Component = () => {
                       <Switch checked={item.enable} onChange={() => onToggleItemDisplay(item)} />
                     </TableCell>
                     <TableCell>
-                      <span class="text-md">{item.icon}</span>
+                      <Icon icon={`tabler:${item.icon}`} height={20} />
                     </TableCell>
                     <TableCell>
                       <span class="text-md">{item.url}</span>
