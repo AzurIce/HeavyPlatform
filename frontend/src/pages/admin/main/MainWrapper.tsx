@@ -4,7 +4,7 @@ import { AdminLoginInfoStore, LoginInfoStore } from '../../../lib/store';
 import { Component, createSignal, onMount } from 'solid-js';
 import { RouteSectionProps, useNavigate } from '@solidjs/router';
 import SideBar from '../../../components/SideBar';
-import { blue, deepOrange, deepPurple, purple } from '@suid/material/colors';
+import { blue, deepOrange, deepPurple, grey, purple } from '@suid/material/colors';
 
 function AccountMenu() {
   const [anchorEl, setAnchorEl] = createSignal<null | HTMLElement>(null);
@@ -36,10 +36,11 @@ function AccountMenu() {
             sx={{
               width: 32,
               height: 32,
-              bgcolor: manager()?.id == 0 ? deepOrange[500] : deepPurple[500]
+              bgcolor: manager()?.id == 0 ? deepOrange[500] : grey[500],
+              fontSize: 16,
             }}
           >
-            {manager()?.id == 0 ? "S" : "M"}
+            {manager()?.id == 0 ? "SM" : "M"}
           </Avatar>
         </IconButton>
       </Box>
