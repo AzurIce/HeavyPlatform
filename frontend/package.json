@@ -13,6 +13,8 @@
   "devDependencies": {
     "@iconify-icon/solid": "^2.1.1",
     "@iconify-json/tabler": "^1.1.113",
+    "@types/hast": "^3.0.4",
+    "@types/unist": "^3.0.2",
     "@unocss/preset-icons": "^0.60.3",
     "solid-devtools": "^0.29.3",
     "typescript": "^5.4.5",
@@ -25,7 +27,16 @@
     "@suid/icons-material": "^0.7.0",
     "@suid/material": "^0.16.0",
     "@suid/vite-plugin": "^0.2.0",
+    "comma-separated-tokens": "^2.0.3",
     "lowdb": "^7.0.1",
-    "solid-js": "^1.8.17"
+    "property-information": "^6.5.0",
+    "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.0",
+    "solid-js": "^1.8.17",
+    "space-separated-tokens": "^2.0.2",
+    "unified": "^11.0.4",
+    "unist-util-visit": "^5.0.0",
+    "vfile": "^6.0.1"
   }
 }
