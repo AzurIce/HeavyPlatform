@@ -1,34 +1,37 @@
 import { Box, Button, InputLabel, MenuItem, Modal, Select, TextField, Typography, useTheme } from "@suid/material"
 import { For, Signal, createEffect, createSignal } from "solid-js"
-import { updateManager } from "../../lib/axios/api"
+import { updateManager, updateManagerPassword } from "../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
 import { AlertsStore, Manager, getManager, getManagers, getUsergroups } from "../../lib/store"
 
-export default function UpdateManagerModal(props: { target: Signal<Manager | undefined> }) {
+export default function UpdateManagerPasswordModal(props: { target: Signal<Manager | undefined> }) {
   const [target, setTarget] = props.target
   const theme = useTheme()
 
   createEffect(() => {
     if (target() != undefined) {
       setUsername(target()!.username)
-      setUsergroup(target()!.usergroup)
     }
   })
 
   const usergroups = createAsync(() => getUsergroups())
 
   const [username, setUsername] = createSignal("")
-  const [usergroup, setUsergroup] = createSignal(0)
+  const [password, setPassword] = createSignal("")
 
   const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore()
 
   const onSubmit = () => {
-    if (username() == "") {
+    if (username() == "" || password() == "") {
+      if (username() == "") {
         newWarningAlert("用户名不能为空");
+      } else if (password() == "") {
+        newWarningAlert("密码不能为空");
+      }
       return;
     }
 
-    updateManager(target()!.id, username()!, usergroup()).then((res) => {
+    updateManagerPassword(target()!.id, password()).then((res) => {
       newSuccessAlert("更新成功")
       revalidate(getManagers.key)
       revalidate(getManager.keyFor(target()!.id))
@@ -40,6 +43,7 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
   }
 
   const onCancel = () => {
+    setPassword("")
     setTarget()
   }
 
@@ -79,9 +83,10 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
             value={username()}
             onChange={(_event, value) => {
               setUsername(value)
-            }} />
+            }} 
+            disabled/>
             
-          {/* <InputLabel>密码</InputLabel>
+          <InputLabel>密码</InputLabel>
           <TextField
             size='small'
             label="密码"
@@ -89,20 +94,21 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
             onChange={(_event, value) => {
               setPassword(value)
             }}
-          /> */}
+          />
 
-          <InputLabel id="usergroup-select">用户组</InputLabel>
+          {/* <InputLabel id="usergroup-select">用户组</InputLabel>
           <Select
             value={usergroup()}
             label="用户组"
             onChange={(e) => setUsergroup(e.target.value)}
+            disabled
           >
             <For each={usergroups()}>{(item) =>
               <>
                 <MenuItem value={item.id}>{item.name}</MenuItem>
               </>}
             </For>
-          </Select>
+          </Select> */}
         </div>
 
         <div class="flex gap-4">

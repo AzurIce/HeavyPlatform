@@ -1,6 +1,6 @@
-import { Add, Delete, Edit, Restore } from "@suid/icons-material";
+import { Add, Delete, Edit, Key, Restore } from "@suid/icons-material";
 import { Chip, Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@suid/material";
-import { Component, For, Show, createEffect, createSignal } from "solid-js";
+import { Accessor, Component, For, Index, Show, createEffect, createSignal } from "solid-js";
 import { createAsync } from "@solidjs/router";
 import { AdminLoginInfoStore, LoginInfoStore, Manager, Usergroup, getManagers, getMenuItems, getUsergroup, getUsergroups } from "../../../lib/store";
 
@@ -11,6 +11,7 @@ import { resetDb } from "../../../lib/db";
 import CreateUsergroupModal from "../../../components/Usergroup/CreateUsergroupModal";
 import UpdateUsergroupModal from "../../../components/Usergroup/UpdatUsergroupModal";
 import { DeleteUsergroupModalButton } from "../../../components/Usergroup";
+import UpdateManagerPasswordModal from "../../../components/Manager/UpdateManagerPassword";
 
 const AccountPage: Component = () => {
   return <>
@@ -95,8 +96,8 @@ const UserGroupPaper: Component = () => {
   </>
 }
 
-const UsergroupCell: Component<{id: number}> = (props) => {
-  const usergroup = createAsync(() => getUsergroup(props.id));
+const UsergroupCell: Component<{ id: Accessor<number> }> = (props) => {
+  const usergroup = createAsync(() => getUsergroup(props.id()));
   return <>
     <Show when={usergroup() != undefined}>
       <span>{usergroup()!.name}</span>
@@ -109,6 +110,8 @@ const ManagerAcountPaper: Component = () => {
   const [getCreateShow, setCreateShow] = createShow;
   const updateTarget = createSignal<Manager | undefined>();
   const [getUpdateTarget, setUpdateTarget] = updateTarget;
+  const updatePasswordTarget = createSignal<Manager | undefined>();
+  const [getUpdatePasswordTarget, setUpdatePasswordTarget] = updatePasswordTarget;
 
   const managers = createAsync(() => getManagers());
   const { manager } = AdminLoginInfoStore();
@@ -116,6 +119,7 @@ const ManagerAcountPaper: Component = () => {
   return <>
     <CreateManagerModal open={createShow} />
     <UpdateManagerModal target={updateTarget} />
+    <UpdateManagerPasswordModal target={updatePasswordTarget} />
     {/* <DeleteManagerModal target={deleteTarget} /> */}
 
     <Paper sx={{
@@ -159,12 +163,15 @@ const ManagerAcountPaper: Component = () => {
 
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    <UsergroupCell id={item.usergroup} />
+                    <UsergroupCell id={() => item.usergroup} />
                   </TableCell>
                   <TableCell>
                     <ButtonGroup>
                       <Button onClick={() => setUpdateTarget(item)} disabled={item.id == 0 || manager()?.id != 0}>
                         <Edit />
+                      </Button>
+                      <Button onClick={() => setUpdatePasswordTarget(item)} disabled={item.id == 0 || manager()?.id != 0}>
+                        <Key />
                       </Button>
                       <DeleteManagerModalButton target={() => item} disabled={() => item.id == 0 || manager()?.id != 0}><Delete /></DeleteManagerModalButton>
                     </ButtonGroup>

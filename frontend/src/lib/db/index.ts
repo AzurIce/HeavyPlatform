@@ -172,12 +172,27 @@ const managers = {
     db.write();
   },
 
-  update: async function (id: number, username: string, password: string, usergroup: number): Promise<void> {
-    if (await this.getById(id) == undefined) {
+  update: async function (id: number, username: string, usergroup: number): Promise<void> {
+    let manager = await this.getById(id);
+    if (manager == undefined) {
       return Promise.reject("manager not exist");
     }
 
-    db.data.managers[id] = { id, username, password, usergroup };
+    const _manager: Manager = {...manager, username, usergroup}
+
+    db.data.managers[id] = _manager;
+    db.write();
+  },
+
+  updatePassword: async function (id: number, password: string): Promise<void> {
+    let manager = await this.getById(id);
+    if (manager == undefined) {
+      return Promise.reject("manager not exist");
+    }
+
+    // Have to reconstruct the object, otherwise <For> won't react
+    const _manager: Manager = { ...manager, password }
+    db.data.managers[id] = _manager;
     db.write();
   },
 

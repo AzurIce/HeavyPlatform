@@ -1,7 +1,7 @@
 import { cache } from "@solidjs/router";
 import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
-import { getManagerAll, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
+import { getManagerAll, getManagerById, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
 import { Trie } from "./trie";
 
 const adminLoginInfoStore = createStore<{manager?: Manager}>()
@@ -118,8 +118,14 @@ export type Manager = {
 }
 
 export const getManagers = cache(async () => {
-  return await getManagerAll()
+  const res = await getManagerAll();
+  // console.log("cache: getManagers: ", res)
+  return res
 }, "managers");
+
+export const getManager = cache(async (id: number) => {
+  return await getManagerById(id);
+}, "manager");
 
 // MenuItem
 export type MenuItem = {

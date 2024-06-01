@@ -14,12 +14,25 @@ export async function createManager(username: string, password: string): Promise
   return await managers.create(username, password);
 }
 
-export async function updateManager(id: number, username: string, password: string, usergroup: number): Promise<void> {
-  return await managers.update(id, username, password, usergroup);
+export async function updateManager(id: number, username: string, usergroup: number): Promise<void> {
+  return await managers.update(id, username, usergroup);
+}
+
+export async function updateManagerPassword(id: number, password: string): Promise<void> {
+  return await managers.updatePassword(id, password);
 }
 
 export async function getManagerAll(): Promise<Manager[]> {
   return await managers.getAll();
+}
+
+export async function getManagerById(id: number): Promise<Manager> {
+  const manager = await managers.getById(id);
+  if (manager == undefined) {
+    return Promise.reject("usergroup not exist");
+  } else {
+    return manager;
+  }
 }
 
 export async function deleteManager(id: number): Promise<void> {

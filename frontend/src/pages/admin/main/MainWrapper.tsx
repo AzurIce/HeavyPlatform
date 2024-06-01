@@ -141,7 +141,7 @@ const MainWrapper: Component<RouteSectionProps> = (props) => {
         </Toolbar>
       </AppBar>
 
-      <div class='grow flex w-full h-200'>
+      <div class='grow flex w-full h-10'>
         <SideBar />
         <div class="max-h-full m-4 w-full flex flex-col gap-4 overflow-y-auto">
           {props.children}
