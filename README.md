@@ -52,60 +52,7 @@
 
 ## 第三次作业
 
-- [x] 纯react静态页面 60
-
-    - [x] 登陆注册
-
-    - [x] 菜单管理
-
-        数据定义为：
-
-        ```ts
-        type MenuItem = {
-          id: number,
-          name: string,
-          icon: string,
-          url: string,
-          enable: boolean,
-        }
-        ```
-
-        - [x] 创建、删除、修改
-        - [x] **<font color="fuchisa">【extra】实现了一个图标选择器（在菜单项编辑弹窗中可以使用到）</font>**
-
-            上面的输入框可以进行搜索，基于 trie 字典树，图标来源为 iconify 的 tabler，共 5289 个图标。
-
-            <img src="./assets/image-20240601112737209.png" alt="image-20240601112737209" style="zoom:50%;" />
-
-    - [x] 用户管理
-
-        数据定义为：
-
-        ```ts
-        type Manager = {
-          id: number,
-          username: string,
-          password: string,
-        }
-        ```
-
-        通过 id 是否为 0 来区分 超级管理员 与 普通管理员。
-
-        - 超级管理员：可以 添加/修改/删除 管理员账号
-
-        - 普通管理员：只能 添加 管理员账号
-
-    - [ ] 角色 / 权限
-
-- [x] 后台用户管理 10
-
-- [ ] 角色管理 10
-
-- [x] 菜单管理 10
-
-- [x] 数据持久化 10
-
-- [ ] 后端联动 20
+见 [docs/第三次作业.md](./docs/第三次作业.md)。
 
 ## 第四次作业
 
