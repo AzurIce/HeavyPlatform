@@ -5,7 +5,6 @@ import { Typography } from "@suid/material";
 const Main: Component = () => {
   return <>
     <Hello />
-    <Typography>第三次作业 —— React</Typography>
   </>
 }
 
