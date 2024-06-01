@@ -119,7 +119,7 @@ const MainWrapper: Component<RouteSectionProps> = (props) => {
   })
 
   return <>
-    <div class='max-h-full overflow-y-hidden h-full w-full flex flex-col items-center'>
+    <div class='max-h-full h-full w-full flex flex-col items-center overflow-hidden'>
       <AppBar position='sticky' sx={{ zIndex: 7 }}>
         <Toolbar>
           <IconButton
@@ -141,9 +141,9 @@ const MainWrapper: Component<RouteSectionProps> = (props) => {
         </Toolbar>
       </AppBar>
 
-      <div class='flex-1 flex w-full max-h-full'>
+      <div class='grow flex w-full h-200'>
         <SideBar />
-        <div class="m-4 w-full flex flex-col gap-4 overflow-y-scroll">
+        <div class="max-h-full m-4 w-full flex flex-col gap-4 overflow-y-auto">
           {props.children}
         </div>
       </div>
