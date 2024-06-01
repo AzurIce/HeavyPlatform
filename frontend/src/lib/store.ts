@@ -28,7 +28,12 @@ export const AdminLoginInfoStore = () => {
     localStorage.setItem('manager', JSON.stringify(manager))
   }
 
-  return { manager, setManager }
+  const logout = () => {
+    _setAdminLoginInfo({ manager: undefined })
+    localStorage.removeItem('manager')
+  }
+
+  return { manager, setManager, logout }
 }
 
 interface User {
