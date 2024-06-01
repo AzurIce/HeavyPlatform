@@ -1,7 +1,7 @@
 import { cache } from "@solidjs/router";
 import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
-import { getManagerAll, getMenuItemAll } from "./axios/api";
+import { getManagerAll, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
 import { Trie } from "./trie";
 
 const adminLoginInfoStore = createStore<{manager?: Manager}>()
@@ -114,6 +114,7 @@ export const AlertsStore = () => {
 export type Manager = {
   id: number,
   username: string,
+  usergroup: number
 }
 
 export const getManagers = cache(async () => {
@@ -132,6 +133,21 @@ export type MenuItem = {
 export const getMenuItems = cache(async () => {
   return await getMenuItemAll()
 }, "menuItems");
+
+// Usergroup
+export type Usergroup = {
+  id: number,
+  name: string,
+  access: number[]
+}
+
+export const getUsergroups = cache(async () => {
+  return await getUsergroupAll();
+}, "usergroups");
+
+export const getUsergroup = cache(async (id: number) => {
+  return await getUsergroupById(id);
+}, "usergroup");
 
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'

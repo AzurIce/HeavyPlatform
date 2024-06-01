@@ -1,23 +1,38 @@
-import { Box, Button, Modal, TextField, Typography, useTheme } from "@suid/material"
-import { Signal, createSignal } from "solid-js"
+import { Box, Button, InputLabel, MenuItem, Modal, Select, TextField, Typography, useTheme } from "@suid/material"
+import { For, Signal, createSignal } from "solid-js"
 import { createManager } from "../../lib/axios/api"
-import { revalidate } from "@solidjs/router"
-import { getManagers } from "../../lib/store"
+import { createAsync, revalidate } from "@solidjs/router"
+import { AlertsStore, getManagers, getUsergroups } from "../../lib/store"
 
 export default function CreateManagerModal(props: { open: Signal<boolean> }) {
   const [open, setOpen] = props.open
   const theme = useTheme()
 
+  const usergroups = createAsync(() => getUsergroups())
+
   const [username, setUsername] = createSignal("")
+  const [usergroup, setUsergroup] = createSignal(0)
   const [password, setPassword] = createSignal("")
 
+  const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore()
+
   const onSubmit = () => {
+    if (username() == "" || password() == "") {
+      if (username() == "") {
+        newWarningAlert("用户名不能为空");
+      } else if (password() == "") {
+        newWarningAlert("密码不能为空");
+      }
+      return;
+    }
+
     createManager(username(), password()).then((res) => {
+      newSuccessAlert("创建成功")
       revalidate(getManagers.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
-      // TODO: Alert
+      newErrorAlert(`创建失败：${err}`)
     })
   }
 
@@ -56,6 +71,7 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
         </Typography>
 
         <div class='flex flex-col gap-2'>
+          <InputLabel>用户名</InputLabel>
           <TextField
             size='small'
             label="用户名"
@@ -63,6 +79,8 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
             onChange={(_event, value) => {
               setUsername(value)
             }} />
+
+          <InputLabel>密码</InputLabel>
           <TextField
             size='small'
             label="密码"
@@ -71,6 +89,21 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
               setPassword(value)
             }}
           />
+
+          <InputLabel id="usergroup-select">用户组</InputLabel>
+          <Select
+            labelId="usergroup-select"
+            size="small"
+            value={usergroup()}
+            label="用户组"
+            onChange={(e) => setUsergroup(e.target.value)}
+          >
+            <For each={usergroups()}>{(item) =>
+              <>
+                <MenuItem value={item.id}>{item.name}</MenuItem>
+              </>}
+            </For>
+          </Select>
         </div>
 
         <div class="flex gap-4">

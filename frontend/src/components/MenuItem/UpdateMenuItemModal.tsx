@@ -2,7 +2,7 @@ import { Box, Button, FormControlLabel, Modal, Switch, TextField, Typography, us
 import { Signal, createEffect, createSignal } from "solid-js"
 import { updateMenuItem } from "../../lib/axios/api"
 import { revalidate } from "@solidjs/router"
-import { MenuItem, getMenuItems } from "../../lib/store"
+import { AlertsStore, MenuItem, getMenuItems } from "../../lib/store"
 import IconInput from "../IconInput"
 
 export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | undefined> }) {
@@ -23,19 +23,34 @@ export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | u
     }
   })
 
+  const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
+
   const onSubmit = () => {
+    if (name() == "" || icon() == "" || url() == "") {
+      if (name() == "") {
+        newWarningAlert("名称不能为空");
+      } else if (icon() == "") {
+        newWarningAlert("图标不能为空");
+      } else if (url() == "") {
+        newWarningAlert("URL 不能为空");
+      }
+      return;
+    }
+
     updateMenuItem(target()!.id, name(), icon(), url(), display()).then((res) => {
+      newSuccessAlert("创建成功")
       revalidate(getMenuItems.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
+      newErrorAlert(`更新失败：${err}`)
       // TODO: Alert
     })
   }
 
   const onCancel = () => {
     setName("")
-    setIcon("tabler:file-unknown")
+    setIcon("file-unknown")
     setUrl("")
     setDisplay(true)
     setTarget()

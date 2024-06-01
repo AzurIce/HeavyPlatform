@@ -42,7 +42,7 @@ const MenuItemPage: Component = () => {
       <Typography variant="h6">菜单项列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加菜单项<Add /></Button>
-        <Button onClick={() => { resetDb() }}>重制数据库<Restore /></Button>
+        <Button onClick={() => { resetDb() }}>重置数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -57,32 +57,32 @@ const MenuItemPage: Component = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-              <For each={menuItems()}>
-                {(item) => <>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {item.id}
-                    </TableCell>
-                    <TableCell>
-                      <span class="text-md">{item.name}</span>
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      <Switch checked={item.enable} onChange={() => onToggleItemDisplay(item)} />
-                    </TableCell>
-                    <TableCell>
-                      <Icon icon={`tabler:${item.icon}`} height={20} />
-                    </TableCell>
-                    <TableCell>
-                      <span class="text-md">{item.url}</span>
-                    </TableCell>
-                    <TableCell>
-                      <ButtonGroup>
-                        <Button onClick={() => setUpdateTarget(item)}>
+            <For each={menuItems()}>
+              {(item) => <>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {item.id}
+                  </TableCell>
+                  <TableCell>
+                    <span class="text-md">{item.name}</span>
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    <Switch checked={item.enable} onChange={() => onToggleItemDisplay(item)} />
+                  </TableCell>
+                  <TableCell>
+                    <Icon icon={`tabler:${item.icon}`} height={20} />
+                  </TableCell>
+                  <TableCell>
+                    <span class="text-md">{item.url}</span>
+                  </TableCell>
+                  <TableCell>
+                    <ButtonGroup>
+                      <Button onClick={() => setUpdateTarget(item)} disabled={item.id == 0}>
                         <Edit />
                       </Button>
-                      <DeleteMenuItemModalButton target={() => item}><Delete /></DeleteMenuItemModalButton>
+                      <DeleteMenuItemModalButton target={() => item} disabled={() => item.id == 0}><Delete /></DeleteMenuItemModalButton>
                     </ButtonGroup>
                   </TableCell>
                 </TableRow>

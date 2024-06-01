@@ -32,7 +32,7 @@ export default function AlertList() {
   const { alerts, delAlert } = AlertsStore()
 
   return (
-    <div class='w-full absolute z-100 top-20 flex flex-col items-center gap-4'>
+    <div class='w-full absolute z-2000 top-16 flex flex-col items-center gap-4'>
       <For each={alerts}>{(alert, index) =>
         // <Transition appear={true} onEnter={(el, done) => {
         //   const a = el.animate([{ opacity: 0 }, { opacity: 1 }], {

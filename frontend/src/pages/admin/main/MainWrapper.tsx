@@ -36,10 +36,10 @@ function AccountMenu() {
             sx={{
               width: 32,
               height: 32,
-              bgcolor: manager()?.id == 1 ? deepOrange[500] : deepPurple[500]
+              bgcolor: manager()?.id == 0 ? deepOrange[500] : deepPurple[500]
             }}
           >
-            {manager()?.id == 1 ? "S" : "M"}
+            {manager()?.id == 0 ? "S" : "M"}
           </Avatar>
         </IconButton>
       </Box>
