@@ -42,7 +42,7 @@ const UserGroupPaper: Component = () => {
       <Typography variant="h6">用户组列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加用户组<Add /></Button>
-        <Button onClick={() => { resetDb() }}>重置数据库<Restore /></Button>
+        <Button onClick={() => { resetDb() }} color="error">重置数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

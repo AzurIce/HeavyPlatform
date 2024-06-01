@@ -3,7 +3,7 @@ import { LocalStoragePreset } from "lowdb/browser";
 // Delete only sets the corresponding index to undefined,
 // in this way we can make sure the id of the manager is corresponding to it's index
 type Data = {
-  usergroups: (UserGroup | undefined)[]
+  usergroups: (Usergroup | undefined)[]
   managers: (Manager | undefined)[]
   menuItems: (MenuItem | undefined)[]
 }
@@ -32,12 +32,6 @@ const getById = function <T>(data: () => T[]): (id: number) => Promise<T> {
     const element = data()[id];
     return element;
   }
-}
-
-type UserGroup = {
-  id: number,
-  name: string,
-  access: number[] // 可以访问的菜单项 id
 }
 
 const data = {
@@ -87,9 +81,16 @@ const menuItems = {
   }
 }
 
+// Usergroup
+type Usergroup = {
+  id: number,
+  name: string,
+  access: number[] // 可以访问的菜单项 id
+}
+
 const usergroups = {
-  getAll: async function (): Promise<UserGroup[]> {
-    let elements = data.usergroups().filter((el) => el != undefined) as UserGroup[];
+  getAll: async function (): Promise<Usergroup[]> {
+    let elements = data.usergroups().filter((el) => el != undefined) as Usergroup[];
 
     elements = elements.map(usergroup => {
       usergroup.access = usergroup.access.filter((id) => db.data.menuItems[id] != undefined)
@@ -113,7 +114,7 @@ const usergroups = {
     let id = db.data.usergroups.find((el) => el == undefined)?.id || db.data.usergroups.length;
     console.log("candidate id: ", id)
 
-    const element: UserGroup = { id, name, access };
+    const element: Usergroup = { id, name, access };
     db.data.usergroups.push(element);
     db.write();
   },
