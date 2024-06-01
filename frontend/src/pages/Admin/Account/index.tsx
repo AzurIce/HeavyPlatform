@@ -96,15 +96,6 @@ const UserGroupPaper: Component = () => {
   </>
 }
 
-const UsergroupCell: Component<{ id: Accessor<number> }> = (props) => {
-  const usergroup = createAsync(() => getUsergroup(props.id()));
-  return <>
-    <Show when={usergroup() != undefined}>
-      <span>{usergroup()!.name}</span>
-    </Show>
-  </>
-}
-
 const ManagerAcountPaper: Component = () => {
   const createShow = createSignal(false);
   const [getCreateShow, setCreateShow] = createShow;
@@ -113,6 +104,7 @@ const ManagerAcountPaper: Component = () => {
   const updatePasswordTarget = createSignal<Manager | undefined>();
   const [getUpdatePasswordTarget, setUpdatePasswordTarget] = updatePasswordTarget;
 
+  const usergroups = createAsync(() => getUsergroups());
   const managers = createAsync(() => getManagers());
   const { manager } = AdminLoginInfoStore();
 
@@ -163,7 +155,7 @@ const ManagerAcountPaper: Component = () => {
 
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    <UsergroupCell id={() => item.usergroup} />
+                    <span>{usergroups()!.find(g => g.id == item.usergroup)!.name}</span>
                   </TableCell>
                   <TableCell>
                     <ButtonGroup>
