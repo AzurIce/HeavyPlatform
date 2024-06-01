@@ -153,8 +153,35 @@ type Manager = {
 }
 
 const managers = {
-  getAll: getAll(data.managers),
-  getById: getById(data.managers),
+  getAll: async function (): Promise<Manager[]> {
+    let elements = data.managers().filter((el) => el != undefined) as Manager[];
+
+    elements = elements.map(manager => {
+      if (db.data.usergroups[manager.usergroup] == undefined) {
+        manager.usergroup = 0;
+      }
+      return manager;
+    });
+
+    db.data.managers = elements;
+    db.write();
+
+    return elements;
+  },
+  getById: async function (id: number): Promise<Manager> {
+    let manager = data.managers()[id];
+    if (manager == undefined) {
+      return Promise.reject("manager not exist");
+    }
+
+    if (db.data.usergroups[manager.usergroup] == undefined) {
+      manager.usergroup = 0;
+      db.data.managers[id] = {...manager, usergroup: 0}
+      db.write();
+    }
+
+    return manager;
+  },
   getByUsername: async function (username: string): Promise<Manager | undefined> {
     const manager = db.data.managers.find((manager) => manager?.username == username);
     return manager;
@@ -178,7 +205,7 @@ const managers = {
       return Promise.reject("manager not exist");
     }
 
-    const _manager: Manager = {...manager, username, usergroup}
+    const _manager: Manager = { ...manager, username, usergroup }
 
     db.data.managers[id] = _manager;
     db.write();
