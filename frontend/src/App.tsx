@@ -1,4 +1,4 @@
-import { onMount, type Component } from 'solid-js';
+import { type Component } from 'solid-js';
 import { Router, Route } from "@solidjs/router";
 
 import Main from './pages/Main';

@@ -56,11 +56,169 @@
 
 ## 第四次作业
 
+### 1. 分工
+
+数据模型设计、路由设计、组件接口设计、mock 数据库及 api 实现
+
+需要的数据模型：
+
+- [ ] 商品
+- [ ] 商品分类
+- [ ] 订单
+
+需要的数据：
+
+- [ ] 全部商品
+
+- [ ] 购物车中商品
+
+### 2. 设计
+
+#### 1> 商品
+
+考察 京东/淘宝 等平台的设计，为了方便会将同一种「商品」的不同选项放在一起，而每个选项都有自己的详情页。
+
+在我们的设计中，引入一个「商品组」的概念来简单地实现这个逻辑：
+
+- 一个「商品」为一个具体的选项，对应着唯一的详情页。
+- 「商品组」将多个商品组合在一起，其中任何一个「商品」的页面下的“选项”中会显示其他同「商品组」的「商品」
+
+```ts
+type Good = {
+    id: number,
+    group_id: number | undefined,
+    category: number | undefined,
+    name: string,
+    price: number,
+    imgs: string[],        // 详情页首部的图片
+    description: string,   // 对应副标题位置的描述
+    specification: string, // 参数，偷懒，直接整个 string 得了
+    detail: string         // 详细信息
+}
+```
+
+```ts
+type GoodGroup = {
+	id: number,
+	goods: number[]
+}
+```
+
+```ts
+type GoodCategory = {
+	id: number,
+	goods: number[],
+}
+```
+
+---
+
+商品的详细页面为 `/goods/:id`，切换选择时直接跳转另一个商品的 id 的 url 即可。
+
+分类页面为 `/categories/:id`，将所有属于该类别的商品卡片显示出来。
+
+---
+
+1. 主页商品卡片：`/components/GoodCard`
+
+    > 难度简单，工作量少
+
+    显示在主页/搜索结果中的商品卡片
+
+    ```ts
+    const GoodCard: Component<{id: number}> = (props) => {
+        // ...
+    }
+    ```
+
+    <img src="./docs/assets/image-20240603165926107.png" alt="image-20240603165926107" style="zoom:50%;" />
+
+2. 分类商品页：`/pages/Main/Categories`
+
+    > 难度中等，工作量少
+    >
+    > 需要学习一下 https://github.com/solidjs/solid-router?tab=readme-ov-file#dynamic-routes
+
+3. 商品详情页：`/pages/Main/Good`
+
+    > 难度中等，工作量中等
+    >
+    > 需要学习一下 https://github.com/solidjs/solid-router?tab=readme-ov-file#dynamic-routes
+
+    <img src="./docs/assets/image-20240603165758177.png" alt="image-20240603165758177" style="zoom:50%;" />
+
+#### 2> 购物车、订单
+
+简化逻辑，订单被视为若干购物车项的列表。立即下单也即创建一个 CartItem 后用其直接创建 Order。
+
+下单后，CartItem 被移除，并创建对应的 Order。
+
+```ts
+type CartItem = {
+    id: number,
+    good_id: number,
+    user_id: number,
+    quantity: number,
+}
+```
+
+```ts
+type Order = {
+    id: number,
+    user_id: number,
+    items: CartItem[]
+}
+```
+
+---
+
+购物车页面路由为 `/cartitems`
+
+订单页面路由为 `/orders`
+
+---
+
+1. 创建订单组件
+
+    > 难度较难，工作量中等
+
+    做成组件而非页面的原因是，组件方便传参，可以实现成一个 Modal（参考 `/components/MenuItem/CreateMenuItemModal.tsx`）。
+
+    ```ts
+    const GoodCard: Component<{show: Accessor<boolean>, cartItems: Accessor<CardItem[]>}> = (props) => {
+        // ...
+    }
+    ```
+    
+    在这个组件里面同时再做一下支付和支付成功（支付成功才会创建订单）
+    
+    就整体上是一个弹窗来创建订单，点下一步，内容变成支付，再点立即支付，内容变成支付成功，这个时候添加到订单列表里。
+    
+1. 购物车页面：`/pages/Main/CartItems`
+
+    > 难度简单，工作量中等
+
+1. 订单列表页面：`/pages/Main/Orders`
+
+    > 难度简单，工作量中等
+
+1. 我的页面：`/pages/Main/Me`
+
+    > 难度简单，工作量中等
+
+#### > 其他
+
+- 我的页面：`/pages/Main/Me`
+
+    > 难度简单，工作量中等
+
+    路由：`/me`
+
 ### 1. 作业内容
 
 #### 前台
 
-- [ ] 登陆注册
+- [ ] 登入
 - [ ] 商城主页面
     - [ ] 首页
         - [ ] 搜索框、轮播图、热门商品
@@ -76,12 +234,10 @@
 
 #### 后台
 
-- [ ] 登录
-- [ ] 权限、角色管理
-- [ ] 商品管理
-- [ ] 分类管理
-- [ ] 订单管理
-    - [ ] 发货（？？？
+- [x] 登录
+- [x] 权限、角色管理
+
+- [ ] 商品/分类/订单 管理三选一
 
 #### 其他
 
@@ -91,6 +247,16 @@
 - 进阶：搓个后端实现前后台数据的联动
 
 ### 2. 评分项
+
+> 5 人小组，组长 1 人
+>
+> 满分 100（代码 + 功能 + 答辩），设总分为 $s$：
+>
+> - 组员得分：80% 组长分配（共 $4s$ 可分配分数） + 20% 老师调整
+>
+> - 组长得分：80% 老师调整 + 20% 组员评分（在 $s \pm 15$​ 范围内）
+>
+> 答辩每组 8 分钟，ppt 包含分工，一位主讲人，其他人也都上台。
 
 划掉的不打算做，剩下的全做满可以做 120 分。
 
