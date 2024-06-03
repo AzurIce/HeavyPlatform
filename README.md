@@ -87,7 +87,7 @@
 type Good = {
     id: number,
     group_id: number | undefined,
-    category: number | undefined,
+    category_id: number | undefined,
     name: string,
     price: number,
     imgs: string[],        // 详情页首部的图片
@@ -107,6 +107,7 @@ type GoodGroup = {
 ```ts
 type GoodCategory = {
 	id: number,
+    name: string,
 	goods: number[],
 }
 ```
