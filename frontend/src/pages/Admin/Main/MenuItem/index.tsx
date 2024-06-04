@@ -1,15 +1,14 @@
 import { Add, Delete, Edit, Restore } from "@suid/icons-material";
-import { Chip, Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Switch } from "@suid/material";
-import { Component, For, Show, createEffect, createSignal } from "solid-js";
+import { Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Switch } from "@suid/material";
+import { Component, For, createSignal } from "solid-js";
 import { createAsync, revalidate } from "@solidjs/router";
-import { AdminLoginInfoStore, LoginInfoStore, MenuItem, getManagers, getMenuItems } from "../../../lib/store";
+import { MenuItem, getMenuItems } from "../../../../lib/store";
 
-import { DeleteManagerModalButton } from "../../../components/Manager";
-import { resetDb } from "../../../lib/db";
-import CreateMenuItemModal from "../../../components/MenuItem/CreateMenuItemModal";
-import UpdateMenuItemModal from "../../../components/MenuItem/UpdateMenuItemModal";
-import { DeleteMenuItemModalButton } from "../../../components/MenuItem";
-import { updateMenuItem } from "../../../lib/axios/api";
+import { resetDb } from "../../../../lib/db";
+import CreateMenuItemModal from "../../../../components/MenuItem/CreateMenuItemModal";
+import UpdateMenuItemModal from "../../../../components/MenuItem/UpdateMenuItemModal";
+import { DeleteMenuItemModalButton } from "../../../../components/MenuItem";
+import { updateMenuItem } from "../../../../lib/axios/api";
 import { Icon } from "@iconify-icon/solid";
 
 const MenuItemPage: Component = () => {

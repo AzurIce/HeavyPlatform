@@ -2,8 +2,8 @@ import { Route } from "@solidjs/router";
 import LoginPage from "./Login";
 import MainWrapper from "./Main/MainWrapper";
 import MainPage from "./Main";
-import AccountPage from "./Account";
-import MenuItemPage from "./MenuItem";
+import AccountPage from "./Main/Account";
+import MenuItemPage from "./Main/MenuItem";
 
 const AdminRoute = () => <>
   <Route path="/admin">

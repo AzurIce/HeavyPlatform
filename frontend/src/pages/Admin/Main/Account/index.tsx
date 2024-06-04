@@ -1,17 +1,17 @@
 import { Add, Delete, Edit, Key, Restore } from "@suid/icons-material";
 import { Chip, Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@suid/material";
-import { Accessor, Component, For, Index, Show, createEffect, createSignal } from "solid-js";
+import { Component, For, Show, createSignal } from "solid-js";
 import { createAsync } from "@solidjs/router";
-import { AdminLoginInfoStore, LoginInfoStore, Manager, Usergroup, getManagers, getMenuItems, getUsergroup, getUsergroups } from "../../../lib/store";
+import { AdminLoginInfoStore, Manager, Usergroup, getManagers, getMenuItems, getUsergroups } from "../../../../lib/store";
 
-import CreateManagerModal from "../../../components/Manager/CreateManagerModal";
-import UpdateManagerModal from "../../../components/Manager/UpdateManagerModal";
-import { DeleteManagerModalButton } from "../../../components/Manager";
-import { resetDb } from "../../../lib/db";
-import CreateUsergroupModal from "../../../components/Usergroup/CreateUsergroupModal";
-import UpdateUsergroupModal from "../../../components/Usergroup/UpdatUsergroupModal";
-import { DeleteUsergroupModalButton } from "../../../components/Usergroup";
-import UpdateManagerPasswordModal from "../../../components/Manager/UpdateManagerPassword";
+import CreateManagerModal from "../../../../components/Manager/CreateManagerModal";
+import UpdateManagerModal from "../../../../components/Manager/UpdateManagerModal";
+import { DeleteManagerModalButton } from "../../../../components/Manager";
+import { resetDb } from "../../../../lib/db";
+import CreateUsergroupModal from "../../../../components/Usergroup/CreateUsergroupModal";
+import UpdateUsergroupModal from "../../../../components/Usergroup/UpdatUsergroupModal";
+import { DeleteUsergroupModalButton } from "../../../../components/Usergroup";
+import UpdateManagerPasswordModal from "../../../../components/Manager/UpdateManagerPassword";
 
 const AccountPage: Component = () => {
   return <>
