@@ -69,19 +69,6 @@ export const resetDb = () => {
   db.write();
 }
 
-// const getAll = function <T>(data: () => (T | undefined)[]): () => Promise<T[]> {
-//   return async () => {
-//     const elements = data().filter((el) => el != undefined) as T[];
-//     return elements;
-//   }
-// }
-// const getById = function <T>(data: () => T[]): (id: number) => Promise<T> {
-//   return async (id: number) => {
-//     const element = data()[id];
-//     return element;
-//   }
-// }
-
 const getAll = async function <T>(target: { data: () => (T | undefined)[] }): Promise<T[]> {
   const elements = target.data().filter((el) => el != undefined) as T[];
   return elements;
@@ -125,13 +112,6 @@ const update = async function <T extends { id: number }>(target: { data: () => (
   db.write();
 }
 
-const data = {
-  usergroups: () => db.data.usergroups,
-  managers: () => db.data.managers,
-  menuItems: () => db.data.menuItems,
-  goods: () => db.data.goods,
-}
-
 // ------------------------------------- //
 
 // good
@@ -168,19 +148,33 @@ export const goods = {
     return goods.filter((el) => el.category_id == category_id);
   },
 
-  create: async function (name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id?: number): Promise<void> {
+  create: async function (name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id: number): Promise<void> {
     const id = await newId(this);
 
     const element: Good = { id, parent_id: id, category_id, name, price, imgs, description, specification, detail };
     return await create(this, element);
   },
 
-  update: async function (id: number, name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id?: number): Promise<void> {
+  update: async function (id: number, name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id: number): Promise<void> {
     const element: Good = { id, parent_id: id, category_id, name, price, imgs, description, specification, detail };
     return await update(this, element);
   },
-}
 
+  // join `another_id`'s goodgroup into `id`'s goodgroup
+  join: async function (id: number, another_id: number): Promise<void> {
+    const parentGood = await this.getById(id);
+
+    const childGoods = await this.getByGroupId(another_id);
+    for (let good of childGoods) {
+      good.parent_id = parentGood.parent_id;
+      await update(this, good);
+    }
+  },
+  disjoin: async function (id: number) {
+    const good = await this.getById(id);
+    await update(this, good);
+  }
+}
 
 // MenuItem
 type MenuItem = {
