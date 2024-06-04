@@ -26,7 +26,7 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
       return;
     }
 
-    createManager(username(), password()).then((res) => {
+    createManager(username(), password(), usergroup()).then((res) => {
       newSuccessAlert("创建成功")
       revalidate(getManagers.key)
       onCancel()

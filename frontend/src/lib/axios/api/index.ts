@@ -10,8 +10,8 @@ export async function login(username: string, password: string): Promise<Manager
 }
 
 // Managers
-export async function createManager(username: string, password: string): Promise<void> {
-  return await managers.create(username, password);
+export async function createManager(username: string, password: string, usergroup?: number): Promise<void> {
+  return await managers.create(username, password, usergroup || 0);
 }
 
 export async function updateManager(id: number, username: string, usergroup: number): Promise<void> {
