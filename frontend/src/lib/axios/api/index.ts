@@ -66,12 +66,7 @@ export async function updateUsergroup(id: number, name: string, access: number[]
 }
 
 export async function getUsergroupById(id: number): Promise<Usergroup> {
-  const usergroup = await usergroups.getById(id);
-  if (usergroup == undefined) {
-    return Promise.reject("usergroup not exist");
-  } else {
-    return usergroup;
-  }
+  return await usergroups.getById(id);
 }
 
 export async function getUsergroupAll(): Promise<Usergroup[]> {
