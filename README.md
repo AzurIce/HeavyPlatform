@@ -83,10 +83,24 @@
 - 一个「商品」为一个具体的选项，对应着唯一的详情页。
 - 「商品组」将多个商品组合在一起，其中任何一个「商品」的页面下的“选项”中会显示其他同「商品组」的「商品」
 
+<s>具体结构如下：</s>
+
+```ts
+/* type GoodGroup = {
+	id: number,
+	goods: number[]
+} */
+```
+
+算啦，为了后台搓起来简单些，这里直接用类似路径压缩并查集的思想来实现（因为逻辑上来说，我们只在乎哪些商品是一组，而不在乎这个组有什么样的属性），查找同组物品时直接对全部物品 filter 一下得了（反正商品也没那么多，搓个作业而已），不单独做一个 GoodGroup 结构了。
+
+为了保证可以直接通过一次 filter 获取到所有同组物品（同一组所有 parent 相同），每一次“合并操作”应该通过获取所有另组物品并设置 parent 为当前组的 parent。
+
 ```ts
 type Good = {
     id: number,
-    group_id: number | undefined,
+    // group_id: number | undefined,
+    parent_id: number
     category_id: number | undefined,
     name: string,
     price: number,
@@ -94,13 +108,6 @@ type Good = {
     description: string,   // 对应副标题位置的描述
     specification: string, // 参数，偷懒，直接整个 string 得了
     detail: string         // 详细信息
-}
-```
-
-```ts
-type GoodGroup = {
-	id: number,
-	goods: number[]
 }
 ```
 
