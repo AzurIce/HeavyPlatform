@@ -1,22 +1,17 @@
 import { Box, Button, InputLabel, MenuItem, Modal, Select, TextField, Typography, useTheme } from "@suid/material"
-import { For, Signal, createEffect, createSignal } from "solid-js"
-import { updateManager, updateManagerPassword } from "../../lib/axios/api"
+import { For, Signal, createSignal } from "solid-js"
+import { createManager } from "../../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
-import { AlertsStore, Manager, getManager, getManagers, getUsergroups } from "../../lib/store"
+import { AlertsStore, getManagers, getUsergroups } from "../../../lib/store"
 
-export default function UpdateManagerPasswordModal(props: { target: Signal<Manager | undefined> }) {
-  const [target, setTarget] = props.target
+export default function CreateManagerModal(props: { open: Signal<boolean> }) {
+  const [open, setOpen] = props.open
   const theme = useTheme()
-
-  createEffect(() => {
-    if (target() != undefined) {
-      setUsername(target()!.username)
-    }
-  })
 
   const usergroups = createAsync(() => getUsergroups())
 
   const [username, setUsername] = createSignal("")
+  const [usergroup, setUsergroup] = createSignal(0)
   const [password, setPassword] = createSignal("")
 
   const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore()
@@ -31,25 +26,25 @@ export default function UpdateManagerPasswordModal(props: { target: Signal<Manag
       return;
     }
 
-    updateManagerPassword(target()!.id, password()).then((res) => {
-      newSuccessAlert("更新成功")
+    createManager(username(), password(), usergroup()).then((res) => {
+      newSuccessAlert("创建成功")
       revalidate(getManagers.key)
-      revalidate(getManager.keyFor(target()!.id))
       onCancel()
     }).catch((err) => {
       console.log(err)
-      newErrorAlert(`更新失败：${err}`)
+      newErrorAlert(`创建失败：${err}`)
     })
   }
 
   const onCancel = () => {
+    setUsername("")
     setPassword("")
-    setTarget()
+    setOpen(false)
   }
 
   return <>
     <Modal
-      open={target() != undefined}
+      open={open()}
       onClose={() => { onCancel() }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -72,7 +67,7 @@ export default function UpdateManagerPasswordModal(props: { target: Signal<Manag
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          修改管理员账号信息
+          添加管理员账号
         </Typography>
 
         <div class='flex flex-col gap-2'>
@@ -83,9 +78,8 @@ export default function UpdateManagerPasswordModal(props: { target: Signal<Manag
             value={username()}
             onChange={(_event, value) => {
               setUsername(value)
-            }} 
-            disabled/>
-            
+            }} />
+
           <InputLabel>密码</InputLabel>
           <TextField
             size='small'
@@ -96,19 +90,20 @@ export default function UpdateManagerPasswordModal(props: { target: Signal<Manag
             }}
           />
 
-          {/* <InputLabel id="usergroup-select">用户组</InputLabel>
+          <InputLabel id="usergroup-select">用户组</InputLabel>
           <Select
+            labelId="usergroup-select"
+            size="small"
             value={usergroup()}
             label="用户组"
             onChange={(e) => setUsergroup(e.target.value)}
-            disabled
           >
             <For each={usergroups()}>{(item) =>
               <>
                 <MenuItem value={item.id}>{item.name}</MenuItem>
               </>}
             </For>
-          </Select> */}
+          </Select>
         </div>
 
         <div class="flex gap-4">

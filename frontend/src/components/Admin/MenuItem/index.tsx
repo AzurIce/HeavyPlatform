@@ -1,6 +1,6 @@
 import { revalidate } from "@solidjs/router"
-import { MenuItem, getMenuItems, getUsergroup, getUsergroups } from "../../lib/store"
-import { deleteMenuItem } from "../../lib/axios/api"
+import { MenuItem, getMenuItems, getUsergroup, getUsergroups } from "../../../lib/store"
+import { deleteMenuItem } from "../../../lib/axios/api"
 import { DeleteButton } from "../common"
 
 const onRevalidate = (id: number) => {

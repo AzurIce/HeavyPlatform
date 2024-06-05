@@ -5,9 +5,9 @@ import { createAsync, revalidate } from "@solidjs/router";
 import { MenuItem, getMenuItems } from "../../../../lib/store";
 
 import { resetDb } from "../../../../lib/db";
-import CreateMenuItemModal from "../../../../components/MenuItem/CreateMenuItemModal";
-import UpdateMenuItemModal from "../../../../components/MenuItem/UpdateMenuItemModal";
-import { DeleteMenuItemModalButton } from "../../../../components/MenuItem";
+import CreateMenuItemModal from "../../../../components/Admin/MenuItem/CreateMenuItemModal";
+import UpdateMenuItemModal from "../../../../components/Admin/MenuItem/UpdateMenuItemModal";
+import { DeleteMenuItemModalButton } from "../../../../components/Admin/MenuItem";
 import { updateMenuItem } from "../../../../lib/axios/api";
 import { Icon } from "@iconify-icon/solid";
 

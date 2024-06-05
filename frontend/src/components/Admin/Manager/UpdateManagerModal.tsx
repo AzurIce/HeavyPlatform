@@ -1,8 +1,8 @@
 import { Box, Button, InputLabel, MenuItem, Modal, Select, TextField, Typography, useTheme } from "@suid/material"
 import { For, Signal, createEffect, createSignal } from "solid-js"
-import { updateManager } from "../../lib/axios/api"
+import { updateManager } from "../../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
-import { AlertsStore, Manager, getManager, getManagers, getUsergroups } from "../../lib/store"
+import { AlertsStore, Manager, getManager, getManagers, getUsergroups } from "../../../lib/store"
 
 export default function UpdateManagerModal(props: { target: Signal<Manager | undefined> }) {
   const [target, setTarget] = props.target

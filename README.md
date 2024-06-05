@@ -115,7 +115,6 @@ type Good = {
 type GoodCategory = {
 	id: number,
     name: string,
-	goods: number[],
 }
 ```
 

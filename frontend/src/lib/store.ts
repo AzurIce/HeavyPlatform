@@ -1,7 +1,7 @@
 import { cache } from "@solidjs/router";
 import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
-import { getManagerAll, getManagerById, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
+import { getGoodAll, getGoodById, getGoodCategoryAll, getManagerAll, getManagerById, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
 import { Trie } from "./trie";
 
 const adminLoginInfoStore = createStore<{manager?: Manager}>()
@@ -154,6 +154,35 @@ export const getUsergroups = cache(async () => {
 export const getUsergroup = cache(async (id: number) => {
   return await getUsergroupById(id);
 }, "usergroup");
+
+export type Good = {
+  id: number,
+  parent_id: number | undefined,
+  category_id: number | undefined,
+  name: string,
+  price: number,
+  imgs: string[],        // 详情页首部的图片
+  description: string,   // 对应副标题位置的描述
+  specification: string, // 参数，偷懒，直接整个 string 得了
+  detail: string         // 详细信息
+}
+
+export type GoodCategory = {
+  id: number,
+  name: string,
+}
+
+export const getGoods = cache(async () => {
+  return await getGoodAll();
+}, "goods")
+
+export const getGood = cache(async (id: number) => {
+  return await getGoodById(id);
+}, "good")
+
+export const getCategories = cache(async () => {
+  return await getGoodCategoryAll();
+}, "categories")
 
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'

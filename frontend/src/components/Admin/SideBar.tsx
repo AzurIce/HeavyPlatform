@@ -1,5 +1,5 @@
 import { useMatch, useNavigate } from "@solidjs/router";
-import { Dashboard, DirectionsBike, List, ManageAccounts, Person } from "@suid/icons-material";
+import { Dashboard, DirectionsBike, List, ManageAccounts, Person, Sell } from "@suid/icons-material";
 import { Button, IconButton } from "@suid/material";
 import { Component } from "solid-js";
 
@@ -26,6 +26,7 @@ const SideBar: Component = () => {
       <SideBarItem icon={Dashboard} route="/admin" />
       <SideBarItem icon={List} route="/admin/menu-item" />
       <SideBarItem icon={ManageAccounts} route="/admin/account" />
+      <SideBarItem icon={Sell} route="/admin/good" />
     </aside>
   </>
 };

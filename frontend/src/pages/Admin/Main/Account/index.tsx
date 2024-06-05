@@ -4,14 +4,14 @@ import { Component, For, Show, createSignal } from "solid-js";
 import { createAsync } from "@solidjs/router";
 import { AdminLoginInfoStore, Manager, Usergroup, getManagers, getMenuItems, getUsergroups } from "../../../../lib/store";
 
-import CreateManagerModal from "../../../../components/Manager/CreateManagerModal";
-import UpdateManagerModal from "../../../../components/Manager/UpdateManagerModal";
-import { DeleteManagerModalButton } from "../../../../components/Manager";
+import CreateManagerModal from "../../../../components/Admin/Manager/CreateManagerModal";
+import UpdateManagerModal from "../../../../components/Admin/Manager/UpdateManagerModal";
+import { DeleteManagerModalButton } from "../../../../components/Admin/Manager";
 import { resetDb } from "../../../../lib/db";
-import CreateUsergroupModal from "../../../../components/Usergroup/CreateUsergroupModal";
-import UpdateUsergroupModal from "../../../../components/Usergroup/UpdatUsergroupModal";
-import { DeleteUsergroupModalButton } from "../../../../components/Usergroup";
-import UpdateManagerPasswordModal from "../../../../components/Manager/UpdateManagerPassword";
+import CreateUsergroupModal from "../../../../components/Admin/Usergroup/CreateUsergroupModal";
+import UpdateUsergroupModal from "../../../../components/Admin/Usergroup/UpdatUsergroupModal";
+import { DeleteUsergroupModalButton } from "../../../../components/Admin/Usergroup";
+import UpdateManagerPasswordModal from "../../../../components/Admin/Manager/UpdateManagerPassword";
 
 const AccountPage: Component = () => {
   return <>

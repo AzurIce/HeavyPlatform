@@ -1,19 +1,29 @@
-import { Box, Button, InputLabel, Modal, TextField, Typography, useTheme } from "@suid/material"
-import { Signal, createSignal } from "solid-js"
-import { createMenuItem } from "../../lib/axios/api"
+import { Box, Button, FormControlLabel, Modal, Switch, TextField, Typography, useTheme } from "@suid/material"
+import { Signal, createEffect, createSignal } from "solid-js"
+import { updateMenuItem } from "../../../lib/axios/api"
 import { revalidate } from "@solidjs/router"
-import { AlertsStore, getMenuItems } from "../../lib/store"
-import IconInput from "../IconInput"
+import { AlertsStore, MenuItem, getMenuItems } from "../../../lib/store"
+import IconInput from "../../IconInput"
 
-export default function CreateManagerModal(props: { open: Signal<boolean> }) {
-  const [open, setOpen] = props.open
+export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | undefined> }) {
+  const [target, setTarget] = props.target
   const theme = useTheme()
 
   const [name, setName] = createSignal("")
-  const [icon, setIcon] = createSignal("file-unknown")
+  const [icon, setIcon] = createSignal("tabler:file-unknown")
   const [url, setUrl] = createSignal("")
+  const [display, setDisplay] = createSignal(true)
 
-  const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore()
+  createEffect(() => {
+    if (target() != undefined) {
+      setName(target()!.name)
+      setIcon(target()!.icon)
+      setUrl(target()!.url)
+      setDisplay(target()!.enable)
+    }
+  })
+
+  const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
 
   const onSubmit = () => {
     if (name() == "" || icon() == "" || url() == "") {
@@ -27,13 +37,14 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
       return;
     }
 
-    createMenuItem(name(), icon(), url()).then((res) => {
+    updateMenuItem(target()!.id, name(), icon(), url(), display()).then((res) => {
       newSuccessAlert("创建成功")
       revalidate(getMenuItems.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
-      newErrorAlert(`创建失败：${err}`)
+      newErrorAlert(`更新失败：${err}`)
+      // TODO: Alert
     })
   }
 
@@ -41,12 +52,13 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
     setName("")
     setIcon("file-unknown")
     setUrl("")
-    setOpen(false)
+    setDisplay(true)
+    setTarget()
   }
 
   return <>
     <Modal
-      open={open()}
+      open={target() != undefined}
       onClose={() => { onCancel() }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -69,11 +81,10 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          添加菜单项
+          修改菜单项
         </Typography>
 
         <div class='flex flex-col gap-2'>
-          <InputLabel>显示名称</InputLabel>
           <TextField
             size='small'
             label="显示名称"
@@ -81,11 +92,11 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
             onChange={(_event, value) => {
               setName(value)
             }} />
-
-          <InputLabel>图标</InputLabel>
-          <IconInput icon={icon} setIcon={setIcon} />
-
-          <InputLabel>URL</InputLabel>
+          <IconInput icon={icon} setIcon={setIcon}/>
+          <FormControlLabel
+            control={<Switch checked={display()} onChange={() => { setDisplay((x) => !x) }} />}
+            label="是否启用"
+          />
           <TextField
             size='small'
             label="URL"

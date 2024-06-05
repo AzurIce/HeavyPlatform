@@ -1,8 +1,8 @@
 import { Box, Button, Checkbox, Modal, TextField, Typography, useTheme } from "@suid/material"
 import { For, Signal, createEffect, createSignal } from "solid-js"
-import { updateUsergroup } from "../../lib/axios/api"
+import { updateUsergroup } from "../../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
-import { AlertsStore, Usergroup, getMenuItems, getUsergroup, getUsergroups } from "../../lib/store"
+import { AlertsStore, Usergroup, getMenuItems, getUsergroup, getUsergroups } from "../../../lib/store"
 
 export default function UpdateUsergroupModal(props: { target: Signal<Usergroup | undefined> }) {
   const [target, setTarget] = props.target;

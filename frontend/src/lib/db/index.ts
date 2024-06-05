@@ -2,6 +2,7 @@ import { LocalStoragePreset } from "lowdb/browser";
 
 import 寻访凭证 from "../../assets/寻访凭证.png";
 import 中坚寻访凭证 from "../../assets/中坚寻访凭证.png";
+import 商人星野 from "../../assets/商人星野.png";
 
 // Delete only sets the corresponding index to undefined,
 // in this way we can make sure the id of the manager is corresponding to it's index
@@ -23,7 +24,7 @@ const defaultData: Data = {
     {
       id: 0,
       parent_id: 0,
-      category_id: 0,
+      category_id: 1,
       name: "寻访凭证",
       price: 10,
       imgs: [寻访凭证],
@@ -34,7 +35,7 @@ const defaultData: Data = {
     {
       id: 1,
       parent_id: 0,
-      category_id: 0,
+      category_id: 1,
       name: "中坚寻访凭证",
       price: 7,
       imgs: [中坚寻访凭证],
@@ -46,10 +47,10 @@ const defaultData: Data = {
     {
       id: 2,
       parent_id: 2,
-      category_id: 1,
+      category_id: 0,
       name: "犹格索托斯的庭院 商人星野",
       price: 7,
-      imgs: [中坚寻访凭证],
+      imgs: [商人星野],
       description: "已经......回不去了......",
       specification: "不会真的有人会买店老板吧",
       detail: "只要钱到位，老板也可以买下来"
@@ -57,8 +58,10 @@ const defaultData: Data = {
   ],
   goodCategories: [{
     id: 0,
+    name: "默认类别",
+  }, {
+    id: 1,
     name: "明日方舟",
-    goods: [0]
   }]
 };
 
@@ -117,8 +120,8 @@ const update = async function <T extends { id: number }>(target: { data: () => (
 // good
 export type Good = {
   id: number,
-  parent_id: number | undefined,
-  category_id: number | undefined,
+  parent_id: number,
+  category_id: number,
   name: string,
   price: number,
   imgs: string[],        // 详情页首部的图片
@@ -130,7 +133,6 @@ export type Good = {
 export type GoodCategory = {
   id: number,
   name: string,
-  goods: number[],
 }
 
 export const goods = {
@@ -174,6 +176,28 @@ export const goods = {
     const good = await this.getById(id);
     await update(this, good);
   }
+}
+
+export const goodCategories = {
+  data: () => db.data.goodCategories,
+  getAll: async function () { return await getAll(this) },
+  getById: async function (id: number) { return await getById(this, id) },
+  delete: async function (id: number) {
+    if (id == 0) return Promise.reject("cannot delete default category");
+    await deleteById(this, id);
+  },
+
+  create: async function (name: string): Promise<void> {
+    const id = await newId(this);
+
+    const element: GoodCategory = { id, name };
+    return await create(this, element);
+  },
+
+  update: async function (id: number, name: string): Promise<void> {
+    const element: GoodCategory = { id, name };
+    return await update(this, element);
+  },
 }
 
 // MenuItem

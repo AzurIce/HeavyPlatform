@@ -1,29 +1,35 @@
-import { Box, Button, Checkbox, InputLabel, Modal, TextField, Typography, useTheme } from "@suid/material"
-import { For, Signal, createSignal } from "solid-js"
-import { createUsergroup } from "../../lib/axios/api"
-import { createAsync, revalidate } from "@solidjs/router"
-import { AlertsStore, getMenuItems, getUsergroups } from "../../lib/store"
+import { Box, Button, InputLabel, Modal, TextField, Typography, useTheme } from "@suid/material"
+import { Signal, createSignal } from "solid-js"
+import { createMenuItem } from "../../../lib/axios/api"
+import { revalidate } from "@solidjs/router"
+import { AlertsStore, getMenuItems } from "../../../lib/store"
+import IconInput from "../../IconInput"
 
-export default function CreateUsergroupModal(props: { open: Signal<boolean> }) {
+export default function CreateManagerModal(props: { open: Signal<boolean> }) {
   const [open, setOpen] = props.open
   const theme = useTheme()
 
-  const menuItems = createAsync(() => getMenuItems());
-
   const [name, setName] = createSignal("")
-  const [access, setAccess] = createSignal<number[]>([])
+  const [icon, setIcon] = createSignal("file-unknown")
+  const [url, setUrl] = createSignal("")
 
   const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore()
 
   const onSubmit = () => {
+    if (name() == "" || icon() == "" || url() == "") {
       if (name() == "") {
         newWarningAlert("名称不能为空");
-        return;
+      } else if (icon() == "") {
+        newWarningAlert("图标不能为空");
+      } else if (url() == "") {
+        newWarningAlert("URL 不能为空");
       }
+      return;
+    }
 
-    createUsergroup(name(), access()).then((res) => {
+    createMenuItem(name(), icon(), url()).then((res) => {
       newSuccessAlert("创建成功")
-      revalidate(getUsergroups.key)
+      revalidate(getMenuItems.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
@@ -33,7 +39,8 @@ export default function CreateUsergroupModal(props: { open: Signal<boolean> }) {
 
   const onCancel = () => {
     setName("")
-    setAccess([])
+    setIcon("file-unknown")
+    setUrl("")
     setOpen(false)
   }
 
@@ -62,39 +69,31 @@ export default function CreateUsergroupModal(props: { open: Signal<boolean> }) {
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          添加用户组
+          添加菜单项
         </Typography>
 
         <div class='flex flex-col gap-2'>
-          <InputLabel>名称</InputLabel>
+          <InputLabel>显示名称</InputLabel>
           <TextField
             size='small'
-            label="名称"
+            label="显示名称"
             value={name()}
             onChange={(_event, value) => {
               setName(value)
             }} />
-          <InputLabel>可访问菜单项</InputLabel>
-          <div class="max-w-100 overflow-y-scroll">
-            <For each={menuItems()}>{(item) =>
-              <>
-                <div class="flex items-center">
-                  <Checkbox
-                    checked={access().find(i => i == item.id) != undefined}
-                    onChange={(event, checked) => {
-                      if (checked) {
-                        setAccess([...access(), item.id])
-                      } else {
-                        setAccess(access().filter(i => i != item.id))
-                      }
-                    }}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                  <span>{item.name}</span>
-                </div>
-              </>}
-            </For>
-          </div>
+
+          <InputLabel>图标</InputLabel>
+          <IconInput icon={icon} setIcon={setIcon} />
+
+          <InputLabel>URL</InputLabel>
+          <TextField
+            size='small'
+            label="URL"
+            value={url()}
+            onChange={(_event, value) => {
+              setUrl(value)
+            }}
+          />
         </div>
 
         <div class="flex gap-4">

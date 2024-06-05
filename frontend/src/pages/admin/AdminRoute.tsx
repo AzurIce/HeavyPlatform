@@ -4,6 +4,7 @@ import MainWrapper from "./Main/MainWrapper";
 import MainPage from "./Main";
 import AccountPage from "./Main/Account";
 import MenuItemPage from "./Main/MenuItem";
+import GoodPage from "./Main/Good";
 
 const AdminRoute = () => <>
   <Route path="/admin">
@@ -12,6 +13,7 @@ const AdminRoute = () => <>
       <Route path="/" component={MainPage} />
       <Route path="/menu-item" component={MenuItemPage}></Route>
       <Route path="/account" component={AccountPage}></Route>
+      <Route path="/good" component={GoodPage}></Route>
     </Route>
   </Route>;
 </>

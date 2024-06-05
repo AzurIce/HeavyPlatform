@@ -3,7 +3,7 @@ import { Home, Logout, PersonAdd, Settings } from "@suid/icons-material";
 import { AdminLoginInfoStore, LoginInfoStore } from '../../../lib/store';
 import { Component, createSignal, onMount } from 'solid-js';
 import { RouteSectionProps, useNavigate } from '@solidjs/router';
-import SideBar from '../../../components/SideBar';
+import SideBar from '../../../components/Admin/SideBar';
 import { blue, deepOrange, deepPurple, grey, purple } from '@suid/material/colors';
 
 function AccountMenu() {
