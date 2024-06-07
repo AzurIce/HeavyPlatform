@@ -1,11 +1,19 @@
 # 轻量化平台开发大作业
 
+## 运行
+
+推荐使用 pnpm（因为 `justfile` 中的命令用的是 pnpm）
+
+- `just frontend`：启动前端
+- `just backend`：启动后端
+
 ## 目录结构
 
 - `/docs`：一些文档和笔记
     - `assets`：存放所有文档中的资源（比如截图）
 - `/frontend`：前端项目的根目录
     - `dist`：**构建产物**
+- `/backend`：后端端项目的根目录
 
 
 ## 使用技术
@@ -45,10 +53,10 @@
     <div class="w-full bg-white flex flex-col"></div>
     ```
 
-<s>引入后端</s>（懒逼了，直接 localstorage 搓个 db 模拟下后端接口响应好了）：
+引入后端：
 
-- <s>[Axios](https://github.com/axios/axios)：用于前端向后端发请求</s>
-- <s>Golang + Gin</s>
+- [Axios](https://github.com/axios/axios)：用于前端向后端发请求
+- 手搓基于 json 的建议 key-value 数据库
 
 ## 第三次作业
 
