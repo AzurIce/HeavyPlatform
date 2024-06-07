@@ -1,22 +1,17 @@
 import { Add, Delete, Edit, Key, Restore } from "@suid/icons-material";
-import { Chip, Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Card, CardMedia, CardActions, useTheme, Modal, InputLabel, TextField, Select, MenuItem } from "@suid/material";
+import { Chip, Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Card, CardMedia, CardActions, useTheme, Modal, InputLabel, TextField, Select, MenuItem, InputAdornment } from "@suid/material";
 import { Component, For, Setter, Show, Signal, createEffect, createSignal } from "solid-js";
 import { createAsync, revalidate } from "@solidjs/router";
-import { AdminLoginInfoStore, AlertsStore, Good, Manager, Usergroup, getCategories, getGood, getGoods, getManagers, getMenuItems, getUsergroups } from "../../../../lib/store";
+import { AdminLoginInfoStore, AlertsStore, Good, Manager, getCategories, getGood, getGoods, getManagers, getUsergroups } from "../../../../lib/store";
 
 import CreateManagerModal from "../../../../components/Admin/Manager/CreateManagerModal";
 import UpdateManagerModal from "../../../../components/Admin/Manager/UpdateManagerModal";
 import { DeleteManagerModalButton } from "../../../../components/Admin/Manager";
 import { resetDb } from "../../../../lib/db";
-import CreateUsergroupModal from "../../../../components/Admin/Usergroup/CreateUsergroupModal";
-import UpdateUsergroupModal from "../../../../components/Admin/Usergroup/UpdatUsergroupModal";
-import { DeleteUsergroupModalButton } from "../../../../components/Admin/Usergroup";
-import UpdateManagerPasswordModal from "../../../../components/Admin/Manager/UpdateManagerPassword";
 import { DeleteButton } from "../../../../components/Admin/common";
 import { createGood, deleteGood } from "../../../../lib/axios/api";
 import { createStore } from "solid-js/store";
 import ImgInput from "../../../../components/ImgInput";
-
 
 const onRevalidate = (id: number) => {
   revalidate(getGoods.key)
@@ -40,19 +35,25 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
   };
 
   const categories = createAsync(() => getCategories());
+  const [price, setPrice] = createSignal("0");
   const [good, setGood] = createStore(emptyGood);
   const imgsSignal = createSignal<string[]>([]);
   const [imgs, setImgs] = imgsSignal;
   createEffect(() => {
     setGood("imgs", [...imgs()]);
   })
+  createEffect(() => {
+    setGood("price", parseFloat(price()))
+  })
 
   const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
 
   const onSubmit = () => {
-    if (false) {
+      if (Number.isNaN(good.price)) {
+        newWarningAlert("价格不合法")
+        return
+      }
       // TODO: validate data
-    }
 
     createGood(good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
       newSuccessAlert("创建成功")
@@ -66,6 +67,7 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
 
   const onCancel = () => {
     setGood(emptyGood);
+    setPrice("0");
     setOpen(false);
   }
 
@@ -124,6 +126,20 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
 
           <InputLabel>图片</InputLabel>
           <ImgInput imgs={imgsSignal} />
+
+          <InputLabel>商品价格</InputLabel>
+          <TextField
+            size='small'
+            label="商品价格"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">¥</InputAdornment>
+              ),
+            }}
+            value={price()}
+            onChange={(_event, value) => {
+              setPrice(value)
+            }} />
 
           <InputLabel>描述</InputLabel>
           <TextField
@@ -189,7 +205,7 @@ const GoodCard: Component<{ id: number, setUpdateTarget: Setter<Good | undefined
         <span>规格参数：{good()?.specification}</span>
         <span>详细信息：{good()?.detail}</span>
       </div>
-      <span>价格：{good()?.price}¥</span>
+      <span class="max-w-20 overflow-hidden text-ellipsis">价格：¥{good()?.price}</span>
       <CardActions>
         <Show when={good() != undefined}>
           <ButtonGroup>
@@ -241,7 +257,7 @@ const GoodPaper: Component = () => {
   </>
 }
 
-const ManagerAcountPaper: Component = () => {
+const GoodCategoryPaper: Component = () => {
   const createShow = createSignal(false);
   const [getCreateShow, setCreateShow] = createShow;
   const updateTarget = createSignal<Manager | undefined>();
@@ -256,7 +272,7 @@ const ManagerAcountPaper: Component = () => {
   return <>
     <CreateManagerModal open={createShow} />
     <UpdateManagerModal target={updateTarget} />
-    <UpdateManagerPasswordModal target={updatePasswordTarget} />
+    {/* <UpdateManagerPasswordModal target={updatePasswordTarget} /> */}
     {/* <DeleteManagerModal target={deleteTarget} /> */}
 
     <Paper sx={{
