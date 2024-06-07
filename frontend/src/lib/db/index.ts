@@ -1,4 +1,4 @@
-import { LocalStoragePreset } from "lowdb/browser";
+// import { LocalStoragePreset } from "lowdb/browser";
 import { GRBackendWrapper } from "./grBackendWrapper";
 
 import 寻访凭证 from "../../assets/寻访凭证.png";
