@@ -50,7 +50,7 @@ const defaultData: Data = {
       parent_id: 2,
       category_id: 0,
       name: "犹格索托斯的庭院 商人星野",
-      price: 7,
+      price: 999999999,
       imgs: [商人星野],
       description: "已经......回不去了......",
       specification: "不会真的有人会买店老板吧",
