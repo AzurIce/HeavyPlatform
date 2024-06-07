@@ -1,4 +1,5 @@
-import { LocalStoragePreset } from "lowdb/browser";
+// import { LocalStoragePreset } from "lowdb/browser";
+import { GRBackendWrapper } from "./grBackendWrapper";
 
 import 寻访凭证 from "../../assets/寻访凭证.png";
 import 中坚寻访凭证 from "../../assets/中坚寻访凭证.png";
@@ -65,7 +66,8 @@ const defaultData: Data = {
   }]
 };
 
-const db = LocalStoragePreset<Data>("db", defaultData);
+// const db = LocalStoragePreset<Data>("db", defaultData);
+const db = new GRBackendWrapper<Data>("db", defaultData);
 
 export const resetDb = () => {
   db.data = defaultData;
