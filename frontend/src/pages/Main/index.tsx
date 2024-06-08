@@ -85,9 +85,7 @@ const Carousel: Component<CarouselProps> = ({ ids }) => {
 const Main = () => {
   const goods = createAsync(() => getGoods())
 
-  const carouselIds = [
-    0, 1, 2
-  ]
+  const carouselIds = [0, 1, 2]
 
   return (
     <Box>

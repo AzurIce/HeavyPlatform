@@ -3,7 +3,6 @@ import { Router, Route } from "@solidjs/router";
 
 import NotFound from './pages/NotFound';
 import AdminRoute from './pages/Admin/AdminRoute';
-import Login from './pages/Login';
 import Playground from './pages/Playground';
 import AlertList from './components/AlertList';
 
@@ -15,10 +14,10 @@ import Cart from './pages/Main/Cart';
 import Me from './pages/Main/Me';
 
 // Details pages
-import CategoriesWrapper from './pages/Categories/CategoriesWrapper';
-import Categories from './pages/Categories';
 import GoodsWrapper from './pages/Goods/GoodsWrapper';
 import Goods from './pages/Goods';
+import OrdersWrapper from './pages/Orders/OrderWrapper';
+import Orders from './pages/Orders';
 
 // TODO: Orders
 
@@ -26,21 +25,28 @@ const App: Component = () => {
   return <>
     <AlertList />
     <Router>
-      <Route path="/login" component={Login} />
-
       <Route path="/" component={MainWrapper}>
+        {/* 主页：轮播图+搜索框+商品列表 */}
         <Route path="/" component={Main} />
+        {/* 分类：分类菜单+商品列表 */}
         <Route path="/category" component={Category} />
+        {/* TODO: 购物车 */}
         <Route path="/cart" component={Cart} />
+        {/* TODO: 我的 */}
         <Route path="/me" component={Me} />
       </Route>
 
-      <Route path="/categories" component={CategoriesWrapper}>
-        <Route path="/:id" component={Categories} />
-      </Route>
 
       <Route path="/goods" component={GoodsWrapper}>
+        {/* 商品详情页 */}
         <Route path="/:id" component={Goods} />
+      </Route>
+
+      <Route path="/orders" component={OrdersWrapper}>
+        {/* TODO: 订单列表页 */}
+        <Route path="/" component={Orders} />
+        {/* TODO: 订单详情页 */}
+        <Route path="/:id" component={Orders} />
       </Route>
 
       <AdminRoute />
