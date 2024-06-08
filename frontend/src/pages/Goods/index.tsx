@@ -17,7 +17,7 @@ const GoodDetailPage = () => {
   })
 
   const handleBackClick = () => {
-    navigate('/')
+    navigate(-1)
   }
 
   return (
