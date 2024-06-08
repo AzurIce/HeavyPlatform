@@ -1,51 +1,61 @@
 import { Container, AppBar, Toolbar, Box, TextField, useTheme, Grid, CardMedia } from "@suid/material"
-import { Component, For, createEffect, createSignal, onCleanup } from "solid-js"
+import { Component, For, createEffect, createSignal, onCleanup, onMount } from "solid-js"
 import GoodCard from "../../components/GoodCard"
-import { createAsync } from "@solidjs/router"
+import { createAsync, useNavigate } from "@solidjs/router"
 import { getGood, getGoods } from "../../lib/store"
 import { transform } from "@suid/vite-plugin"
-
-interface GridGoodCardProps {
-  id: number
-}
 
 interface CarouselProps {
   ids: number[]
 }
 
-// CSS 动画样式
-const boxSx = {
-};
-
 const Carousel: Component<CarouselProps> = ({ ids }) => {
-  const [currentIndex, setCurrentIndex] = createSignal(0);
-  const [isLoaded, setIsLoaded] = createSignal(false);
+  const [currentIndex, setCurrentIndex] = createSignal(0)
+  const [isLoaded, setIsLoaded] = createSignal(false)
+  const navigate = useNavigate()
 
   const nextImage = () => {
-    setIsLoaded(false);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % ids.length);
-  };
+    setIsLoaded(false)
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % ids.length)
+  }
 
   const prevImage = () => {
-    setIsLoaded(false);
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + ids.length) % ids.length);
-  };
+    setIsLoaded(false)
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + ids.length) % ids.length)
+  }
 
-  const good = createAsync(() => getGood(ids[currentIndex()]));
+  const good = createAsync(() => getGood(ids[currentIndex()]))
 
   // 自动翻页
-  createEffect(() => {
-    const intervalId = setInterval(nextImage, 3000); // 每3秒翻页一次
-    onCleanup(() => clearInterval(intervalId)); // 组件卸载时清除定时器
-  });
+  onMount(() => {
+    const intervalId = setInterval(nextImage, 3000) // 每3秒翻页一次
+    onCleanup(() => clearInterval(intervalId)) // 组件卸载时清除定时器
+  })
+
+  // Router Navigation
+  const handleClick = () => {
+    navigate(`/goods/${ids[currentIndex()]}`)
+  }
 
   return (
-    <Box sx={{...boxSx, position: 'relative', width: '100%', minHeight: '200px', '& img': {
-      position: 'absolute',
-      top: 0,
-      left: '30%',
-      width: '40%',
-      height: '100%',
+    <Box sx={{
+      alignItems: "center",
+      transition: "background-color 0.3s ease",
+      position: 'relative',
+      width: '100%',
+      minHeight: '200px',
+      border: 'solid 2px rgba(0, 0, 0, 0.2)',
+      borderRadius: '8px',
+      "&:hover": {
+        cursor: "pointer",
+        backgroundColor: "#eeeeee", // 灰色背景
+      },
+      '& img': {
+        position: 'absolute',
+        top: 0,
+        left: '30%',
+        width: '40%',
+        height: '100%',
     }}}>
       <For each={ids}>
         {(id, index) => (
@@ -58,14 +68,19 @@ const Carousel: Component<CarouselProps> = ({ ids }) => {
               zIndex: index() === currentIndex() ? 1 : 0,
             }}
             onLoad={() => setIsLoaded(true)}
+            onClick={handleClick}
           />
         )}
       </For>
-      <Box sx={{ position: 'absolute', top: '50%', left: '10px', cursor: 'pointer' }} onClick={prevImage}>{"<"}</Box>
-      <Box sx={{ position: 'absolute', top: '50%', right: '10px', cursor: 'pointer' }} onClick={nextImage}>{">"}</Box>
+      <Box sx={{ position: 'absolute', top: '10%', left: '10px', cursor: 'pointer', width: 'auto', height: '80%', display: 'flex', alignItems: 'center',
+        userSelect: 'none', "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.3)", },
+      }} onClick={prevImage}>&nbsp;&nbsp;&nbsp;&nbsp;{"<"}&nbsp;&nbsp;&nbsp;&nbsp;</Box>
+      <Box sx={{ position: 'absolute', top: '10%',right: '10px', cursor: 'pointer', width: 'auto', height: '80%', display: 'flex', alignItems: 'center',
+        userSelect: 'none', "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.3)", },
+      }} onClick={nextImage}>&nbsp;&nbsp;&nbsp;&nbsp;{">"}&nbsp;&nbsp;&nbsp;&nbsp;</Box>
     </Box>
-  );
-};
+  )
+}
 
 const Main = () => {
   const goods = createAsync(() => getGoods())
@@ -75,10 +90,10 @@ const Main = () => {
   ]
 
   return (
-    <Container>
+    <Box>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField fullWidth placeholder="搜索" variant="outlined" style={{ margin: "16px 0 0 0" }} />
+          <TextField fullWidth placeholder="搜索" variant="outlined" sx={{ margin: "16px 0 0 0", border: 'solid 2px rgba(0, 0, 0, 0.2)', borderRadius: '8px' }} />
         </Grid>
 
         <Grid item xs={12}>
@@ -92,7 +107,7 @@ const Main = () => {
         }</For>
 
       </Grid>
-    </Container>
+    </Box>
   )
 }
 

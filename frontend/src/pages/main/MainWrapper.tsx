@@ -1,8 +1,8 @@
 import { RouteSectionProps, useNavigate } from "@solidjs/router";
-import { Component, onMount } from "solid-js";
+import { Component } from "solid-js";
 
 import { createSignal } from "solid-js"
-import { Container, AppBar, Toolbar, BottomNavigation, BottomNavigationAction, Box, TextField } from "@suid/material"
+import { Container, BottomNavigation, BottomNavigationAction } from "@suid/material"
 import HomeIcon from "@suid/icons-material/Home"
 import CategoryIcon from "@suid/icons-material/Category"
 import ShoppingCartIcon from "@suid/icons-material/ShoppingCart"
@@ -34,9 +34,10 @@ const MainWrapper: Component<RouteSectionProps> = (props) => {
   }
 
   return (
-    <Container>
+    <Container sx={{width:'100%', padding:'0 25px'}}>
       {props.children}
-      <BottomNavigation value={value()} onChange={handleNavigationChange} showLabels style={{ position: "fixed", bottom: 0, width: "100%" }}>
+      <BottomNavigation style={{ width: "100%" }} />
+      <BottomNavigation value={value()} onChange={handleNavigationChange} showLabels style={{ position: "fixed", bottom: 0, left: 0, width: "100%" }}>
         <BottomNavigationAction label="首页" icon={<HomeIcon />} />
         <BottomNavigationAction label="分类" icon={<CategoryIcon />} />
         <BottomNavigationAction label="购物车" icon={<ShoppingCartIcon />} />
