@@ -36,7 +36,6 @@ const App: Component = () => {
         <Route path="/me" component={Me} />
       </Route>
 
-
       <Route path="/goods" component={GoodsWrapper}>
         {/* 商品详情页 */}
         <Route path="/:id" component={Goods} />

@@ -186,6 +186,7 @@ export const getCategories = cache(async () => {
 
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
+import { useMediaQuery } from "@suid/material";
 
 const iconsTrie = new Trie();
 const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);
@@ -197,3 +198,5 @@ export const searchIcons = (prefix: string): string[] => {
   }
   return iconsTrie.search(prefix)
 }
+
+export const isMobile = useMediaQuery("(max-width: 600px)")
