@@ -196,6 +196,7 @@ export const getGoodCategories = cache(async () => {
 import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";
 import { goodCategoriesApi, goodsApi, managersApi, menuItemsApi, userGroupsApi } from "./axios/api";
+import { useMediaQuery } from "@suid/material";
 
 const iconsTrie = new Trie();
 const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);
@@ -220,3 +221,4 @@ export const resetAllData = () => {
   revalidate(getGoodsByGroupId.key)
   revalidate(getGoodCategories.key)
 }
+export const isMobile = useMediaQuery("(max-width: 600px)")

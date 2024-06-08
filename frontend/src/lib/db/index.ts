@@ -4,6 +4,15 @@ import { GRBackendWrapper } from "./grBackendWrapper";
 import 寻访凭证 from "../../assets/寻访凭证.png";
 import 中坚寻访凭证 from "../../assets/中坚寻访凭证.png";
 import 商人星野 from "../../assets/商人星野.png";
+import 凑阿库娅1 from "../../assets/MinatoAqua1.png";
+import 凑阿库娅2 from "../../assets/MinatoAqua2.jpg";
+import 凑阿库娅3 from "../../assets/MinatoAqua3.jpg";
+import 未花 from "../../assets/未花.png";
+import 真纪 from "../../assets/真纪.png";
+import 梓 from "../../assets/梓.png";
+import 日富美 from "../../assets/日富美.png";
+import 玛丽 from "../../assets/玛丽.png";
+import 诺瓦 from "../../assets/诺瓦.png";
 
 // Delete only sets the corresponding index to undefined,
 // in this way we can make sure the id of the manager is corresponding to it's index
@@ -56,6 +65,107 @@ const defaultData: Data = {
       specification: "不会真的有人会买店老板吧",
       detail: "只要钱到位，老板也可以买下来"
     },
+    // 【凑阿库娅】
+    {
+      id: 3,
+      parent_id: 0,
+      category_id: 2,
+      name: "凑阿库娅的😘照片",
+      price: 10,
+      imgs: [凑阿库娅1],
+      description: "你知道的，我一直是凑阿库娅厨",
+      specification: "凑阿库娅可爱捏",
+      detail: "凑阿库娅是日本Vtuber，所属Hololive Production。她是第一期ID成员，是Hololive的第一位海外成员"
+    },
+    {
+      id: 4,
+      parent_id: 0,
+      category_id: 2,
+      name: "凑阿库娅在整理头发",
+      price: 12,
+      imgs: [凑阿库娅2],
+      description: "你知道的，我一直是凑阿库娅厨",
+      specification: "凑阿库娅可爱捏",
+      detail: "凑阿库娅是日本Vtuber，所属Hololive Production。她是第一期ID成员，是Hololive的第一位海外成员"
+    },
+    {
+      id: 5,
+      parent_id: 0,
+      category_id: 2,
+      name: "凑阿库娅的带耳机照片",
+      price: 11,
+      imgs: [凑阿库娅3],
+      description: "你知道的，我一直是凑阿库娅厨",
+      specification: "凑阿库娅可爱捏",
+      detail: "凑阿库娅是日本Vtuber，所属Hololive Production。她是第一期ID成员，是Hololive的第一位海外成员"
+    },
+    // 【碧蓝档案】
+    {
+      id: 6,
+      parent_id: 0,
+      category_id: 3,
+      name: "未花",
+      price: 20,
+      imgs: [未花],
+      description: "你知道的，我一直是未花厨",
+      specification: "未花可爱捏",
+      detail: ""
+    },
+    {
+      id: 7,
+      parent_id: 0,
+      category_id: 3,
+      name: "真纪",
+      price: 21,
+      imgs: [真纪],
+      description: "你知道的，我一直是真纪厨",
+      specification: "真纪可爱捏",
+      detail: ""
+    },
+    {
+      id: 8,
+      parent_id: 0,
+      category_id: 3,
+      name: "梓",
+      price: 19,
+      imgs: [梓],
+      description: "你知道的，我一直是梓厨",
+      specification: "梓可爱捏",
+      detail: ""
+    },
+    {
+      id: 9,
+      parent_id: 0,
+      category_id: 3,
+      name: "日富美",
+      price: 21,
+      imgs: [日富美],
+      description: "你知道的，我一直是日富美厨",
+      specification: "日富美可爱捏",
+      detail: ""
+    },
+    {
+      id: 10,
+      parent_id: 0,
+      category_id: 3,
+      name: "玛丽",
+      price: 20,
+      imgs: [玛丽],
+      description: "你知道的，我一直是玛丽厨",
+      specification: "玛丽可爱捏",
+      detail: ""
+    },
+    {
+      id: 11,
+      parent_id: 0,
+      category_id: 0,
+      name: "诺瓦",
+      price: 20,
+      imgs: [诺瓦],
+      description: "你知道的，我一直是诺瓦厨",
+      specification: "诺瓦可爱捏",
+      detail: "星空列车与白的旅行~"
+    },
   ],
   goodCategories: [{
     id: 0,
@@ -63,6 +173,12 @@ const defaultData: Data = {
   }, {
     id: 1,
     name: "明日方舟",
+  }, {
+    id: 2,
+    name: "凑阿库娅",
+  }, {
+    id: 3,
+    name: "碧蓝档案",
   }]
 };
 
