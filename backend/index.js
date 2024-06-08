@@ -8,7 +8,7 @@ let chalk
 import('chalk').then(module => { chalk = module.default })
 
 const app = express()
-const PORT = process.env.PORT || 6666
+const PORT = process.env.PORT || 9999
 const DATA_FILE = path.join(__dirname, 'data.json')
 
 app.use(cors())
