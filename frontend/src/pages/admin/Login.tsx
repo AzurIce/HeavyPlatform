@@ -72,6 +72,7 @@ const LoginPage: Component = () => {
               onChange={(_event, value) => {
                 setPassword(value)
               }}
+              
             />
           </div>
           <div class='flex gap-2 items-center justify-center'>

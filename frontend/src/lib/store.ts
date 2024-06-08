@@ -1,4 +1,4 @@
-import { cache } from "@solidjs/router";
+import { cache, revalidate } from "@solidjs/router";
 import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
 import { getGoodAll, getGoodById, getGoodCategoryAll, getManagerAll, getManagerById, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
@@ -186,6 +186,7 @@ export const getCategories = cache(async () => {
 
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
+import { resetDb } from "./db";
 
 const iconsTrie = new Trie();
 const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);
@@ -196,4 +197,16 @@ export const searchIcons = (prefix: string): string[] => {
     return _icons;
   }
   return iconsTrie.search(prefix)
+}
+
+export const resetAllData = () => {
+  resetDb()
+  revalidate(getManagers.key)
+  revalidate(getManager.key)
+  revalidate(getMenuItems.key)
+  revalidate(getUsergroups.key)
+  revalidate(getUsergroup.key)
+  revalidate(getGoods.key)
+  revalidate(getGood.key)
+  revalidate(getCategories.key)
 }

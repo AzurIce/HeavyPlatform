@@ -2,12 +2,11 @@ import { Add, Delete, Edit, Key, Restore } from "@suid/icons-material";
 import { Chip, Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@suid/material";
 import { Component, For, Show, createSignal } from "solid-js";
 import { createAsync } from "@solidjs/router";
-import { AdminLoginInfoStore, Manager, Usergroup, getManagers, getMenuItems, getUsergroups } from "../../../../lib/store";
+import { AdminLoginInfoStore, Manager, Usergroup, getManagers, getMenuItems, getUsergroups, resetAllData } from "../../../../lib/store";
 
 import CreateManagerModal from "../../../../components/Admin/Manager/CreateManagerModal";
 import UpdateManagerModal from "../../../../components/Admin/Manager/UpdateManagerModal";
 import { DeleteManagerModalButton } from "../../../../components/Admin/Manager";
-import { resetDb } from "../../../../lib/db";
 import CreateUsergroupModal from "../../../../components/Admin/Usergroup/CreateUsergroupModal";
 import UpdateUsergroupModal from "../../../../components/Admin/Usergroup/UpdatUsergroupModal";
 import { DeleteUsergroupModalButton } from "../../../../components/Admin/Usergroup";
@@ -43,7 +42,7 @@ const UserGroupPaper: Component = () => {
       <Typography variant="h6">用户组列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加用户组<Add /></Button>
-        <Button onClick={() => { resetDb() }} color="error">重置数据库<Restore /></Button>
+        <Button onClick={() => { resetAllData() }} color="error">重置数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -123,7 +122,7 @@ const ManagerAcountPaper: Component = () => {
       <Typography variant="h6">用户列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加用户<Add /></Button>
-        <Button onClick={() => { resetDb() }}>重置数据库<Restore /></Button>
+        <Button onClick={() => { resetAllData() }}>重置数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

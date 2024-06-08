@@ -1,24 +1,25 @@
-import { Add, Delete, Edit, Key, Restore } from "@suid/icons-material";
-import { Chip, Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Card, CardMedia, CardActions, useTheme, Modal, InputLabel, TextField, Select, MenuItem, InputAdornment } from "@suid/material";
+import { Add, Delete, Edit, Restore } from "@suid/icons-material";
+import { Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Card, CardMedia, CardActions, useTheme, Modal, InputLabel, TextField, Select, MenuItem, InputAdornment } from "@suid/material";
 import { Component, For, Setter, Show, Signal, createEffect, createSignal } from "solid-js";
 import { createAsync, revalidate } from "@solidjs/router";
-import { AdminLoginInfoStore, AlertsStore, Good, Manager, getCategories, getGood, getGoods, getManagers, getUsergroups } from "../../../../lib/store";
+import { AlertsStore, Good, GoodCategory, getCategories, getGood, getGoods, resetAllData } from "../../../../lib/store";
 
-import CreateManagerModal from "../../../../components/Admin/Manager/CreateManagerModal";
-import UpdateManagerModal from "../../../../components/Admin/Manager/UpdateManagerModal";
-import { DeleteManagerModalButton } from "../../../../components/Admin/Manager";
-import { resetDb } from "../../../../lib/db";
 import { DeleteButton } from "../../../../components/Admin/common";
-import { createGood, deleteGood } from "../../../../lib/axios/api";
+import { createGood, deleteGood, deleteGoodCategory, updateGood } from "../../../../lib/axios/api";
 import { createStore } from "solid-js/store";
 import ImgInput from "../../../../components/ImgInput";
 
-const onRevalidate = (id: number) => {
+const onRevalidateGood = (id: number) => {
   revalidate(getGoods.key)
   revalidate(getGood.keyFor(id))
 }
 
-const DeleteGoodModalButton = DeleteButton<Good>("商品", deleteGood, onRevalidate);
+const onRevalidateGoodCategory = (id: number) => {
+  revalidate(getCategories.key)
+}
+
+const DeleteGoodModalButton = DeleteButton<Good>("商品", deleteGood, onRevalidateGood);
+const DeleteGoodCategoryModalButton = DeleteButton<GoodCategory>("商品分类", deleteGoodCategory, onRevalidateGoodCategory);
 
 const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
   const [open, setOpen] = props.open
@@ -96,7 +97,176 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          添加菜单项
+          添加商品
+        </Typography>
+
+        <div class='flex flex-col gap-2'>
+          <InputLabel>商品名称</InputLabel>
+          <TextField
+            size='small'
+            label="商品名称"
+            value={good.name}
+            onChange={(_event, value) => {
+              setGood("name", value)
+            }} />
+
+          <InputLabel>商品类别</InputLabel>
+          <Select
+            labelId="usergroup-select"
+            size="small"
+            value={good.category_id}
+            label="商品类别"
+            onChange={(e) => setGood("category_id", e.target.value)}
+          >
+            <For each={categories()}>{(item) =>
+              <>
+                <MenuItem value={item.id}>{item.name}</MenuItem>
+              </>}
+            </For>
+          </Select>
+
+          <InputLabel>图片</InputLabel>
+          <ImgInput imgs={imgsSignal} />
+
+          <InputLabel>商品价格</InputLabel>
+          <TextField
+            size='small'
+            label="商品价格"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">¥</InputAdornment>
+              ),
+            }}
+            value={price()}
+            onChange={(_event, value) => {
+              setPrice(value)
+            }} />
+
+          <InputLabel>描述</InputLabel>
+          <TextField
+            size='small'
+            label="描述"
+            value={good.description}
+            onChange={(_event, value) => {
+              setGood("description", value);
+            }}
+          />
+
+          <InputLabel>规格参数</InputLabel>
+          <TextField
+            size='small'
+            label="规格参数"
+            value={good.specification}
+            onChange={(_event, value) => {
+              setGood("specification", value);
+            }}
+          />
+
+          <InputLabel>详细信息</InputLabel>
+          <TextField
+            size='small'
+            label="详细信息"
+            value={good.detail}
+            onChange={(_event, value) => {
+              setGood("detail", value);
+            }}
+          />
+        </div>
+
+        <div class="flex gap-4">
+          <Button variant="contained" onClick={onSubmit}>提交</Button>
+          <Button variant="outlined" onClick={onCancel}>取消</Button>
+        </div>
+      </Box>
+    </Modal>
+  </>
+}
+
+const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = (props) => {
+  const [target, setTarget] = props.target
+  const theme = useTheme()
+
+  const emptyGood = {
+    id: 0,
+    category_id: 0,
+    name: "",
+    price: 0,
+    imgs: [] as string[],
+    description: "",
+    specification: "",
+    detail: "",
+  };
+
+  const categories = createAsync(() => getCategories());
+  const [price, setPrice] = createSignal("0");
+  const [good, setGood] = createStore(emptyGood);
+  const imgsSignal = createSignal<string[]>([]);
+  const [imgs, setImgs] = imgsSignal;
+  createEffect(() => {
+    if (target() != undefined) {
+      setGood({ ...target()! });
+      setPrice(target()!.price.toString());
+      setImgs([...target()!.imgs]);
+    }
+  })
+  createEffect(() => {
+    setGood("imgs", [...imgs()]);
+  })
+  createEffect(() => {
+    setGood("price", parseFloat(price()))
+  })
+
+  const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
+
+  const onSubmit = () => {
+      if (Number.isNaN(good.price)) {
+        newWarningAlert("价格不合法")
+        return
+      }
+      // TODO: validate data
+
+    updateGood(good.id, good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
+      newSuccessAlert("创建成功")
+      revalidate(getGoods.key)
+      onCancel()
+    }).catch((err) => {
+      console.log(err)
+      newErrorAlert(`创建失败：${err}`)
+    })
+  }
+
+  const onCancel = () => {
+    setGood(emptyGood);
+    setPrice("0");
+    setTarget();
+  }
+
+  return <>
+    <Modal
+      open={target() != undefined}
+      onClose={() => { onCancel() }}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "60%",
+          maxWidth: "1000px",
+          bgcolor: theme.palette.background.paper,
+          boxShadow: "24px",
+          borderRadius: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          p: 4,
+        }}
+      >
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          添加商品
         </Typography>
 
         <div class='flex flex-col gap-2'>
@@ -183,6 +353,7 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
 
 const GoodPage: Component = () => {
   return <>
+    <GoodCategoryPaper />
     <GoodPaper />
     {/* <UserGroupPaper />
     <ManagerAcountPaper /> */}
@@ -233,6 +404,7 @@ const GoodPaper: Component = () => {
 
   return <>
     <CreateGoodModal open={createShow} />
+    <UpdateGoodModal target={updateTarget} />
     {/* <UpdateUsergroupModal target={updateTarget} /> */}
 
     <Paper sx={{
@@ -244,7 +416,7 @@ const GoodPaper: Component = () => {
       <Typography variant="h6">商品列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加商品<Add /></Button>
-        <Button onClick={() => { resetDb() }} color="error">重置数据库<Restore /></Button>
+        <Button onClick={() => { resetAllData() }} color="error">重置数据库<Restore /></Button>
       </ButtonGroup>
       <div class="flex flex-col w-full gap-2">
         <For each={goods()}>{(item) =>
@@ -260,18 +432,12 @@ const GoodPaper: Component = () => {
 const GoodCategoryPaper: Component = () => {
   const createShow = createSignal(false);
   const [getCreateShow, setCreateShow] = createShow;
-  const updateTarget = createSignal<Manager | undefined>();
+  const updateTarget = createSignal<GoodCategory | undefined>();
   const [getUpdateTarget, setUpdateTarget] = updateTarget;
-  const updatePasswordTarget = createSignal<Manager | undefined>();
-  const [getUpdatePasswordTarget, setUpdatePasswordTarget] = updatePasswordTarget;
 
-  const usergroups = createAsync(() => getUsergroups());
-  const managers = createAsync(() => getManagers());
-  const { manager } = AdminLoginInfoStore();
+  const categories = createAsync(() => getCategories());
 
   return <>
-    <CreateManagerModal open={createShow} />
-    <UpdateManagerModal target={updateTarget} />
     {/* <UpdateManagerPasswordModal target={updatePasswordTarget} /> */}
     {/* <DeleteManagerModal target={deleteTarget} /> */}
 
@@ -281,23 +447,22 @@ const GoodCategoryPaper: Component = () => {
       flexDirection: "column",
       gap: 2
     }}>
-      <Typography variant="h6">用户列表</Typography>
+      <Typography variant="h6">商品分类</Typography>
       <ButtonGroup>
-        <Button onClick={() => { setCreateShow(true) }}>添加用户<Add /></Button>
-        <Button onClick={() => { resetDb() }}>重置数据库<Restore /></Button>
+        <Button onClick={() => { setCreateShow(true) }}>添加分类<Add /></Button>
+        <Button onClick={() => { resetAllData() }} color="error">重置数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell>用户名</TableCell>
-              <TableCell>用户组</TableCell>
+              <TableCell>分类名</TableCell>
               <TableCell>操作</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <For each={managers()}>
+            <For each={categories()}>
               {(item) => (
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -306,27 +471,14 @@ const GoodCategoryPaper: Component = () => {
                     {item.id}
                   </TableCell>
                   <TableCell>
-                    <span class="text-md">{item.username}</span>
-                    <Show when={item.id == 0}>
-                      <Chip label="Super Admin" color="error" size="small" sx={{ marginLeft: 1 }} />
-                    </Show>
-                    <Show when={item.id == manager()?.id}>
-                      <Chip label="You" color="primary" size="small" sx={{ marginLeft: 1 }} />
-                    </Show>
-
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    <span>{usergroups()!.find(g => g.id == item.usergroup)!.name}</span>
+                    <span class="text-md">{item.name}</span>
                   </TableCell>
                   <TableCell>
                     <ButtonGroup>
-                      <Button onClick={() => setUpdateTarget(item)} disabled={item.id == 0 || manager()?.id != 0}>
+                      <Button onClick={() => setUpdateTarget(item)} disabled={item.id == 0}>
                         <Edit />
                       </Button>
-                      <Button onClick={() => setUpdatePasswordTarget(item)} disabled={item.id == 0 || manager()?.id != 0}>
-                        <Key />
-                      </Button>
-                      <DeleteManagerModalButton target={() => item} disabled={() => item.id == 0 || manager()?.id != 0}><Delete /></DeleteManagerModalButton>
+                      <DeleteGoodCategoryModalButton target={() => item} disabled={() => item.id == 0}><Delete /></DeleteGoodCategoryModalButton>
                     </ButtonGroup>
                   </TableCell>
                 </TableRow>

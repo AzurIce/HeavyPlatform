@@ -2,9 +2,8 @@ import { Add, Delete, Edit, Restore } from "@suid/icons-material";
 import { Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Switch } from "@suid/material";
 import { Component, For, createSignal } from "solid-js";
 import { createAsync, revalidate } from "@solidjs/router";
-import { MenuItem, getMenuItems } from "../../../../lib/store";
+import { MenuItem, getMenuItems, resetAllData } from "../../../../lib/store";
 
-import { resetDb } from "../../../../lib/db";
 import CreateMenuItemModal from "../../../../components/Admin/MenuItem/CreateMenuItemModal";
 import UpdateMenuItemModal from "../../../../components/Admin/MenuItem/UpdateMenuItemModal";
 import { DeleteMenuItemModalButton } from "../../../../components/Admin/MenuItem";
@@ -41,7 +40,7 @@ const MenuItemPage: Component = () => {
       <Typography variant="h6">菜单项列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加菜单项<Add /></Button>
-        <Button onClick={() => { resetDb() }} color="error">重置数据库<Restore /></Button>
+        <Button onClick={() => { resetAllData() }} color="error">重置数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
