@@ -17,7 +17,8 @@ export const GoodCard: Component<{ id: number }> = (props) => {
     <Card
       elevation={1}
       sx={{
-        flex: "1 0 160px",
+        flex: "1 0 150px",
+        maxWidth: isMobile() ? 600 : 200,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

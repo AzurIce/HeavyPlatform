@@ -11,14 +11,17 @@ const Main = () => {
   const carouselIds = [0, 1, 2]
 
   return <>
-    <TextField placeholder="搜索" variant="outlined" sx={{backgroundColor: "white"}}/>
+    <div class="flex flex-col p-4 gap-4">
+      <TextField placeholder="搜索" variant="outlined" sx={{ backgroundColor: "white" }} />
 
-    <Carousel ids={carouselIds} />
+      <Carousel ids={carouselIds} />
 
-    <div class="flex flex-wrap gap-4 justify-between">
-      <For each={goods()}>{(item) =>
-        <GoodCard id={item.id} />
-      }</For>
+      <div class="flex flex-wrap gap-4 justify-between">
+        <For each={goods()}>{(item) =>
+          <GoodCard id={item.id} />
+        }</For>
+      </div>
+
     </div>
   </>
 }

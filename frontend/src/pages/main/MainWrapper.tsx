@@ -73,7 +73,7 @@ const MainWrapper: Component<RouteSectionProps> = (props) => {
       </Switch>
 
       <div class='grow flex w-full h-10'>
-        <div class="max-h-full m-4 w-full flex flex-col gap-4 overflow-y-auto">
+        <div class="max-h-full w-full overflow-y-auto">
           {props.children}
         </div>
       </div>
