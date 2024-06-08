@@ -8,7 +8,7 @@ import 商人星野 from "../../assets/商人星野.png";
 // Delete only sets the corresponding index to undefined,
 // in this way we can make sure the id of the manager is corresponding to it's index
 type Data = {
-  usergroups: (Usergroup | undefined)[]
+  userGroups: (Usergroup | undefined)[]
   managers: (Manager | undefined)[]
   menuItems: (MenuItem | undefined)[]
 
@@ -17,7 +17,7 @@ type Data = {
 }
 
 const defaultData: Data = {
-  usergroups: [{ id: 0, name: "默认用户组", access: [0] }],
+  userGroups: [{ id: 0, name: "默认用户组", access: [0] }],
   managers: [{ id: 0, usergroup: 0, username: "admin", password: "admin" }],
   menuItems: [{ id: 0, name: "主页", icon: "file-unknown", url: "/", enable: true }],
   goods: [
@@ -137,7 +137,7 @@ export type GoodCategory = {
   name: string,
 }
 
-export const goods = {
+export const goodsDb = {
   data: () => db.data.goods,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
@@ -180,7 +180,7 @@ export const goods = {
   }
 }
 
-export const goodCategories = {
+export const goodCategoriesDb = {
   data: () => db.data.goodCategories,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
@@ -211,7 +211,7 @@ type MenuItem = {
   enable: boolean,
 }
 
-export const menuItems = {
+export const menuItemsDb = {
   data: () => db.data.menuItems,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
@@ -232,7 +232,7 @@ export const menuItems = {
   delete: async function (id: number): Promise<void> {
     if (id == 0) return Promise.reject("cannot delete default menuItem")
     await deleteById(this, id);
-    for (let usergroup of usergroups.data()) {
+    for (let usergroup of usergroupsDb.data()) {
       if (usergroup != undefined) {
         usergroup.access = usergroup.access.filter((id) => db.data.menuItems[id] != undefined)
       }
@@ -248,14 +248,14 @@ type Usergroup = {
   access: number[] // 可以访问的菜单项 id
 }
 
-export const usergroups = {
-  data: () => db.data.usergroups,
+export const usergroupsDb = {
+  data: () => db.data.userGroups,
   getAll: async function () { return await getAll(this); },
   getById: async function (id: number) { return await getById(this, id); },
 
   create: async function (name: string, access: number[]): Promise<void> {
     for (let id of access) {
-      if (await menuItems.getById(id) == undefined) {
+      if (await menuItemsDb.getById(id) == undefined) {
         return Promise.reject("menu item not exist");
       }
     }
@@ -267,7 +267,7 @@ export const usergroups = {
 
   update: async function (id: number, name: string, access: number[]): Promise<void> {
     for (let id of access) {
-      if (await menuItems.getById(id) == undefined) {
+      if (await menuItemsDb.getById(id) == undefined) {
         return Promise.reject("menu item not exist");
       }
     }
@@ -280,7 +280,7 @@ export const usergroups = {
     if (id == 0) return Promise.reject("cannot delete default usergroup")
     await deleteById(this, id);
 
-    for (let manager of managers.data()) {
+    for (let manager of managersDb.data()) {
       if (manager != undefined && manager.usergroup == id) {
         manager.usergroup = 0;
       }
@@ -297,17 +297,22 @@ type Manager = {
   password: string,
 }
 
-export const managers = {
+export const managersDb = {
   data: () => db.data.managers,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
-  getByUsername: async function (username: string): Promise<Manager | undefined> {
+  getByUsername: async function (username: string): Promise<Manager> {
     const manager = db.data.managers.find((manager) => manager?.username == username);
+    if (manager == undefined) {
+      return Promise.reject("manager not exist");
+    }
     return manager;
   },
 
   create: async function (username: string, password: string, usergroup: number): Promise<void> {
-    if (await this.getByUsername(username) != undefined) {
+    try {
+      await this.getByUsername(username)
+    } catch {
       return Promise.reject("username already exists");
     }
     const id = await newId(this);

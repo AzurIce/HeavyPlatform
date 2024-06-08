@@ -5,9 +5,9 @@ import { createAsync, revalidate } from "@solidjs/router";
 import { AlertsStore, Good, GoodCategory, getGoodCategories, getGood, getGoods, resetAllData } from "../../../../lib/store";
 
 import { DeleteButton } from "../../../../components/Admin/common";
-import { createGood, createGoodCategory, deleteGood, deleteGoodCategory, updateGood, updateGoodCategory } from "../../../../lib/axios/api";
 import { createStore } from "solid-js/store";
 import ImgInput from "../../../../components/ImgInput";
+import { goodCategoriesApi, goodsApi } from "../../../../lib/axios/api";
 
 const onRevalidateGood = (id: number) => {
   revalidate(getGoods.key)
@@ -18,8 +18,8 @@ const onRevalidateGoodCategory = (id: number) => {
   revalidate(getGoodCategories.key)
 }
 
-const DeleteGoodModalButton = DeleteButton<Good>("商品", deleteGood, onRevalidateGood);
-const DeleteGoodCategoryModalButton = DeleteButton<GoodCategory>("商品分类", deleteGoodCategory, onRevalidateGoodCategory);
+const DeleteGoodModalButton = DeleteButton<Good>("商品", goodsApi.delete, onRevalidateGood);
+const DeleteGoodCategoryModalButton = DeleteButton<GoodCategory>("商品分类", goodCategoriesApi.delete, onRevalidateGoodCategory);
 
 const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
   const [open, setOpen] = props.open
@@ -56,7 +56,7 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
     }
     // TODO: validate data
 
-    createGood(good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
+    goodsApi.create(good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
       newSuccessAlert("创建成功")
       revalidate(getGoods.key)
       onCancel()
@@ -225,13 +225,13 @@ const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = (props)
     }
     // TODO: validate data
 
-    updateGood(good.id, good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
-      newSuccessAlert("创建成功")
+    goodsApi.update(good.id, good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
+      newSuccessAlert("更新成功")
       revalidate(getGoods.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
-      newErrorAlert(`创建失败：${err}`)
+      newErrorAlert(`更新失败：${err}`)
     })
   }
 
@@ -504,7 +504,7 @@ const CreateGoodCategoryModal: Component<{ open: Signal<boolean> }> = (props) =>
       return
     }
 
-    createGoodCategory(name()).then((res) => {
+    goodCategoriesApi.create(name()).then((res) => {
       newSuccessAlert("创建成功")
       revalidate(getGoods.key)
       onCancel()
@@ -585,13 +585,13 @@ const UpdateGoodCategoryModal: Component<{ target: Signal<GoodCategory | undefin
       return
     }
 
-    updateGoodCategory(target()!.id, name()).then((res) => {
-      newSuccessAlert("创建成功")
+    goodCategoriesApi.update(target()!.id, name()).then((res) => {
+      newSuccessAlert("更新成功")
       revalidate(getGoodCategories.key)
       onCancel()
     }).catch((err) => {
       console.log(err)
-      newErrorAlert(`创建失败：${err}`)
+      newErrorAlert(`更新失败：${err}`)
     })
   }
 

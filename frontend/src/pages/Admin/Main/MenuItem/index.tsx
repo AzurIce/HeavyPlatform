@@ -7,8 +7,8 @@ import { MenuItem, getMenuItems, resetAllData } from "../../../../lib/store";
 import CreateMenuItemModal from "../../../../components/Admin/MenuItem/CreateMenuItemModal";
 import UpdateMenuItemModal from "../../../../components/Admin/MenuItem/UpdateMenuItemModal";
 import { DeleteMenuItemModalButton } from "../../../../components/Admin/MenuItem";
-import { updateMenuItem } from "../../../../lib/axios/api";
 import { Icon } from "@iconify-icon/solid";
+import { menuItemsApi } from "../../../../lib/axios/api";
 
 const MenuItemPage: Component = () => {
   const createShow = createSignal(false);
@@ -19,7 +19,7 @@ const MenuItemPage: Component = () => {
   const menuItems = createAsync(() => getMenuItems());
 
   const onToggleItemDisplay = (item: MenuItem) => {
-    updateMenuItem(item.id, item.name, item.icon, item.url, !item.enable).then((res) => {
+    menuItemsApi.update(item.id, item.name, item.icon, item.url, !item.enable).then((res) => {
       revalidate(getMenuItems.key);
     }).catch((err) => {
       console.log(err)

@@ -1,117 +1,150 @@
-import { goodCategories, goods, managers, menuItems, usergroups } from '../../db';
+import { goodCategoriesDb, goodsDb, managersDb, menuItemsDb, usergroupsDb as userGroupsDb } from '../../db';
 import { Good, GoodCategory, Manager, MenuItem, Usergroup } from '../../store'
 
-export async function login(username: string, password: string): Promise<Manager> {
-  const manager = await managers.getByUsername(username);
-  if (manager?.password != password) {
-    return Promise.reject("username or password incorrect");
-  }
-  return Promise.resolve(manager);
-}
-
 // Managers
-export async function createManager(username: string, password: string, usergroup?: number): Promise<void> {
-  return await managers.create(username, password, usergroup || 0);
-}
+export const managersApi = {
+  login: async function (username: string, password: string): Promise<Manager> {
+    const manager = await managersDb.getByUsername(username);
+    if (manager?.password != password) {
+      return Promise.reject("username or password incorrect");
+    }
+    return Promise.resolve(manager);
+  },
 
-export async function updateManager(id: number, username: string, usergroup: number): Promise<void> {
-  return await managers.update(id, username, usergroup);
-}
+  getAll: async function (): Promise<Manager[]> {
+    return await managersDb.getAll();
+  },
 
-export async function updateManagerPassword(id: number, password: string): Promise<void> {
-  return await managers.updatePassword(id, password);
-}
+  getByUsername: async function (username: string): Promise<Manager> {
+    return await managersDb.getByUsername(username);
+  },
 
-export async function getManagerAll(): Promise<Manager[]> {
-  return await managers.getAll();
-}
+  getById: async function (id: number): Promise<Manager> {
+    return await managersDb.getById(id);
+  },
 
-export async function getManagerById(id: number): Promise<Manager> {
-  const manager = await managers.getById(id);
-  if (manager == undefined) {
-    return Promise.reject("usergroup not exist");
-  } else {
-    return manager;
+  create: async function (username: string, password: string, usergroup?: number): Promise<void> {
+    return await managersDb.create(username, password, usergroup || 0);
+  },
+
+  update: async function (id: number, username: string, usergroup: number): Promise<void> {
+    return await managersDb.update(id, username, usergroup);
+  },
+
+  updatePassword: async function (id: number, password: string): Promise<void> {
+    return await managersDb.updatePassword(id, password);
+  },
+
+  delete: async function (id: number): Promise<void> {
+    return await managersDb.delete(id);
   }
-}
-
-export async function deleteManager(id: number): Promise<void> {
-  return await managers.delete(id);
 }
 
 // MenuItems
-export async function createMenuItem(name: string, icon: string, url: string): Promise<void> {
-  return await menuItems.create(name, icon, url);
-}
+export const menuItemsApi = {
+  getAll: async function (): Promise<MenuItem[]> {
+    return await menuItemsDb.getAll();
+  },
 
-export async function updateMenuItem(id: number, name: string, icon: string, url: string, display: boolean): Promise<void> {
-  return await menuItems.update(id, name, icon, url, display);
-}
+  create: async function (name: string, icon: string, url: string): Promise<void> {
+    return await menuItemsDb.create(name, icon, url);
+  },
 
-export async function getMenuItemAll(): Promise<MenuItem[]> {
-  return await menuItems.getAll();
-}
+  update: async function (id: number, name: string, icon: string, url: string, display: boolean): Promise<void> {
+    return await menuItemsDb.update(id, name, icon, url, display);
+  },
 
-export async function deleteMenuItem(id: number): Promise<void> {
-  return await menuItems.delete(id);
+  delete: async function (id: number): Promise<void> {
+    return await menuItemsDb.delete(id);
+  },
 }
 
 // Usergroups
-export async function getUsergroupAll(): Promise<Usergroup[]> {
-  return await usergroups.getAll();
-}
+export const userGroupsApi = {
+  getAll: async function (): Promise<Usergroup[]> {
+    return await userGroupsDb.getAll();
+  },
 
-export async function getUsergroupById(id: number): Promise<Usergroup> {
-  return await usergroups.getById(id);
-}
+  getById: async function (id: number): Promise<Usergroup> {
+    return await userGroupsDb.getById(id);
+  },
 
-export async function deleteUsergroup(id: number): Promise<void> {
-  return await usergroups.delete(id);
-}
-export async function createUsergroup(name: string, access: number[]): Promise<void> {
-  return await usergroups.create(name, access);
-}
+  delete: async function (id: number): Promise<void> {
+    return await userGroupsDb.delete(id);
+  },
 
-export async function updateUsergroup(id: number, name: string, access: number[]): Promise<void> {
-  return await usergroups.update(id, name, access);
+  create: async function (name: string, access: number[]): Promise<void> {
+    return await userGroupsDb.create(name, access);
+  },
+
+  update: async function (id: number, name: string, access: number[]): Promise<void> {
+    return await userGroupsDb.update(id, name, access);
+  },
 }
 
 // Goods
-export async function getGoodAll(): Promise<Good[]> {
-  return await goods.getAll();
-}
+export const goodsApi = {
+  getAll: async function (): Promise<Good[]> {
+    return await goodsDb.getAll();
+  },
 
-export async function getGoodById(id: number): Promise<Good> {
-  return await goods.getById(id);
-}
+  getByGroupId: async function (id: number): Promise<Good[]> {
+    return await goodsDb.getByGroupId(id);
+  },
 
-export async function deleteGood(id: number): Promise<void> {
-  return await goods.delete(id);
-}
-export async function createGood(name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id?: number): Promise<void> {
-  return await goods.create(name, price, imgs, description, specification, detail, category_id || 0);
-}
+  getById: async function (id: number): Promise<Good> {
+    return await goodsDb.getById(id);
+  },
 
-export async function updateGood(id: number, name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id?: number): Promise<void> {
-  return await goods.update(id, name, price, imgs, description, specification, detail, category_id || 0);
+  delete: async function (id: number): Promise<void> {
+    return await goodsDb.delete(id);
+  },
+
+  create: async function (
+    name: string,
+    price: number,
+    imgs: string[],
+    description: string,
+    specification: string,
+    detail: string,
+    category_id?: number
+  ): Promise<void> {
+    return await goodsDb.create(name, price, imgs, description, specification, detail, category_id || 0);
+  },
+
+  update: async function (
+    id: number,
+    name: string,
+    price: number,
+    imgs: string[],
+    description: string,
+    specification: string,
+    detail: string,
+    category_id?: number
+  ): Promise<void> {
+    return await goodsDb.update(id, name, price, imgs, description, specification, detail, category_id || 0);
+  },
 }
 
 // Categories
-export async function getGoodCategoryAll(): Promise<GoodCategory[]> {
-  return await goodCategories.getAll();
-}
+export const goodCategoriesApi = {
+  getAll: async function (): Promise<GoodCategory[]> {
+    return await goodCategoriesDb.getAll();
+  },
 
-export async function getGoodCategoryById(id: number): Promise<GoodCategory> {
-  return await goodCategories.getById(id);
-}
+  getById: async function (id: number): Promise<GoodCategory> {
+    return await goodCategoriesDb.getById(id);
+  },
 
-export async function deleteGoodCategory(id: number): Promise<void> {
-  return await goodCategories.delete(id);
-}
-export async function createGoodCategory(name: string): Promise<void> {
-  return await goodCategories.create(name);
-}
+  delete: async function (id: number): Promise<void> {
+    return await goodCategoriesDb.delete(id);
+  },
 
-export async function updateGoodCategory(id: number, name: string): Promise<void> {
-  return await goodCategories.update(id, name);
+  create: async function (name: string): Promise<void> {
+    return await goodCategoriesDb.create(name);
+  },
+
+  update: async function (id: number, name: string): Promise<void> {
+    return await goodCategoriesDb.update(id, name);
+  },
 }

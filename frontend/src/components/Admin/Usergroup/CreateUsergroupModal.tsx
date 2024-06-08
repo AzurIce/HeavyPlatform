@@ -1,8 +1,8 @@
 import { Box, Button, Checkbox, InputLabel, Modal, TextField, Typography, useTheme } from "@suid/material"
 import { For, Signal, createSignal } from "solid-js"
-import { createUsergroup } from "../../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
 import { AlertsStore, getMenuItems, getUsergroups } from "../../../lib/store"
+import { userGroupsApi } from "../../../lib/axios/api"
 
 export default function CreateUsergroupModal(props: { open: Signal<boolean> }) {
   const [open, setOpen] = props.open
@@ -21,7 +21,7 @@ export default function CreateUsergroupModal(props: { open: Signal<boolean> }) {
         return;
       }
 
-    createUsergroup(name(), access()).then((res) => {
+    userGroupsApi.create(name(), access()).then((res) => {
       newSuccessAlert("创建成功")
       revalidate(getUsergroups.key)
       onCancel()

@@ -1,8 +1,8 @@
 import { Box, Button, InputLabel, MenuItem, Modal, Select, TextField, Typography, useTheme } from "@suid/material"
 import { For, Signal, createEffect, createSignal } from "solid-js"
-import { updateManager } from "../../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
 import { AlertsStore, Manager, getManager, getManagers, getUsergroups } from "../../../lib/store"
+import { managersApi } from "../../../lib/axios/api"
 
 export default function UpdateManagerModal(props: { target: Signal<Manager | undefined> }) {
   const [target, setTarget] = props.target
@@ -28,7 +28,7 @@ export default function UpdateManagerModal(props: { target: Signal<Manager | und
       return;
     }
 
-    updateManager(target()!.id, username()!, usergroup()).then((res) => {
+    managersApi.update(target()!.id, username()!, usergroup()).then((res) => {
       newSuccessAlert("更新成功")
       revalidate(getManagers.key)
       revalidate(getManager.keyFor(target()!.id))

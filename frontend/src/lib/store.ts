@@ -1,7 +1,6 @@
 import { cache, revalidate } from "@solidjs/router";
 import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
-import { getGoodAll, getGoodById, getGoodCategoryAll, getManagerAll, getManagerById, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
 import { Trie } from "./trie";
 
 const adminLoginInfoStore = createStore<{manager?: Manager}>()
@@ -118,13 +117,13 @@ export type Manager = {
 }
 
 export const getManagers = cache(async () => {
-  const res = await getManagerAll();
+  const res = await managersApi.getAll();
   // console.log("cache: getManagers: ", res)
   return res
 }, "managers");
 
 export const getManager = cache(async (id: number) => {
-  return await getManagerById(id);
+  return await managersApi.getById(id);
 }, "manager");
 
 // MenuItem
@@ -137,7 +136,7 @@ export type MenuItem = {
 }
 
 export const getMenuItems = cache(async () => {
-  return await getMenuItemAll()
+  return await menuItemsApi.getAll()
 }, "menuItems");
 
 // Usergroup
@@ -148,11 +147,11 @@ export type Usergroup = {
 }
 
 export const getUsergroups = cache(async () => {
-  return await getUsergroupAll();
+  return await userGroupsApi.getAll();
 }, "usergroups");
 
 export const getUsergroup = cache(async (id: number) => {
-  return await getUsergroupById(id);
+  return await userGroupsApi.getById(id);
 }, "usergroup");
 
 export type Good = {
@@ -173,20 +172,26 @@ export type GoodCategory = {
 }
 
 export const getGoods = cache(async () => {
-  return await getGoodAll();
+  return await goodsApi.getAll();
 }, "goods")
 
 export const getGood = cache(async (id: number) => {
-  return await getGoodById(id);
+  return await goodsApi.getById(id);
 }, "good")
 
+export const getGoodsByGroupId = cache(async (id: number) => {
+  return await goodsApi.getByGroupId(id);
+}, "goodsByGroupId");
+
+
 export const getGoodCategories = cache(async () => {
-  return await getGoodCategoryAll();
+  return await goodCategoriesApi.getAll();
 }, "categories")
 
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";
+import { goodCategoriesApi, goodsApi, managersApi, menuItemsApi, userGroupsApi } from "./axios/api";
 
 const iconsTrie = new Trie();
 const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);
@@ -208,5 +213,6 @@ export const resetAllData = () => {
   revalidate(getUsergroup.key)
   revalidate(getGoods.key)
   revalidate(getGood.key)
+  revalidate(getGoodsByGroupId.key)
   revalidate(getGoodCategories.key)
 }

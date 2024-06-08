@@ -1,6 +1,6 @@
 import { useMatch, useNavigate } from "@solidjs/router";
-import { Dashboard, DirectionsBike, List, ManageAccounts, Person, Sell } from "@suid/icons-material";
-import { Button, IconButton } from "@suid/material";
+import { Dashboard, List, ManageAccounts, Sell } from "@suid/icons-material";
+import { IconButton } from "@suid/material";
 import { Component } from "solid-js";
 
 const SideBarItem: Component<{ icon: Component, route: string }> = (props) => {

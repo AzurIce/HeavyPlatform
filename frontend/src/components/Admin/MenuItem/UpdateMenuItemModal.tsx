@@ -1,9 +1,9 @@
 import { Box, Button, FormControlLabel, Modal, Switch, TextField, Typography, useTheme } from "@suid/material"
 import { Signal, createEffect, createSignal } from "solid-js"
-import { updateMenuItem } from "../../../lib/axios/api"
 import { revalidate } from "@solidjs/router"
 import { AlertsStore, MenuItem, getMenuItems } from "../../../lib/store"
 import IconInput from "../../IconInput"
+import { menuItemsApi } from "../../../lib/axios/api"
 
 export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | undefined> }) {
   const [target, setTarget] = props.target
@@ -37,8 +37,8 @@ export default function UpdateMenuItemModal(props: { target: Signal<MenuItem | u
       return;
     }
 
-    updateMenuItem(target()!.id, name(), icon(), url(), display()).then((res) => {
-      newSuccessAlert("创建成功")
+    menuItemsApi.update(target()!.id, name(), icon(), url(), display()).then((res) => {
+      newSuccessAlert("更新成功")
       revalidate(getMenuItems.key)
       onCancel()
     }).catch((err) => {
