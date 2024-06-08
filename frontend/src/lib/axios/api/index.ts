@@ -88,6 +88,10 @@ export const goodsApi = {
     return await goodsDb.getAll();
   },
 
+  getAllGroupId: async function (): Promise<number[]> {
+    return Array.from(new Set((await goodsDb.getAll()).map(good => good.parent_id)));
+  },
+
   getByGroupId: async function (id: number): Promise<Good[]> {
     return await goodsDb.getByGroupId(id);
   },

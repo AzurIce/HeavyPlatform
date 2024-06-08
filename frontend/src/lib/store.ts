@@ -183,6 +183,10 @@ export const getGoodsByGroupId = cache(async (id: number) => {
   return await goodsApi.getByGroupId(id);
 }, "goodsByGroupId");
 
+export const getGoodGroupIds = cache(async () => {
+  return await goodsApi.getAllGroupId();
+}, "goodGroupIds")
+
 
 export const getGoodCategories = cache(async () => {
   return await goodCategoriesApi.getAll();
