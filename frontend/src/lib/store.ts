@@ -180,7 +180,7 @@ export const getGood = cache(async (id: number) => {
   return await getGoodById(id);
 }, "good")
 
-export const getCategories = cache(async () => {
+export const getGoodCategories = cache(async () => {
   return await getGoodCategoryAll();
 }, "categories")
 
@@ -208,5 +208,5 @@ export const resetAllData = () => {
   revalidate(getUsergroup.key)
   revalidate(getGoods.key)
   revalidate(getGood.key)
-  revalidate(getCategories.key)
+  revalidate(getGoodCategories.key)
 }

@@ -2,10 +2,10 @@ import { Add, Delete, Edit, Restore } from "@suid/icons-material";
 import { Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Card, CardMedia, CardActions, useTheme, Modal, InputLabel, TextField, Select, MenuItem, InputAdornment } from "@suid/material";
 import { Component, For, Setter, Show, Signal, createEffect, createSignal } from "solid-js";
 import { createAsync, revalidate } from "@solidjs/router";
-import { AlertsStore, Good, GoodCategory, getCategories, getGood, getGoods, resetAllData } from "../../../../lib/store";
+import { AlertsStore, Good, GoodCategory, getGoodCategories, getGood, getGoods, resetAllData } from "../../../../lib/store";
 
 import { DeleteButton } from "../../../../components/Admin/common";
-import { createGood, deleteGood, deleteGoodCategory, updateGood } from "../../../../lib/axios/api";
+import { createGood, createGoodCategory, deleteGood, deleteGoodCategory, updateGood, updateGoodCategory } from "../../../../lib/axios/api";
 import { createStore } from "solid-js/store";
 import ImgInput from "../../../../components/ImgInput";
 
@@ -15,7 +15,7 @@ const onRevalidateGood = (id: number) => {
 }
 
 const onRevalidateGoodCategory = (id: number) => {
-  revalidate(getCategories.key)
+  revalidate(getGoodCategories.key)
 }
 
 const DeleteGoodModalButton = DeleteButton<Good>("商品", deleteGood, onRevalidateGood);
@@ -35,7 +35,7 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
     detail: "",
   };
 
-  const categories = createAsync(() => getCategories());
+  const categories = createAsync(() => getGoodCategories());
   const [price, setPrice] = createSignal("0");
   const [good, setGood] = createStore(emptyGood);
   const imgsSignal = createSignal<string[]>([]);
@@ -50,11 +50,11 @@ const CreateGoodModal: Component<{ open: Signal<boolean> }> = (props) => {
   const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
 
   const onSubmit = () => {
-      if (Number.isNaN(good.price)) {
-        newWarningAlert("价格不合法")
-        return
-      }
-      // TODO: validate data
+    if (Number.isNaN(good.price)) {
+      newWarningAlert("价格不合法")
+      return
+    }
+    // TODO: validate data
 
     createGood(good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
       newSuccessAlert("创建成功")
@@ -197,7 +197,7 @@ const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = (props)
     detail: "",
   };
 
-  const categories = createAsync(() => getCategories());
+  const categories = createAsync(() => getGoodCategories());
   const [price, setPrice] = createSignal("0");
   const [good, setGood] = createStore(emptyGood);
   const imgsSignal = createSignal<string[]>([]);
@@ -219,11 +219,11 @@ const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = (props)
   const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
 
   const onSubmit = () => {
-      if (Number.isNaN(good.price)) {
-        newWarningAlert("价格不合法")
-        return
-      }
-      // TODO: validate data
+    if (Number.isNaN(good.price)) {
+      newWarningAlert("价格不合法")
+      return
+    }
+    // TODO: validate data
 
     updateGood(good.id, good.name, good.price, good.imgs, good.description, good.specification, good.detail, good.category_id).then((res) => {
       newSuccessAlert("创建成功")
@@ -435,11 +435,11 @@ const GoodCategoryPaper: Component = () => {
   const updateTarget = createSignal<GoodCategory | undefined>();
   const [getUpdateTarget, setUpdateTarget] = updateTarget;
 
-  const categories = createAsync(() => getCategories());
+  const categories = createAsync(() => getGoodCategories());
 
   return <>
-    {/* <UpdateManagerPasswordModal target={updatePasswordTarget} /> */}
-    {/* <DeleteManagerModal target={deleteTarget} /> */}
+    <CreateGoodCategoryModal open={createShow} />
+    <UpdateGoodCategoryModal target={updateTarget} />
 
     <Paper sx={{
       padding: 2,
@@ -490,5 +490,162 @@ const GoodCategoryPaper: Component = () => {
     </Paper>
   </>
 };
+
+const CreateGoodCategoryModal: Component<{ open: Signal<boolean> }> = (props) => {
+  const [open, setOpen] = props.open
+  const theme = useTheme()
+
+  const [name, setName] = createSignal("");
+  const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
+
+  const onSubmit = () => {
+    if (name() == "") {
+      newWarningAlert("名称不能为空")
+      return
+    }
+
+    createGoodCategory(name()).then((res) => {
+      newSuccessAlert("创建成功")
+      revalidate(getGoods.key)
+      onCancel()
+    }).catch((err) => {
+      console.log(err)
+      newErrorAlert(`创建失败：${err}`)
+    })
+  }
+
+  const onCancel = () => {
+    setName("");
+    setOpen(false);
+  }
+
+  return <>
+    <Modal
+      open={open()}
+      onClose={() => { onCancel() }}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "60%",
+          maxWidth: "1000px",
+          bgcolor: theme.palette.background.paper,
+          boxShadow: "24px",
+          borderRadius: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          p: 4,
+        }}
+      >
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          添加商品分类
+        </Typography>
+
+        <div class='flex flex-col gap-2'>
+          <InputLabel>名称</InputLabel>
+          <TextField
+            size='small'
+            label="名称"
+            value={name()}
+            onChange={(_event, value) => {
+              setName(value)
+            }} />
+        </div>
+
+        <div class="flex gap-4">
+          <Button variant="contained" onClick={onSubmit}>提交</Button>
+          <Button variant="outlined" onClick={onCancel}>取消</Button>
+        </div>
+      </Box>
+    </Modal>
+  </>
+}
+
+const UpdateGoodCategoryModal: Component<{ target: Signal<GoodCategory | undefined> }> = (props) => {
+  const [target, setTarget] = props.target
+  const theme = useTheme()
+
+  const [name, setName] = createSignal("");
+  createEffect(() => {
+    if (target() != undefined) {
+      setName(target()!.name);
+    }
+  })
+  const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
+
+  const onSubmit = () => {
+    if (name() == "") {
+      newWarningAlert("名称不能为空")
+      return
+    }
+
+    updateGoodCategory(target()!.id, name()).then((res) => {
+      newSuccessAlert("创建成功")
+      revalidate(getGoodCategories.key)
+      onCancel()
+    }).catch((err) => {
+      console.log(err)
+      newErrorAlert(`创建失败：${err}`)
+    })
+  }
+
+  const onCancel = () => {
+    setName("")
+    setTarget();
+  }
+
+  return <>
+    <Modal
+      open={target() != undefined}
+      onClose={() => { onCancel() }}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "60%",
+          maxWidth: "1000px",
+          bgcolor: theme.palette.background.paper,
+          boxShadow: "24px",
+          borderRadius: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          p: 4,
+        }}
+      >
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          添加商品
+        </Typography>
+
+        <div class='flex flex-col gap-2'>
+          <InputLabel>名称</InputLabel>
+          <TextField
+            size='small'
+            label="名称"
+            value={name()}
+            onChange={(_event, value) => {
+              setName(value)
+            }} />
+        </div>
+
+        <div class="flex gap-4">
+          <Button variant="contained" onClick={onSubmit}>提交</Button>
+          <Button variant="outlined" onClick={onCancel}>取消</Button>
+        </div>
+      </Box>
+    </Modal>
+  </>
+}
 
 export default GoodPage;
