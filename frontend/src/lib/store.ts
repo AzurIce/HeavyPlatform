@@ -210,12 +210,6 @@ export type CartItem = {
   quantity: number,
 }
 
-export type Order = {
-  id: number,
-  user_id: number,
-  items: CartItem[]
-}
-
 export const getCartItems = cache(async () => {
   return await cartItemsApi.getAll();
 }, "cartItems")
@@ -224,6 +218,29 @@ export const getCartItem = cache(async (id: number) => {
   return await cartItemsApi.getById(id);
 }, "cartItem")
 
+export const createCartItem = cache(async (user_id: number, good_id: number, quantity: number) => {
+  await cartItemsApi.create(user_id, good_id, quantity);
+  // 更新缓存中的数据，确保缓存的一致性
+  const updatedCartItems = await cartItemsApi.getAll();
+  cache.set("cartItems", updatedCartItems);
+}, "createCartItem");
+
+export const deleteCartItem = cache(async (id: number) => {
+  await cartItemsApi.delete(id);
+  // 更新缓存中的数据，确保缓存的一致性
+  const updatedCartItems = await cartItemsApi.getAll();
+  cache.set("cartItems", updatedCartItems);
+}, "deleteCartItem");
+
+
+
+// Order
+export type Order = {
+  id: number,
+  user_id: number,
+  items: CartItem[]
+}
+
 export const getOrders = cache(async () => {
   return await ordersApi.getAll();
 }, "orders")
@@ -231,6 +248,21 @@ export const getOrders = cache(async () => {
 export const getOrder = cache(async (id: number) => {
   return await ordersApi.getById(id);
 }, "order")
+
+export const createOrder = cache(async (user_id: number, items: CartItem[]) => {
+  await ordersApi.create(user_id, items);
+  // 更新缓存中的数据，确保缓存的一致性
+  const updatedOrders = await ordersApi.getAll();
+  cache.set("orders", updatedOrders);
+}, "createOrder");
+
+export const deleteOrder = cache(async (id: number) => {
+  await ordersApi.delete(id);
+  // 更新缓存中的数据，确保缓存的一致性
+  const updatedOrders = await ordersApi.getAll();
+  cache.set("orders", updatedOrders);
+}, "deleteOrder");
+
 
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
