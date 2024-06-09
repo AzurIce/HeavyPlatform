@@ -8,6 +8,7 @@ import OrderModal from "../../components/OrderModal"
 const GoodDetailPage: Component = () => {
   const params = useParams()
   const { user } = LoginInfoStore()
+  // FIXME: 处理用户没有登录的情况
   const currentUser = user()!.id
   const good = createAsync(() => getGood(Number(params.id)))
   const [currentImage, setCurrentImage] = createSignal(good()?.imgs[0])
