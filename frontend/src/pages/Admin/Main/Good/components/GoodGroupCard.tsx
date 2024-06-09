@@ -12,9 +12,10 @@ export const GoodGroupCard: Component<{ id: number, setUpdateTarget: Setter<Good
   return <>
     <Card sx={{ padding: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Show when={goods() != undefined && goods()!.length > 0}>
-        <div class="flex gap-1">
+        <div class="flex gap-1 overflow-x-auto">
           <For each={goods()}>{(item, index) => <>
-            <Button onClick={() => setCur(index())} variant={index() == cur() ? "contained" : "outlined"}>{item.name}</Button>
+            <Button onClick={() => setCur(index())} variant={index() == cur() ? "contained" : "outlined"}
+              sx={{flexShrink: 0}}>{item.name}</Button>
           </>}</For>
           {/* <Button onClick={() => { }} variant="outlined"><Add /></Button> */}
         </div>

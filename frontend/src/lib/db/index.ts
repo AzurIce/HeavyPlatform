@@ -68,7 +68,7 @@ const defaultData: Data = {
     // 【凑阿库娅】
     {
       id: 3,
-      parent_id: 0,
+      parent_id: 3,
       category_id: 2,
       name: "凑阿库娅的😘照片",
       price: 10,
@@ -79,7 +79,7 @@ const defaultData: Data = {
     },
     {
       id: 4,
-      parent_id: 0,
+      parent_id: 3,
       category_id: 2,
       name: "凑阿库娅在整理头发",
       price: 12,
@@ -90,7 +90,7 @@ const defaultData: Data = {
     },
     {
       id: 5,
-      parent_id: 0,
+      parent_id: 3,
       category_id: 2,
       name: "凑阿库娅的带耳机照片",
       price: 11,
@@ -102,7 +102,7 @@ const defaultData: Data = {
     // 【碧蓝档案】
     {
       id: 6,
-      parent_id: 0,
+      parent_id: 6,
       category_id: 3,
       name: "未花",
       price: 20,
@@ -113,7 +113,7 @@ const defaultData: Data = {
     },
     {
       id: 7,
-      parent_id: 0,
+      parent_id: 7,
       category_id: 3,
       name: "真纪",
       price: 21,
@@ -124,7 +124,7 @@ const defaultData: Data = {
     },
     {
       id: 8,
-      parent_id: 0,
+      parent_id: 8,
       category_id: 3,
       name: "梓",
       price: 19,
@@ -135,7 +135,7 @@ const defaultData: Data = {
     },
     {
       id: 9,
-      parent_id: 0,
+      parent_id: 9,
       category_id: 3,
       name: "日富美",
       price: 21,
@@ -146,7 +146,7 @@ const defaultData: Data = {
     },
     {
       id: 10,
-      parent_id: 0,
+      parent_id: 10,
       category_id: 3,
       name: "玛丽",
       price: 20,
@@ -157,7 +157,7 @@ const defaultData: Data = {
     },
     {
       id: 11,
-      parent_id: 0,
+      parent_id: 11,
       category_id: 0,
       name: "诺瓦",
       price: 20,
@@ -302,6 +302,13 @@ export const goodCategoriesDb = {
   getById: async function (id: number) { return await getById(this, id) },
   delete: async function (id: number) {
     if (id == 0) return Promise.reject("cannot delete default category");
+
+    for (let good of goodsDb.data()) {
+      if (good != undefined) {
+        good.category_id = 0;
+      }
+    }
+
     await deleteById(this, id);
   },
 

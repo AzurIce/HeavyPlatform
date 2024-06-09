@@ -156,8 +156,8 @@ export const getUsergroup = cache(async (id: number) => {
 
 export type Good = {
   id: number,
-  parent_id: number | undefined,
-  category_id: number | undefined,
+  parent_id: number,
+  category_id: number,
   name: string,
   price: number,
   imgs: string[],        // 详情页首部的图片

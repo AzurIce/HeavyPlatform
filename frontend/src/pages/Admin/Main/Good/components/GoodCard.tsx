@@ -1,22 +1,31 @@
 import { createAsync } from "@solidjs/router";
 import { Component, Setter, Show } from "solid-js";
-import { Good, getGood, getGoodCategories } from "../../../../../lib/store";
-import { Button, ButtonGroup, Card, CardActions, CardMedia } from "@suid/material";
+import { Good, getGood, getGoodCategorie as getGoodCategory, getGoodCategories } from "../../../../../lib/store";
+import { Button, ButtonGroup, Card, CardActions, CardMedia, Chip } from "@suid/material";
 import { Delete, Edit } from "@suid/icons-material";
 import { DeleteGoodModalButton } from ".";
+
+const CategoryChip: Component<{id: number}> = (props) => {
+  const category = createAsync(() => getGoodCategory(props.id));
+  return <>
+    <Chip label={category()?.name} />
+  </>
+}
 
 export const GoodCard: Component<{ id: number, setUpdateTarget: Setter<Good | undefined> }> = (props) => {
   const { setUpdateTarget } = props;
   const good = createAsync(() => getGood(props.id))
-  const category = createAsync(() => getGoodCategories())
 
   return <>
     <Card sx={{ display: "flex", padding: 2, gap: 2, alignItems: "center" }}>
       <CardMedia component="img" src={good()?.imgs[0]} alt="good-img" sx={{ width: 80 }} />
       <div class="flex flex-col flex-1">
         <div class="flex gap-2">
-          <span class="font-bold text-lg">{good()?.name}</span>
-          <span class="text-xs text-[#999999]">id: {good()?.id}</span>
+          <Show when={good() != undefined}>
+            <span class="font-bold text-lg">{good()?.name}</span>
+            <span class="text-xs text-[#999999]">id: {good()?.id}</span>
+            <CategoryChip id={good()!.category_id} />
+          </Show>
         </div>
         <span class="text-sm text-[#999999]">{good()?.description}</span>
         <span>规格参数：{good()?.specification}</span>
