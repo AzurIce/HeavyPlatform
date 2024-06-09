@@ -21,6 +21,10 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
     setStep(step() + 1);
   };
 
+  const handlePreviousStep = () => {
+    setStep(step() - 1);
+  };
+
   const handleTotalPriceChange = (id: number, totalPrice: number) => {
     setTotalPrices(prices => {
       const newPrices = prices.map((price, index) => {
@@ -35,6 +39,10 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
 
   const calculateTotalPrice = () => {
     return totalPrices().reduce((acc, price) => acc + price, 0);
+  };
+
+  const handlePaymentSuccess = () => {
+    setStep(3);
   };
 
   return (
@@ -54,10 +62,43 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
             </Box>
           </Box>
         )}
+        {step() === 2 && (
+          <Box>
+            <Typography variant="h6">只存在于虚拟的支付页面</Typography>
+            <Box mt={2}>
+              <Typography variant="h6">总价格: ¥{calculateTotalPrice()}</Typography>
+            </Box>
+          </Box>
+        )}
+        {step() === 3 && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+            <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            🎉 付款成功喵 🎉
+            </Typography>
+            <Typography variant="body1" sx={{ textAlign: 'center', marginTop: 1 }}>
+              感谢您的购买喵~ 💖 小猫娘会尽快处理您的订单喵~ 💖
+            </Typography>
+          </Box>
+        )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={props.onClose} color="secondary">取消</Button>
-        <Button onClick={handleNextStep} color="primary">下一步</Button>
+      <DialogActions sx={{ justifyContent: step() === 3 ? 'center' : 'flex-end' }}>
+        {step() === 1 && (
+          <>
+            <Button onClick={props.onClose} color="secondary">取消</Button>
+            <Button onClick={handleNextStep} color="primary" disabled={calculateTotalPrice() <= 0}>立即下单</Button>
+          </>
+        )}
+        {step() === 2 && (
+          <>
+            <Button onClick={handlePreviousStep} color="secondary">上一步</Button>
+            <Button onClick={handlePaymentSuccess} color="primary">立即付款</Button>
+          </>
+        )}
+        {step() === 3 && (
+          <>
+            <Button onClick={() => navigate('/orders')} color="primary">查看订单</Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   );
