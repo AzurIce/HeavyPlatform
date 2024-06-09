@@ -1,12 +1,14 @@
 import { Component, createEffect } from "solid-js"
 import { createSignal } from "solid-js"
 import { Card, CardMedia, Box, Typography, Button, Container } from "@suid/material"
-import { getGood } from "../../lib/store"
+import { getGood, LoginInfoStore } from "../../lib/store"
 import { createAsync, useNavigate, useParams } from "@solidjs/router"
 import OrderModal from "../../components/OrderModal"
 
 const GoodDetailPage: Component = () => {
   const params = useParams()
+  const { user } = LoginInfoStore()
+  const currentUser = user()!.id
   const good = createAsync(() => getGood(Number(params.id)))
   const [currentImage, setCurrentImage] = createSignal(good()?.imgs[0])
   const [showOrderModal, setShowOrderModal] = createSignal(false)
@@ -75,8 +77,8 @@ const GoodDetailPage: Component = () => {
         <OrderModal 
           show={showOrderModal()} 
           onClose={handleOrderModalClose} 
-          user_id={1}
-          items={[{ id: good()!.id, good_id: good()!.id, user_id: 1, quantity: 1 }]} 
+          user_id={currentUser}
+          items={[{ id: good()!.id, good_id: good()!.id, user_id: currentUser, quantity: 1 }]} 
         />
       )}
     </>
