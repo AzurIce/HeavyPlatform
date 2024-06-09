@@ -1,17 +1,30 @@
 import { Box, Button, InputAdornment, InputLabel, MenuItem, Modal, Select, TextField, Typography, useTheme } from "@suid/material";
 import { Component, For, Signal, createEffect, createSignal } from "solid-js";
-import { AlertsStore, Good, getGoodCategories, getGoods } from "../../../../../lib/store";
+import { AlertsStore, Good, getGoodCategories, getGoodGroupIds, getGoods, getGoodsByGroupId } from "../../../../../lib/store";
 import { createAsync, revalidate } from "@solidjs/router";
 import { createStore } from "solid-js/store";
 import { goodsApi } from "../../../../../lib/axios/api";
 import ImgInput from "../../../../../components/ImgInput";
 
+const GoodGroupGoods: Component<{ id: number }> = (props) => {
+  const goods = createAsync(() => getGoodsByGroupId(props.id));
+
+  return <>
+    <div class="flex gap-2">
+      <For each={goods()}>{(item) =>
+        <span> {item.name} </span>
+      }</For>
+    </div>
+  </>
+}
+
 export const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = (props) => {
   const [target, setTarget] = props.target
   const theme = useTheme()
 
-  const emptyGood = {
+  const emptyGood: Good = {
     id: 0,
+    parent_id: 0,
     category_id: 0,
     name: "",
     price: 0,
@@ -39,6 +52,8 @@ export const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = 
   createEffect(() => {
     setGood("price", parseFloat(price()))
   })
+
+  const goodGroupIds = createAsync(() => getGoodGroupIds());
 
   const { newErrorAlert, newWarningAlert, newSuccessAlert } = AlertsStore();
 
@@ -105,7 +120,6 @@ export const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = 
 
           <InputLabel>商品类别</InputLabel>
           <Select
-            labelId="usergroup-select"
             size="small"
             value={good.category_id}
             label="商品类别"
@@ -117,6 +131,22 @@ export const UpdateGoodModal: Component<{ target: Signal<Good | undefined> }> = 
               </>}
             </For>
           </Select>
+
+          {/* <InputLabel>商品组</InputLabel>
+          <Select
+            size="small"
+            value={good.parent_id}
+            label="商品组"
+            onChange={(e) => setGood("parent_id", e.target.value)}
+          >
+            <For each={goodGroupIds()}>{(item) =>
+              <>
+                <MenuItem value={item}>
+                  <GoodGroupGoods id={item} />
+                </MenuItem>
+              </>}
+            </For>
+          </Select> */}
 
           <InputLabel>图片</InputLabel>
           <ImgInput imgs={imgsSignal} />
