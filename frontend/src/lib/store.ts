@@ -192,6 +192,10 @@ export const getGoodCategories = cache(async () => {
   return await goodCategoriesApi.getAll();
 }, "categories")
 
+export const getGoodCategorie = cache(async (id: number) => {
+  return await goodCategoriesApi.getById(id);
+}, "categorie")
+
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";

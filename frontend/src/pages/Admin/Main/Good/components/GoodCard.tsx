@@ -1,6 +1,6 @@
 import { createAsync } from "@solidjs/router";
 import { Component, Setter, Show } from "solid-js";
-import { Good, getGood } from "../../../../../lib/store";
+import { Good, getGood, getGoodCategories } from "../../../../../lib/store";
 import { Button, ButtonGroup, Card, CardActions, CardMedia } from "@suid/material";
 import { Delete, Edit } from "@suid/icons-material";
 import { DeleteGoodModalButton } from ".";
@@ -8,6 +8,7 @@ import { DeleteGoodModalButton } from ".";
 export const GoodCard: Component<{ id: number, setUpdateTarget: Setter<Good | undefined> }> = (props) => {
   const { setUpdateTarget } = props;
   const good = createAsync(() => getGood(props.id))
+  const category = createAsync(() => getGoodCategories())
 
   return <>
     <Card sx={{ display: "flex", padding: 2, gap: 2, alignItems: "center" }}>

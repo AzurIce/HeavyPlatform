@@ -1,8 +1,10 @@
 import { revalidate } from "@solidjs/router"
-import { Good, GoodCategory, getGood, getGoodCategories, getGoods } from "../../../../../lib/store"
+import { Good, GoodCategory, getGood, getGoodCategorie, getGoodCategories, getGoods } from "../../../../../lib/store"
 import { DeleteButton } from "../../../../../components/Admin/common"
 import { goodCategoriesApi, goodsApi } from "../../../../../lib/axios/api"
 
+export { CreateGoodCategoryModal } from "./CreateGoodCategoryModal"
+export { UpdateGoodCategoryModal } from "./UpdateGoodCategoryModal"
 export { GoodGroupCard } from "./GoodGroupCard"
 export { GoodCard } from "./GoodCard"
 export { CreateGoodModal } from "./CreateGoodModal"
@@ -15,6 +17,7 @@ const onRevalidateGood = (id: number) => {
 
 const onRevalidateGoodCategory = (id: number) => {
   revalidate(getGoodCategories.key)
+  revalidate(getGoodCategorie.keyFor(id))
 }
 
 export const DeleteGoodModalButton = DeleteButton<Good>("商品", goodsApi.delete, onRevalidateGood);
