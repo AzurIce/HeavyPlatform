@@ -218,21 +218,6 @@ export const getCartItem = cache(async (id: number) => {
   return await cartItemsApi.getById(id);
 }, "cartItem")
 
-export const createCartItem = cache(async (user_id: number, good_id: number, quantity: number) => {
-  await cartItemsApi.create(user_id, good_id, quantity);
-  // 更新缓存中的数据，确保缓存的一致性
-  const updatedCartItems = await cartItemsApi.getAll();
-  cache.set("cartItems", updatedCartItems);
-}, "createCartItem");
-
-export const deleteCartItem = cache(async (id: number) => {
-  await cartItemsApi.delete(id);
-  // 更新缓存中的数据，确保缓存的一致性
-  const updatedCartItems = await cartItemsApi.getAll();
-  cache.set("cartItems", updatedCartItems);
-}, "deleteCartItem");
-
-
 
 // Order
 export type Order = {

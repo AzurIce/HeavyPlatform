@@ -20,11 +20,11 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
   });
 
   const handleNextStep = () => {
-    setStep(step() + 1);
+    setStep(v => v+1);
   };
 
   const handlePreviousStep = () => {
-    setStep(step() - 1);
+    setStep(v => v-1);
   };
 
   const handleQuantityChange = (id: number, quantity: number) => {
