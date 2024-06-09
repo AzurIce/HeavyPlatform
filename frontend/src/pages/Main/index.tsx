@@ -16,7 +16,7 @@ const Main = () => {
 
       <Carousel ids={carouselIds} />
 
-      <div class="flex flex-wrap gap-4 justify-between">
+      <div class="flex flex-wrap gap-4">
         <For each={goods()}>{(item) =>
           <GoodCard id={item.id} />
         }</For>
