@@ -71,12 +71,12 @@ const GoodDetailPage: Component = () => {
           </Typography>
         </Box>
       </Card>
-      {showOrderModal() && (
+      {showOrderModal() && good() && (
         <OrderModal 
           show={showOrderModal()} 
           onClose={handleOrderModalClose} 
           user_id={1}
-          items={[{ id: 1, good_id: Number(params.id), user_id: 1, quantity: 1 }]} 
+          items={[{ id: good()!.id, good_id: good()!.id, user_id: 1, quantity: 1 }]} 
         />
       )}
     </>
