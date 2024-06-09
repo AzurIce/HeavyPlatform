@@ -2,7 +2,7 @@ import { RouteSectionProps, useNavigate } from "@solidjs/router";
 import { Component, For, Match, Switch } from "solid-js";
 
 import { createSignal } from "solid-js"
-import { Container, BottomNavigation, BottomNavigationAction, Paper, AppBar, IconButton, Toolbar, Typography } from "@suid/material"
+import { Container, BottomNavigation, BottomNavigationAction, Paper, AppBar, IconButton, Toolbar, Typography, Button } from "@suid/material"
 import HomeIcon from "@suid/icons-material/Home"
 import CategoryIcon from "@suid/icons-material/Category"
 import ShoppingCartIcon from "@suid/icons-material/ShoppingCart"
@@ -67,6 +67,9 @@ const MainWrapper: Component<RouteSectionProps> = (props) => {
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 重量化商城
               </Typography>
+              <For each={navigates}>{(item) =>
+                <Button color="inherit" onClick={() => navigate(item.path)}>{item.label}</Button>
+              }</For>
             </Toolbar>
           </AppBar>
         </Match>
