@@ -5,34 +5,32 @@ import { Box, Card, CardMedia, Typography, IconButton, useTheme } from '@suid/ma
 import AddIcon from '@suid/icons-material/Add';
 import RemoveIcon from '@suid/icons-material/Remove';
 
-const OrderItemCard: Component<{ id: number, initialQuantity: number, onTotalPriceChange: (id: number, totalPrice: number) => void }> = (props) => {
-  const { id, initialQuantity, onTotalPriceChange } = props;
+const OrderItemCard: Component<{ id: number, initialQuantity: number, onQuantityChange: (id: number, quantity: number) => void }> = (props) => {
+  const { id, initialQuantity, onQuantityChange } = props;
   const good = createAsync(() => getGood(id));
   const theme = useTheme();
   const [quantity, setQuantity] = createSignal(initialQuantity);
 
-  const updateTotalPrice = () => {
-    const price = good()?.price || 0;
-    const totalPrice = price * quantity();
-    onTotalPriceChange(id, totalPrice);
+  const updateQuantity = () => {
+    onQuantityChange(id, quantity());
   };
 
   const handleIncrease = () => {
     const newQuantity = quantity() + 1;
     setQuantity(newQuantity);
-    updateTotalPrice();
+    updateQuantity();
   };
 
   const handleDecrease = () => {
     if (quantity() > 0) {
       const newQuantity = quantity() - 1;
       setQuantity(newQuantity);
-      updateTotalPrice();
+      updateQuantity();
     }
   };
 
   onMount(() => {
-    updateTotalPrice();
+    updateQuantity();
   });
 
   return (
@@ -70,7 +68,7 @@ const OrderItemCard: Component<{ id: number, initialQuantity: number, onTotalPri
           </IconButton>
         </Box>
         <Show when={good()?.price} fallback={<div>Loading...</div>}>
-          <Typography variant="body1">价格: ¥{(good()?.price || 0) * quantity()}</Typography>
+          <Typography variant="body1" color="error">总价: ¥{(good()?.price || 0) * quantity()}</Typography>
         </Show>
       </Box>
     </Card>

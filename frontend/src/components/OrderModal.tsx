@@ -2,12 +2,14 @@ import { Component, createSignal, createEffect } from 'solid-js';
 import { useNavigate } from "@solidjs/router";
 import { isMobile, CartItem, getGood, Good } from '../lib/store';
 import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@suid/material';
+import { createOrder } from '../lib/store';
 import OrderItemCard from './OrderItemCard';
 
 export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id: number, items: CartItem[] }> = (props) => {
   const [step, setStep] = createSignal(1);
   const [totalPrices, setTotalPrices] = createSignal<number[]>(Array(props.items.length).fill(0));
   const [goods, setGoods] = createSignal<Good[]>([]);
+  const [updatedItems, setUpdatedItems] = createSignal<CartItem[]>(props.items);
   const navigate = useNavigate();
 
   createEffect(async () => {
@@ -25,11 +27,21 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
     setStep(step() - 1);
   };
 
-  const handleTotalPriceChange = (id: number, totalPrice: number) => {
+  const handleQuantityChange = (id: number, quantity: number) => {
+    setUpdatedItems(items => {
+      return items.map(item => {
+        if (item.id === id) {
+          return { ...item, quantity };
+        }
+        return item;
+      });
+    });
     setTotalPrices(prices => {
       const newPrices = prices.map((price, index) => {
-        if (props.items[index].id === id) {
-          return totalPrice;
+        const item = props.items[index];
+        if (item.id === id) {
+          const good = goods().find(g => g.id === id);
+          return (good?.price || 0) * quantity;
         }
         return price;
       });
@@ -42,6 +54,8 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
   };
 
   const handlePaymentSuccess = () => {
+    // console.log(updatedItems());
+    createOrder(props.user_id, updatedItems());
     setStep(3);
   };
 
@@ -54,7 +68,11 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
             <Typography variant="h6">商品信息</Typography>
             <Box>
               {props.items.map(good => (
-                <OrderItemCard id={good.id} initialQuantity={good.quantity} onTotalPriceChange={handleTotalPriceChange} />
+                <OrderItemCard
+                  id={good.id} 
+                  initialQuantity={good.quantity} 
+                  onQuantityChange={handleQuantityChange} 
+                />
               ))}
             </Box>
             <Box mt={2}>
@@ -73,7 +91,7 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
         {step() === 3 && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
             <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-            🎉 付款成功喵 🎉
+              🎉 付款成功喵 🎉
             </Typography>
             <Typography variant="body1" sx={{ textAlign: 'center', marginTop: 1 }}>
               感谢您的购买喵~ 💖 小猫娘会尽快处理您的订单喵~ 💖
