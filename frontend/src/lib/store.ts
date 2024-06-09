@@ -1,7 +1,6 @@
-import { cache } from "@solidjs/router";
+import { cache, revalidate } from "@solidjs/router";
 import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
-import { getGoodAll, getGoodById, getGoodCategoryAll, getManagerAll, getManagerById, getMenuItemAll, getUsergroupAll, getUsergroupById } from "./axios/api";
 import { Trie } from "./trie";
 
 const adminLoginInfoStore = createStore<{manager?: Manager}>()
@@ -118,13 +117,13 @@ export type Manager = {
 }
 
 export const getManagers = cache(async () => {
-  const res = await getManagerAll();
+  const res = await managersApi.getAll();
   // console.log("cache: getManagers: ", res)
   return res
 }, "managers");
 
 export const getManager = cache(async (id: number) => {
-  return await getManagerById(id);
+  return await managersApi.getById(id);
 }, "manager");
 
 // MenuItem
@@ -137,7 +136,7 @@ export type MenuItem = {
 }
 
 export const getMenuItems = cache(async () => {
-  return await getMenuItemAll()
+  return await menuItemsApi.getAll()
 }, "menuItems");
 
 // Usergroup
@@ -148,17 +147,17 @@ export type Usergroup = {
 }
 
 export const getUsergroups = cache(async () => {
-  return await getUsergroupAll();
+  return await userGroupsApi.getAll();
 }, "usergroups");
 
 export const getUsergroup = cache(async (id: number) => {
-  return await getUsergroupById(id);
+  return await userGroupsApi.getById(id);
 }, "usergroup");
 
 export type Good = {
   id: number,
-  parent_id: number | undefined,
-  category_id: number | undefined,
+  parent_id: number,
+  category_id: number,
   name: string,
   price: number,
   imgs: string[],        // 详情页首部的图片
@@ -173,19 +172,34 @@ export type GoodCategory = {
 }
 
 export const getGoods = cache(async () => {
-  return await getGoodAll();
+  return await goodsApi.getAll();
 }, "goods")
 
 export const getGood = cache(async (id: number) => {
-  return await getGoodById(id);
+  return await goodsApi.getById(id);
 }, "good")
 
-export const getCategories = cache(async () => {
-  return await getGoodCategoryAll();
+export const getGoodsByGroupId = cache(async (id: number) => {
+  return await goodsApi.getByGroupId(id);
+}, "goodsByGroupId");
+
+export const getGoodGroupIds = cache(async () => {
+  return await goodsApi.getAllGroupId();
+}, "goodGroupIds")
+
+
+export const getGoodCategories = cache(async () => {
+  return await goodCategoriesApi.getAll();
 }, "categories")
+
+export const getGoodCategorie = cache(async (id: number) => {
+  return await goodCategoriesApi.getById(id);
+}, "categorie")
 
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
+import { resetDb } from "./db";
+import { goodCategoriesApi, goodsApi, managersApi, menuItemsApi, userGroupsApi } from "./axios/api";
 import { useMediaQuery } from "@suid/material";
 
 const iconsTrie = new Trie();
@@ -199,4 +213,16 @@ export const searchIcons = (prefix: string): string[] => {
   return iconsTrie.search(prefix)
 }
 
+export const resetAllData = () => {
+  resetDb()
+  revalidate(getManagers.key)
+  revalidate(getManager.key)
+  revalidate(getMenuItems.key)
+  revalidate(getUsergroups.key)
+  revalidate(getUsergroup.key)
+  revalidate(getGoods.key)
+  revalidate(getGood.key)
+  revalidate(getGoodsByGroupId.key)
+  revalidate(getGoodCategories.key)
+}
 export const isMobile = useMediaQuery("(max-width: 600px)")

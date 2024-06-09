@@ -1,8 +1,8 @@
 import { Box, Button, InputLabel, MenuItem, Modal, Select, TextField, Typography, useTheme } from "@suid/material"
 import { For, Signal, createSignal } from "solid-js"
-import { createManager } from "../../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
 import { AlertsStore, getManagers, getUsergroups } from "../../../lib/store"
+import { managersApi } from "../../../lib/axios/api"
 
 export default function CreateManagerModal(props: { open: Signal<boolean> }) {
   const [open, setOpen] = props.open
@@ -26,7 +26,7 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
       return;
     }
 
-    createManager(username(), password(), usergroup()).then((res) => {
+    managersApi.create(username(), password(), usergroup()).then((res) => {
       newSuccessAlert("创建成功")
       revalidate(getManagers.key)
       onCancel()

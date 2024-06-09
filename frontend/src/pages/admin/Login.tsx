@@ -2,7 +2,7 @@ import { A, useNavigate } from "@solidjs/router";
 import { Box, Button, TextField } from "@suid/material";
 import { Component, createSignal } from "solid-js";
 import { AdminLoginInfoStore, AlertsStore } from "../../lib/store";
-import { login } from "../../lib/axios/api";
+import { managersApi } from "../../lib/axios/api";
 
 const LoginPage: Component = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const LoginPage: Component = () => {
 
   function onLogin() {
     console.log("[Login]: onLogin")
-    login(username(), password()).then((res) => {
+    managersApi.login(username(), password()).then((res) => {
       console.log(`[Login]: login success:`, res)
 
       newSuccessAlert('登录成功')
@@ -72,6 +72,7 @@ const LoginPage: Component = () => {
               onChange={(_event, value) => {
                 setPassword(value)
               }}
+              
             />
           </div>
           <div class='flex gap-2 items-center justify-center'>

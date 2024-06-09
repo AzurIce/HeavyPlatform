@@ -1,9 +1,9 @@
 import { Box, Button, InputLabel, Modal, TextField, Typography, useTheme } from "@suid/material"
 import { Signal, createSignal } from "solid-js"
-import { createMenuItem } from "../../../lib/axios/api"
 import { revalidate } from "@solidjs/router"
 import { AlertsStore, getMenuItems } from "../../../lib/store"
 import IconInput from "../../IconInput"
+import { menuItemsApi } from "../../../lib/axios/api"
 
 export default function CreateManagerModal(props: { open: Signal<boolean> }) {
   const [open, setOpen] = props.open
@@ -27,7 +27,7 @@ export default function CreateManagerModal(props: { open: Signal<boolean> }) {
       return;
     }
 
-    createMenuItem(name(), icon(), url()).then((res) => {
+    menuItemsApi.create(name(), icon(), url()).then((res) => {
       newSuccessAlert("创建成功")
       revalidate(getMenuItems.key)
       onCancel()

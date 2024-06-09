@@ -1,7 +1,7 @@
 import { revalidate } from "@solidjs/router"
 import { Manager, Usergroup, getManager, getManagers, getUsergroup, getUsergroups } from "../../../lib/store"
-import { deleteManager, deleteUsergroup } from "../../../lib/axios/api"
 import { DeleteButton } from "../common"
+import { userGroupsApi } from "../../../lib/axios/api"
 
 const onRevalidate = (id: number) => {
   revalidate(getUsergroups.key)
@@ -10,4 +10,4 @@ const onRevalidate = (id: number) => {
   revalidate(getManager.key)
 }
 
-export const DeleteUsergroupModalButton = DeleteButton<Usergroup>("用户组", deleteUsergroup, onRevalidate);
+export const DeleteUsergroupModalButton = DeleteButton<Usergroup>("用户组", userGroupsApi.delete, onRevalidate);

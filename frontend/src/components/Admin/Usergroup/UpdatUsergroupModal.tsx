@@ -1,8 +1,8 @@
 import { Box, Button, Checkbox, Modal, TextField, Typography, useTheme } from "@suid/material"
 import { For, Signal, createEffect, createSignal } from "solid-js"
-import { updateUsergroup } from "../../../lib/axios/api"
 import { createAsync, revalidate } from "@solidjs/router"
 import { AlertsStore, Usergroup, getMenuItems, getUsergroup, getUsergroups } from "../../../lib/store"
+import { userGroupsApi } from "../../../lib/axios/api";
 
 export default function UpdateUsergroupModal(props: { target: Signal<Usergroup | undefined> }) {
   const [target, setTarget] = props.target;
@@ -27,7 +27,7 @@ export default function UpdateUsergroupModal(props: { target: Signal<Usergroup |
       newWarningAlert("名称不能为空");
       return;
     }
-    updateUsergroup(target()!.id, name(), access()).then((res) => {
+    userGroupsApi.update(target()!.id, name(), access()).then((res) => {
       newSuccessAlert("更新成功")
       revalidate(getUsergroups.key);
       revalidate(getUsergroup.keyFor(target()!.id));

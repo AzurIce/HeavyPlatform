@@ -1,12 +1,12 @@
 import { createSignal, onMount } from "solid-js"
 import { Box, Button, Card, Grid, Typography, useTheme } from "@suid/material"
 import { createAsync, useNavigate } from "@solidjs/router"
-import { getGoods, getCategories } from "../../lib/store"
+import { getGoods, getGoodCategories } from "../../lib/store"
 import GoodCard from "../../components/GoodCard"
 
 const CategoryPage = () => {
   const goods = createAsync(() => getGoods())
-  const categories = createAsync(() => getCategories())
+  const categories = createAsync(() => getGoodCategories())
   const navigate = useNavigate()
   const theme = useTheme()
 

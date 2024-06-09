@@ -17,7 +17,7 @@ import 诺瓦 from "../../assets/诺瓦.png";
 // Delete only sets the corresponding index to undefined,
 // in this way we can make sure the id of the manager is corresponding to it's index
 type Data = {
-  usergroups: (Usergroup | undefined)[]
+  userGroups: (Usergroup | undefined)[]
   managers: (Manager | undefined)[]
   menuItems: (MenuItem | undefined)[]
 
@@ -26,7 +26,7 @@ type Data = {
 }
 
 const defaultData: Data = {
-  usergroups: [{ id: 0, name: "默认用户组", access: [0] }],
+  userGroups: [{ id: 0, name: "默认用户组", access: [0] }],
   managers: [{ id: 0, usergroup: 0, username: "admin", password: "admin" }],
   menuItems: [{ id: 0, name: "主页", icon: "file-unknown", url: "/", enable: true }],
   goods: [
@@ -59,7 +59,7 @@ const defaultData: Data = {
       parent_id: 2,
       category_id: 0,
       name: "犹格索托斯的庭院 商人星野",
-      price: 7,
+      price: 999999999,
       imgs: [商人星野],
       description: "已经......回不去了......",
       specification: "不会真的有人会买店老板吧",
@@ -68,7 +68,7 @@ const defaultData: Data = {
     // 【凑阿库娅】
     {
       id: 3,
-      parent_id: 0,
+      parent_id: 3,
       category_id: 2,
       name: "凑阿库娅的😘照片",
       price: 10,
@@ -79,7 +79,7 @@ const defaultData: Data = {
     },
     {
       id: 4,
-      parent_id: 0,
+      parent_id: 3,
       category_id: 2,
       name: "凑阿库娅在整理头发",
       price: 12,
@@ -90,7 +90,7 @@ const defaultData: Data = {
     },
     {
       id: 5,
-      parent_id: 0,
+      parent_id: 3,
       category_id: 2,
       name: "凑阿库娅的带耳机照片",
       price: 11,
@@ -102,7 +102,7 @@ const defaultData: Data = {
     // 【碧蓝档案】
     {
       id: 6,
-      parent_id: 0,
+      parent_id: 6,
       category_id: 3,
       name: "未花",
       price: 20,
@@ -113,7 +113,7 @@ const defaultData: Data = {
     },
     {
       id: 7,
-      parent_id: 0,
+      parent_id: 7,
       category_id: 3,
       name: "真纪",
       price: 21,
@@ -124,7 +124,7 @@ const defaultData: Data = {
     },
     {
       id: 8,
-      parent_id: 0,
+      parent_id: 8,
       category_id: 3,
       name: "梓",
       price: 19,
@@ -135,7 +135,7 @@ const defaultData: Data = {
     },
     {
       id: 9,
-      parent_id: 0,
+      parent_id: 9,
       category_id: 3,
       name: "日富美",
       price: 21,
@@ -146,7 +146,7 @@ const defaultData: Data = {
     },
     {
       id: 10,
-      parent_id: 0,
+      parent_id: 10,
       category_id: 3,
       name: "玛丽",
       price: 20,
@@ -157,7 +157,7 @@ const defaultData: Data = {
     },
     {
       id: 11,
-      parent_id: 0,
+      parent_id: 11,
       category_id: 0,
       name: "诺瓦",
       price: 20,
@@ -253,7 +253,7 @@ export type GoodCategory = {
   name: string,
 }
 
-export const goods = {
+export const goodsDb = {
   data: () => db.data.goods,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
@@ -296,12 +296,19 @@ export const goods = {
   }
 }
 
-export const goodCategories = {
+export const goodCategoriesDb = {
   data: () => db.data.goodCategories,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
   delete: async function (id: number) {
     if (id == 0) return Promise.reject("cannot delete default category");
+
+    for (let good of goodsDb.data()) {
+      if (good != undefined) {
+        good.category_id = 0;
+      }
+    }
+
     await deleteById(this, id);
   },
 
@@ -327,7 +334,7 @@ type MenuItem = {
   enable: boolean,
 }
 
-export const menuItems = {
+export const menuItemsDb = {
   data: () => db.data.menuItems,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
@@ -348,7 +355,7 @@ export const menuItems = {
   delete: async function (id: number): Promise<void> {
     if (id == 0) return Promise.reject("cannot delete default menuItem")
     await deleteById(this, id);
-    for (let usergroup of usergroups.data()) {
+    for (let usergroup of usergroupsDb.data()) {
       if (usergroup != undefined) {
         usergroup.access = usergroup.access.filter((id) => db.data.menuItems[id] != undefined)
       }
@@ -364,14 +371,14 @@ type Usergroup = {
   access: number[] // 可以访问的菜单项 id
 }
 
-export const usergroups = {
-  data: () => db.data.usergroups,
+export const usergroupsDb = {
+  data: () => db.data.userGroups,
   getAll: async function () { return await getAll(this); },
   getById: async function (id: number) { return await getById(this, id); },
 
   create: async function (name: string, access: number[]): Promise<void> {
     for (let id of access) {
-      if (await menuItems.getById(id) == undefined) {
+      if (await menuItemsDb.getById(id) == undefined) {
         return Promise.reject("menu item not exist");
       }
     }
@@ -383,7 +390,7 @@ export const usergroups = {
 
   update: async function (id: number, name: string, access: number[]): Promise<void> {
     for (let id of access) {
-      if (await menuItems.getById(id) == undefined) {
+      if (await menuItemsDb.getById(id) == undefined) {
         return Promise.reject("menu item not exist");
       }
     }
@@ -396,7 +403,7 @@ export const usergroups = {
     if (id == 0) return Promise.reject("cannot delete default usergroup")
     await deleteById(this, id);
 
-    for (let manager of managers.data()) {
+    for (let manager of managersDb.data()) {
       if (manager != undefined && manager.usergroup == id) {
         manager.usergroup = 0;
       }
@@ -413,17 +420,22 @@ type Manager = {
   password: string,
 }
 
-export const managers = {
+export const managersDb = {
   data: () => db.data.managers,
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
-  getByUsername: async function (username: string): Promise<Manager | undefined> {
+  getByUsername: async function (username: string): Promise<Manager> {
     const manager = db.data.managers.find((manager) => manager?.username == username);
+    if (manager == undefined) {
+      return Promise.reject("manager not exist");
+    }
     return manager;
   },
 
   create: async function (username: string, password: string, usergroup: number): Promise<void> {
-    if (await this.getByUsername(username) != undefined) {
+    try {
+      await this.getByUsername(username)
+    } catch {
       return Promise.reject("username already exists");
     }
     const id = await newId(this);

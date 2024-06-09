@@ -2,14 +2,13 @@ import { Add, Delete, Edit, Restore } from "@suid/icons-material";
 import { Button, ButtonGroup, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Switch } from "@suid/material";
 import { Component, For, createSignal } from "solid-js";
 import { createAsync, revalidate } from "@solidjs/router";
-import { MenuItem, getMenuItems } from "../../../../lib/store";
+import { MenuItem, getMenuItems, resetAllData } from "../../../../lib/store";
 
-import { resetDb } from "../../../../lib/db";
 import CreateMenuItemModal from "../../../../components/Admin/MenuItem/CreateMenuItemModal";
 import UpdateMenuItemModal from "../../../../components/Admin/MenuItem/UpdateMenuItemModal";
 import { DeleteMenuItemModalButton } from "../../../../components/Admin/MenuItem";
-import { updateMenuItem } from "../../../../lib/axios/api";
 import { Icon } from "@iconify-icon/solid";
+import { menuItemsApi } from "../../../../lib/axios/api";
 
 const MenuItemPage: Component = () => {
   const createShow = createSignal(false);
@@ -20,7 +19,7 @@ const MenuItemPage: Component = () => {
   const menuItems = createAsync(() => getMenuItems());
 
   const onToggleItemDisplay = (item: MenuItem) => {
-    updateMenuItem(item.id, item.name, item.icon, item.url, !item.enable).then((res) => {
+    menuItemsApi.update(item.id, item.name, item.icon, item.url, !item.enable).then((res) => {
       revalidate(getMenuItems.key);
     }).catch((err) => {
       console.log(err)
@@ -41,7 +40,7 @@ const MenuItemPage: Component = () => {
       <Typography variant="h6">菜单项列表</Typography>
       <ButtonGroup>
         <Button onClick={() => { setCreateShow(true) }}>添加菜单项<Add /></Button>
-        <Button onClick={() => { resetDb() }} color="error">重置数据库<Restore /></Button>
+        <Button onClick={() => { resetAllData() }} color="error">重置数据库<Restore /></Button>
       </ButtonGroup>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
