@@ -14,6 +14,8 @@ import 日富美 from "../../assets/日富美.png";
 import 玛丽 from "../../assets/玛丽.png";
 import 诺瓦 from "../../assets/诺瓦.png";
 
+import 德克萨斯 from "../../assets/德克萨斯.jpeg";
+
 // Delete only sets the corresponding index to undefined,
 // in this way we can make sure the id of the manager is corresponding to it's index
 type Data = {
@@ -21,14 +23,25 @@ type Data = {
   managers: (Manager | undefined)[]
   menuItems: (MenuItem | undefined)[]
 
+  users: (User | undefined)[]
   goods: (Good | undefined)[]
   goodCategories: (GoodCategory | undefined)[]
-}
+  cartItems: (CartItem | undefined)[]
+  orders: (Order | undefined)[]
+};
 
 const defaultData: Data = {
   userGroups: [{ id: 0, name: "默认用户组", access: [0] }],
   managers: [{ id: 0, usergroup: 0, username: "admin", password: "admin" }],
   menuItems: [{ id: 0, name: "主页", icon: "file-unknown", url: "/", enable: true }],
+
+  users: [{
+    id: 0,
+    nickname: "AzurIce",
+    avatar: 德克萨斯,
+    username: "user",
+    password: "user",
+  }],
   goods: [
     // 【明日方舟 - 0】寻访凭证 & 中坚寻访凭证
     {
@@ -179,6 +192,43 @@ const defaultData: Data = {
   }, {
     id: 3,
     name: "碧蓝档案",
+  }],
+  cartItems: [{
+    id: 0,
+    user_id: 0,
+    good_id: 2,
+    quantity: 1,
+  }, {
+    id: 1,
+    user_id: 0,
+    good_id: 0,
+    quantity: 300,
+  }],
+  orders: [{
+    id: 0,
+    user_id: 0,
+    items: [{
+      id: 0, // 这里的 id 和 user_id 其实没啥用，只是为了方便从购物车下单（直接加到 items 里）
+      user_id: 0,
+      good_id: 6,
+      quantity: 1,
+    }, {
+      id: 0, // 这里的 id 和 user_id 其实没啥用，只是为了方便从购物车下单（直接加到 items 里）
+      user_id: 0,
+      good_id: 7,
+      quantity: 1,
+    }, {
+      id: 0, // 这里的 id 和 user_id 其实没啥用，只是为了方便从购物车下单（直接加到 items 里）
+      user_id: 0,
+      good_id: 8,
+      quantity: 1,
+    }, {
+      id: 0, // 这里的 id 和 user_id 其实没啥用，只是为了方便从购物车下单（直接加到 items 里）
+      user_id: 0,
+      good_id: 9,
+      quantity: 1,
+    },
+    ]
   }]
 };
 
@@ -225,7 +275,7 @@ const create = async function <T extends { id: number }>(target: { data: () => (
 
 const update = async function <T extends { id: number }>(target: { data: () => (T | undefined)[] }, element: T): Promise<void> {
   if (await getById(target, element.id) == undefined) {
-    return Promise.reject("good not exist");
+    return Promise.reject("item not exist");
   }
 
   // ! we can't update the object attribute only, we need to replace this object
@@ -234,6 +284,55 @@ const update = async function <T extends { id: number }>(target: { data: () => (
 }
 
 // ------------------------------------- //
+
+// CartItem
+export type CartItem = {
+  id: number,
+  good_id: number,
+  user_id: number,
+  quantity: number,
+}
+
+export type Order = {
+  id: number,
+  user_id: number,
+  items: CartItem[]
+}
+
+export const cartItemsDb = {
+  data: () => db.data.cartItems,
+  getAll: async function () { return await getAll(this) },
+  getById: async function (id: number) { return await getById(this, id) },
+  delete: async function (id: number) { await deleteById(this, id); },
+
+  create: async function (user_id: number, good_id: number, quantity: number): Promise<void> {
+    const id = await newId(this);
+
+    const element: CartItem = { id, user_id, good_id, quantity };
+    return await create(this, element);
+  },
+
+  update: async function (id: number, quantity: number): Promise<void> {
+    const cartItem = await this.getById(id);
+    const _cartItem = { ...cartItem, quantity };
+
+    return await update(this, _cartItem);
+  },
+}
+
+export const ordersDb = {
+  data: () => db.data.orders,
+  getAll: async function () { return await getAll(this) },
+  getById: async function (id: number) { return await getById(this, id) },
+  delete: async function (id: number) { await deleteById(this, id); },
+
+  create: async function (user_id: number, items: CartItem[]): Promise<void> {
+    const id = await newId(this);
+
+    const element: Order = { id, user_id, items };
+    return await create(this, element);
+  },
+}
 
 // good
 export type Good = {
@@ -361,6 +460,67 @@ export const menuItemsDb = {
       }
     }
     db.write();
+  }
+}
+
+// User 前台账号
+type User = {
+  id: number,
+  nickname: string,
+  avatar: string,
+  username: string,
+  password: string,
+}
+
+export const usersDb = {
+  data: () => db.data.users,
+  getAll: async function () { return await getAll(this) },
+  getById: async function (id: number) { return await getById(this, id) },
+  getByUsername: async function (username: string): Promise<User> {
+    const user = this.data().find((user) => user?.username == username);
+    if (user == undefined) {
+      return Promise.reject("manager not exist");
+    }
+    return user;
+  },
+
+  create: async function (username: string, password: string, nickname: string, avatar: string): Promise<void> {
+    try {
+      await this.getByUsername(username)
+    } catch {
+      return Promise.reject("username already exists");
+    }
+    const id = await newId(this);
+
+    const user: User = { id, username, password, nickname, avatar };
+    return await create(this, user);
+  },
+
+  update: async function (id: number, username: string, nickname: string, avatar: string): Promise<void> {
+    let user = await this.getById(id);
+    if (user == undefined) {
+      return Promise.reject("user not exist");
+    }
+
+    const _user: User = { ...user, username, nickname, avatar }
+    return await update(this, _user);
+  },
+
+  updatePassword: async function (id: number, password: string): Promise<void> {
+    let user = await this.getById(id);
+    if (user == undefined) {
+      return Promise.reject("user not exist");
+    }
+
+    // Have to reconstruct the object, otherwise <For> won't react
+    const _user: User = { ...user, password }
+    db.data.users[id] = _user;
+    db.write();
+  },
+
+  delete: async function (id: number): Promise<void> {
+    if (id == 0) return Promise.reject("cannot delete default user")
+    await deleteById(this, id);
   }
 }
 

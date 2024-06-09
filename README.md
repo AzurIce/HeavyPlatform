@@ -70,8 +70,8 @@
 
 需要的数据模型：
 
-- [ ] 商品
-- [ ] 商品分类
+- [x] 商品
+- [x] 商品分类
 - [ ] 订单
 
 需要的数据：
@@ -109,7 +109,7 @@ type Good = {
     id: number,
     // group_id: number | undefined,
     parent_id: number
-    category_id: number | undefined,
+    category_id: number,
     name: string,
     price: number,
     imgs: string[],        // 详情页首部的图片
