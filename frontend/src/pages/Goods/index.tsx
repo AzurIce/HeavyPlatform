@@ -68,7 +68,7 @@ const GoodDetailPage: Component = () => {
         </Typography>
 
         <div class="flex gap-2">
-          <Button onClick={user() == undefined ? openLoginModal : () => setShowOrderModal(true)} variant="outlined" color="primary" sx={{ flexGrow: 1 }}>
+          <Button onClick={user() == undefined ? openLoginModal : () => setShowAddToCartModal(true)} variant="outlined" color="primary" sx={{ flexGrow: 1 }}>
             加入购物车
           </Button>
           <Button onClick={user() == undefined ? openLoginModal : () => setShowOrderModal(true)} variant="contained" color="primary" sx={{ flexGrow: 1 }}>

@@ -1,5 +1,5 @@
 import { createAsync, useNavigate, useParams } from "@solidjs/router";
-import { Component, For } from "solid-js";
+import { Component, For, onMount } from "solid-js";
 import { getGoods, getOrder, getOrders, LoginInfoStore, Good, Order, CartItem } from "../../lib/store";
 import { Box, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Card, CardContent, Divider, Button, AppBar, Toolbar, Container, IconButton } from "@suid/material";
 import NotFound from "../NotFound";
@@ -11,6 +11,12 @@ const Orders: Component = () => {
   const orders = createAsync(() => getOrders());
   const { user } = LoginInfoStore();
   const currentUser = user()?.id;
+
+  onMount(() => {
+    if (user() == undefined) {
+      navigate(`/`);
+    }
+  })
 
   return (
     <Box sx={{ flexGrow: 1 }}>
