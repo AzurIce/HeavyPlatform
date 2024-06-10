@@ -1,18 +1,28 @@
 
-import { Component, createSignal, createEffect, For, Show } from "solid-js";
-import { createAsync, revalidate } from "@solidjs/router";
+import { Component, createSignal, createEffect, For, Show, onMount } from "solid-js";
+import { createAsync, revalidate, useNavigate } from "@solidjs/router";
 import { Box, Typography, Button } from "@suid/material";
-import { getCartItems, getGood, CartItem, Good, getGoods } from "../../lib/store";
+import { getCartItems, getGood, CartItem, Good, getGoods, LoginInfoStore, AlertsStore, getOrders } from "../../lib/store";
 import CartItemCard from "../../components/CartItemCard";
-import { cartItemsApi } from "../../lib/axios/api";
+import { cartItemsApi, ordersApi } from "../../lib/axios/api";
+import OrderModal from "../../components/OrderModal";
 
 const Cart: Component = () => {
-  const userId = 0; // 假设当前用户ID为0
+  const { user, openLoginModal } = LoginInfoStore();
+  const { newInfoAlert } = AlertsStore();
+  const navigate = useNavigate();
+
+  onMount(() => {
+    if (user() == undefined) {
+      navigate(`/`);
+      newInfoAlert("请先登录")
+    }
+  })
 
   const goods = createAsync(() => getGoods());
   const cartItems = createAsync(() => getCartItems());
   const curCartItems = () => {
-    return cartItems()?.filter(item => item.user_id === userId);
+    return cartItems()?.filter(item => item.user_id === user()?.id);
   }
   const total = () => {
     return selectedCartItems().reduce((acc, item) => {
@@ -37,8 +47,20 @@ const Cart: Component = () => {
     }
   }
 
+  const onSubmit = () => {
+    ordersApi.create(user()!.id, selectedCartItems()).then((res) => {
+      Promise.all(selectedCartItems().map((item) => cartItemsApi.delete(item.id))).then(() => {
+        revalidate(getCartItems.key)
+        revalidate(getOrders.key)
+      })
+    })
+  }
+
+  const [show, setShow] = createSignal(false);
+
   return (
     <Box class="p-4">
+      <OrderModal show={show()} onClose={() => setShow(false)} user_id={user()!.id} items={selectedCartItems()} />
       <Typography variant="h6" component="div" class="mb-4">
         购物车
       </Typography>
@@ -63,7 +85,7 @@ const Cart: Component = () => {
         <Typography variant="h6" component="div">
           总价: {total()} 元
         </Typography>
-        <Button variant="contained" color="primary" class="mt-2">结算</Button>
+        <Button variant="contained" color="primary" class="mt-2" onClick={user() == undefined ? openLoginModal : () => setShow(true)}>结算</Button>
       </Box>
     </Box>
   );

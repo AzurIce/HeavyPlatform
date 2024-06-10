@@ -98,6 +98,7 @@ const GoodDetailPage: Component = () => {
           show={showOrderModal()}
           onClose={() => setShowOrderModal(false)}
           user_id={user()!.id}
+          cntChange={true}
           items={[{ id: good()!.id, good_id: good()!.id, user_id: user()!.id, quantity: 1 }]} />
         <AddToCartModal
           show={showAddToCartModal()}
