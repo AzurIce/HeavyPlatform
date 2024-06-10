@@ -210,12 +210,6 @@ export type CartItem = {
   quantity: number,
 }
 
-export type Order = {
-  id: number,
-  user_id: number,
-  items: CartItem[]
-}
-
 export const getCartItems = cache(async () => {
   return await cartItemsApi.getAll();
 }, "cartItems")
@@ -223,6 +217,14 @@ export const getCartItems = cache(async () => {
 export const getCartItem = cache(async (id: number) => {
   return await cartItemsApi.getById(id);
 }, "cartItem")
+
+
+// Order
+export type Order = {
+  id: number,
+  user_id: number,
+  items: CartItem[]
+}
 
 export const getOrders = cache(async () => {
   return await ordersApi.getAll();

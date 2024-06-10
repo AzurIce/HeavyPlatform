@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 
 const serverHost = 'http://localhost'
-const serverPort = 9999
+const serverPort = 9998
 
 /**
  * A lowdb-style wrapper class for GR Backend API
