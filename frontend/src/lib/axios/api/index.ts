@@ -23,7 +23,7 @@ export const managersApi = {
     return await managersDb.getById(id);
   },
 
-  create: async function (username: string, password: string, usergroup?: number): Promise<void> {
+  create: async function (username: string, password: string, usergroup?: number): Promise<number> {
     return await managersDb.create(username, password, usergroup || 0);
   },
 
@@ -46,7 +46,7 @@ export const menuItemsApi = {
     return await menuItemsDb.getAll();
   },
 
-  create: async function (name: string, icon: string, url: string): Promise<void> {
+  create: async function (name: string, icon: string, url: string): Promise<number> {
     return await menuItemsDb.create(name, icon, url);
   },
 
@@ -73,7 +73,7 @@ export const userGroupsApi = {
     return await userGroupsDb.delete(id);
   },
 
-  create: async function (name: string, access: number[]): Promise<void> {
+  create: async function (name: string, access: number[]): Promise<number> {
     return await userGroupsDb.create(name, access);
   },
 
@@ -104,7 +104,7 @@ export const usersApi = {
     return await usersDb.getById(id);
   },
 
-  create: async function (username: string, password: string, nickname: string, avatar: string): Promise<void> {
+  create: async function (username: string, password: string, nickname: string, avatar: string): Promise<number> {
     return await usersDb.create(username, password, nickname, avatar);
   },
 
@@ -151,7 +151,7 @@ export const goodsApi = {
     specification: string,
     detail: string,
     category_id?: number
-  ): Promise<void> {
+  ): Promise<number> {
     return await goodsDb.create(name, price, imgs, description, specification, detail, category_id || 0);
   },
 
@@ -183,7 +183,7 @@ export const goodCategoriesApi = {
     return await goodCategoriesDb.delete(id);
   },
 
-  create: async function (name: string): Promise<void> {
+  create: async function (name: string): Promise<number> {
     return await goodCategoriesDb.create(name);
   },
 
@@ -206,7 +206,7 @@ export const cartItemsApi = {
     return await cartItemsDb.delete(id);
   },
 
-  create: async function (user_id: number, good_id: number, quantity: number): Promise<void> {
+  create: async function (user_id: number, good_id: number, quantity: number): Promise<number> {
     return await cartItemsDb.create(user_id, good_id, quantity);
   },
 
@@ -229,7 +229,7 @@ export const ordersApi = {
     return await ordersDb.delete(id);
   },
 
-  create: async function (user_id: number, items: CartItem[]): Promise<void> {
+  create: async function (user_id: number, items: CartItem[]): Promise<number> {
     return await ordersDb.create(user_id, items);
   },
 }
