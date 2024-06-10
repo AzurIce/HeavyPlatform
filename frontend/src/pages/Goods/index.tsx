@@ -1,23 +1,34 @@
-import { Component, createEffect } from "solid-js"
+import { For, createEffect } from "solid-js"
 import { createSignal } from "solid-js"
-import { Card, CardMedia, Box, Typography, Button, Container } from "@suid/material"
-import { getGood } from "../../lib/store"
+import { Card, CardMedia, Box, Typography, Button } from "@suid/material"
+import { getGood, getGoodsByGroupId } from "../../lib/store"
 import { createAsync, useNavigate, useParams } from "@solidjs/router"
 
 const GoodDetailPage = () => {
   const params = useParams()
   const good = createAsync(() => getGood(Number(params.id)))
+  const goodsInTheSameGroup = createAsync(() => getGoodsByGroupId(Number(good()?.parent_id)))
   const [currentImage, setCurrentImage] = createSignal(good()?.imgs[0])
+  const [cur, setCur] = createSignal(0);
   const navigate = useNavigate()
 
   createEffect(() => {
     if (good()) {
       setCurrentImage(good()?.imgs[0])
     }
+    const goods = goodsInTheSameGroup()
+    if (goods) {
+      for (let i = 0; i < goods.length; i++) {
+        if (goods[i].id == Number(params.id)) {
+          setCur(i)
+          break
+        }
+      }
+    }
   })
 
   const handleBackClick = () => {
-    navigate(-1)
+    navigate('/')
   }
 
   return (
@@ -37,6 +48,12 @@ const GoodDetailPage = () => {
         <Typography variant="body2" color="text.secondary">
           {good()?.description}
         </Typography>
+        <div class="flex flex-wrap gap-4">
+          <For each={goodsInTheSameGroup()}>{(item, index) => (
+            <Button onClick={() => navigate(`/goods/${item.id}`)} variant={index() == cur() ? "contained" : "outlined"}
+              sx={{flexShrink: 0}}>{item.name}</Button>
+          )}</For>
+        </div>
         <Typography variant="h5" component="div" color="error">
           ¥{good()?.price}
         </Typography>
