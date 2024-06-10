@@ -5,14 +5,13 @@ import { Box, Card, CardMedia, Typography, IconButton, useTheme } from '@suid/ma
 import AddIcon from '@suid/icons-material/Add';
 import RemoveIcon from '@suid/icons-material/Remove';
 
-const OrderItemCard: Component<{ id: number, initialQuantity: number, onQuantityChange: (id: number, quantity: number) => void }> = (props) => {
-  const { id, initialQuantity, onQuantityChange } = props;
+const OrderItemCard: Component<{ id: number, onQuantityChange: (quantity: number) => void, quantity?: number }> = (props) => {
+  const { id, onQuantityChange } = props;
   const good = createAsync(() => getGood(id));
-  const theme = useTheme();
-  const [quantity, setQuantity] = createSignal(initialQuantity);
+  const [quantity, setQuantity] = createSignal(props.quantity || 1);
 
   const updateQuantity = () => {
-    onQuantityChange(id, quantity());
+    onQuantityChange(quantity());
   };
 
   const handleIncrease = () => {

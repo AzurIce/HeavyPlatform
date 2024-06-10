@@ -84,8 +84,8 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
               {props.items.map(good => (
                 <OrderItemCard
                   id={good.id}
-                  initialQuantity={good.quantity}
-                  onQuantityChange={handleQuantityChange}
+                  quantity={good.quantity}
+                  onQuantityChange={(quantity) => handleQuantityChange(good.id, quantity)}
                 />
               ))}
             </Box>
