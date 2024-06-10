@@ -1,0 +1,53 @@
+@font-face {
+    font-family: 'LXGW Bright';
+    src: local('LXGW Bright'),
+    url('./LXGWBright-SemiLight.ttf');
+    font-display: swap;
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LXGW Bright';
+    src: local('LXGW Bright'),
+    url('./LXGWBright-SemiLightItalic.ttf');
+    font-display: swap;
+    font-weight: 200;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'LXGW Bright';
+    src: local('LXGW Bright'),
+    url('./LXGWBright-Regular.ttf');
+    font-display: swap;
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LXGW Bright';
+    src: local('LXGW Bright'),
+    url('./LXGWBright-Italic.ttf');
+    font-display: swap;
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'LXGW Bright';
+    src: local('LXGW Bright'),
+    url('./LXGWBright-Medium.ttf');
+    font-display: swap;
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LXGW Bright';
+    src: local('LXGW Bright'),
+    url('./LXGWBright-MediumItalic.ttf');
+    font-display: swap;
+    font-weight: 400;
+    font-style: italic;
+}
