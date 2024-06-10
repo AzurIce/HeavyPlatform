@@ -1,15 +1,46 @@
 import { createAsync, useNavigate, useParams } from "@solidjs/router";
-import { Component } from "solid-js";
-import { getGoods, getOrder, getOrders, Good, Order, CartItem } from "../../lib/store";
-import { Box, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Card, CardContent, Divider, Button } from "@suid/material";
+import { Component, For } from "solid-js";
+import { getGoods, getOrder, getOrders, LoginInfoStore, Good, Order, CartItem } from "../../lib/store";
+import { Box, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Card, CardContent, Divider, Button, AppBar, Toolbar, Container, IconButton } from "@suid/material";
 import NotFound from "../NotFound";
+import OrderCard from "../../components/OrderCard";
+import { Home } from "@suid/icons-material";
 
 const Orders: Component = () => {
   const navigate = useNavigate();
   const orders = createAsync(() => getOrders());
+  const { user } = LoginInfoStore();
+  const currentUser = user()?.id;
 
-  return <>Orders</>;
-}
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position='sticky'>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={() => navigate('/')}
+          >
+            <Home />
+          </IconButton>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            全部订单
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container sx={{ padding: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <For each={orders()?.filter(order => order.user_id === currentUser)}>{(item) =>
+            <OrderCard id={item.id} />
+          }</For>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
 
 const OrderDetailPage: Component = () => {
   const params = useParams();
@@ -73,7 +104,7 @@ const OrderDetailPage: Component = () => {
               })}
             </List>
             <Divider sx={{ marginY: 2 }} />
-            <Typography variant="h6" sx={{ textAlign: 'right' }}>
+            <Typography variant="h5" sx={{ textAlign: 'right' }}>
               总金额: ¥{calculateTotalAmount()}
             </Typography>
           </CardContent>
