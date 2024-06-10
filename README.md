@@ -56,7 +56,7 @@
 引入后端：
 
 - [Axios](https://github.com/axios/axios)：用于前端向后端发请求
-- 手搓基于 json 的建议 key-value 数据库
+- 手搓基于 json 的简易 key-value 数据库
 
 ## 第三次作业
 
