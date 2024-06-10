@@ -58,7 +58,7 @@ const GoodDetailPage: Component = () => {
         {/* 商品组 */}
         <div class="flex flex-wrap gap-4">
           <For each={goodsInTheSameGroup()}>{(item, index) => (
-            <Button onClick={() => navigate(`/goods/${item.id}`)} variant={index() == cur() ? "contained" : "outlined"}
+            <Button onClick={() => navigate(`/goods/${item.id}`, { replace: true })} variant={index() == cur() ? "contained" : "outlined"}
               sx={{ flexShrink: 0 }}>{item.name}</Button>
           )}</For>
         </div>
