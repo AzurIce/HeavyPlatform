@@ -68,7 +68,7 @@ const OrderItemCard: Component<{ id: number, initialQuantity: number, onQuantity
           </IconButton>
         </Box>
         <Show when={good()?.price} fallback={<div>Loading...</div>}>
-          <Typography variant="body1" color="error">总价: ¥{(good()?.price || 0) * quantity()}</Typography>
+          <Typography variant="body1">价格: ¥{(good()?.price || 0) * quantity()}</Typography>
         </Show>
       </Box>
     </Card>

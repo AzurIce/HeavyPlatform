@@ -1,7 +1,7 @@
 import { Component, createSignal, createEffect } from 'solid-js';
 import { useNavigate } from "@solidjs/router";
 import { isMobile, CartItem, getGood, Good } from '../lib/store';
-import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@suid/material';
+import { Box, Typography, Button, Dialog, Divider, DialogContent, DialogTitle, Radio, RadioGroup, FormControlLabel } from '@suid/material';
 import { createOrder } from '../lib/store';
 import OrderItemCard from './OrderItemCard';
 
@@ -10,6 +10,7 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
   const [totalPrices, setTotalPrices] = createSignal<number[]>(Array(props.items.length).fill(0));
   const [goods, setGoods] = createSignal<Good[]>([]);
   const [updatedItems, setUpdatedItems] = createSignal<CartItem[]>(props.items);
+  const [paymentMethod, setPaymentMethod] = createSignal('alipay');
   const navigate = useNavigate();
 
   createEffect(async () => {
@@ -61,63 +62,66 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
 
   return (
     <Dialog open={props.show} onClose={props.onClose} maxWidth="sm" fullWidth>
-      <DialogTitle sx={{ fontSize: '1.5rem' }}>创建订单</DialogTitle>
-      <DialogContent>
-        {step() === 1 && (
+      <DialogTitle sx={{ fontSize: '1.5rem', textAlign: 'center', backgroundColor: '#e0f7fa', fontWeight: 'bold' }}>
+        {step() === 1 && '创建订单'}
+        {step() === 2 && '支付'}
+        {step() === 3 && '付款成功'}
+      </DialogTitle>
+      <DialogContent sx={{ marginTop: '10px'}}>
+      {step() === 1 && (
           <Box>
-            <Typography variant="h6">商品信息</Typography>
+            <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2 }}>商品信息</Typography>
             <Box>
               {props.items.map(good => (
                 <OrderItemCard
-                  id={good.id} 
-                  initialQuantity={good.quantity} 
-                  onQuantityChange={handleQuantityChange} 
+                  id={good.id}
+                  initialQuantity={good.quantity}
+                  onQuantityChange={handleQuantityChange}
                 />
               ))}
             </Box>
-            <Box mt={2}>
-              <Typography variant="h6">总价格: ¥{calculateTotalPrice()}</Typography>
+            <Divider sx={{ marginY: 2 }} />
+            <Box>
+              <Typography variant="h6" sx={{ textAlign: 'center' }}>商品总价: ¥{calculateTotalPrice()}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+              <Button onClick={handleNextStep} variant="contained" color="primary" sx={{ width: '80%', marginBottom: 1 }} disabled={calculateTotalPrice() <= 0}>提交订单</Button>
+              <Button onClick={props.onClose} color="secondary" sx={{ width: '80%' }}>取消</Button>
             </Box>
           </Box>
         )}
         {step() === 2 && (
-          <Box>
-            <Typography variant="h6">只存在于虚拟的支付页面</Typography>
-            <Box mt={2}>
-              <Typography variant="h6">总价格: ¥{calculateTotalPrice()}</Typography>
+          // <Box>
+          //   <Typography variant="h6">只存在于虚拟的支付页面</Typography>
+          // </Box>
+          <Box> 
+            <Typography variant="h4" color="error" sx={{ textAlign: 'center', marginTop: 1 }}>¥{calculateTotalPrice()}</Typography>
+            <RadioGroup value={paymentMethod()} onChange={(event) => setPaymentMethod(event.target.value)} sx={{ marginTop: 2 }}>
+              <FormControlLabel value="alipay" control={<Radio />} label="支付宝支付" />
+              <FormControlLabel value="wechat" control={<Radio />} label="微信支付" />
+            </RadioGroup>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+              <Button onClick={handlePaymentSuccess} variant="contained" color="primary" sx={{ width: '80%', marginBottom: 1 }}>确认支付</Button>
+              <Button onClick={handlePreviousStep} color="secondary" sx={{ width: '80%' }}>返回上一步</Button>
             </Box>
           </Box>
         )}
         {step() === 3 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+          <Box>
             <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
               🎉 付款成功喵 🎉
             </Typography>
             <Typography variant="body1" sx={{ textAlign: 'center', marginTop: 1 }}>
               感谢您的购买喵~ 💖 小猫娘会尽快处理您的订单喵~ 💖
             </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+              <Button onClick={() => navigate('/orders')} variant="contained" color="primary" sx={{ width: '80%', marginBottom: 1 }}>查看订单</Button>
+              <Button onClick={() => navigate('/')} color="secondary" sx={{ width: '80%' }}>返回主页</Button>
+            </Box>
           </Box>
         )}
+
       </DialogContent>
-      <DialogActions sx={{ justifyContent: step() === 3 ? 'center' : 'flex-end' }}>
-        {step() === 1 && (
-          <>
-            <Button onClick={props.onClose} color="secondary">取消</Button>
-            <Button onClick={handleNextStep} color="primary" disabled={calculateTotalPrice() <= 0}>立即下单</Button>
-          </>
-        )}
-        {step() === 2 && (
-          <>
-            <Button onClick={handlePreviousStep} color="secondary">上一步</Button>
-            <Button onClick={handlePaymentSuccess} color="primary">立即付款</Button>
-          </>
-        )}
-        {step() === 3 && (
-          <>
-            <Button onClick={() => navigate('/orders')} color="primary">查看订单</Button>
-          </>
-        )}
-      </DialogActions>
     </Dialog>
   );
 };
