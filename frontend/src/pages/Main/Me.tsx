@@ -5,6 +5,8 @@ import { createAsync, useNavigate } from "@solidjs/router";
 
 const LoginedUserInfo: Component<{ userId: number }> = ({ userId }) => {
   const user = createAsync(() => getUser(userId));
+  const { logout } = LoginInfoStore();
+  const navigate = useNavigate();
 
   return <>
     <Show when={user() != undefined}>
@@ -13,26 +15,30 @@ const LoginedUserInfo: Component<{ userId: number }> = ({ userId }) => {
         <Box>
           <Typography variant="h6">{user()!.nickname}</Typography>
           <Typography variant="body1">@{user()!.username}</Typography>
+          <Typography variant="body2">ID: {user()!.id}</Typography>
+          <Button variant="contained" color="secondary" onClick={logout}>登出</Button>
+          <Button onClick={() => { navigate(`/orders`) }}>我的订单</Button>
         </Box>
       </Box>
-      <Typography variant="body2">ID: {user()!.id}</Typography>
+      
     </Show>
   </>
 }
 
 const NotLoginedUserInfo: Component = () => {
-  return <>
-  </>
+  const {  openLoginModal } = LoginInfoStore();
+  return (
+    <Box class="flex flex-col items-center">
+      <Typography variant="h6" class="mb-4">您尚未登录</Typography>
+      <Button variant="contained" color="primary" onClick={openLoginModal}>登录</Button>
+    </Box>
+  );
 }
 
 const Me: Component = () => {
   const navigate = useNavigate();
-  const { user, logout, openLoginModal, showLoginModal } = LoginInfoStore();
+  const { user,  showLoginModal } = LoginInfoStore();
 
-
-  const handleLogout = () => {
-    // 处理登出逻辑
-  };
 
   return (
     <Box class="p-4">
@@ -41,11 +47,6 @@ const Me: Component = () => {
         <Match when={user() == undefined}><NotLoginedUserInfo /></Match>
         <Match when={user() != undefined}><LoginedUserInfo userId={user()!.id} /></Match>
       </Switch>
-      <>
-        {/* 这里可以添加更多用户信息 */}
-        <Button variant="contained" color="secondary" onClick={logout}>登出</Button>
-      </>
-      <Button onClick={user() == undefined ? openLoginModal : () => { navigate(`/orders`) }}>我的订单</Button>
     </Box>
   );
 };
