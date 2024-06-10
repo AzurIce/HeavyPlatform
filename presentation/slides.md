@@ -13,9 +13,9 @@ mdc: true
 肖斌 俞贤皓 付家齐 杨鹏 谷雅丰
 
 <div class="absolute right-0 top-0 bottom-0 w-90 m-10">
-  <img src="admin.png" class="absolute transform -left-10 -rotate-5 shadow">
-  <img src="main-mobile.png" class="absolute h-80 left-10 bottom-5 transform rotate-30 z-10 shadow">
-  <img src="main-desktop.png" class="absolute transform top-20 rotate-10 shadow">
+  <img src="/admin.png" class="absolute transform -left-10 -rotate-5 shadow">
+  <img src="/main-mobile.png" class="absolute h-80 left-10 bottom-5 transform rotate-30 z-10 shadow">
+  <img src="/main-desktop.png" class="absolute transform top-20 rotate-10 shadow">
 </div>
 
 ---
@@ -95,16 +95,16 @@ hideInToc: true
 - 前后端交互：axios
 
 <div v-click="[1, 2]" class="absolute bottom-0 left-0 right-0 bottom-30 flex h-60 justify-center">
-  <img src="bun-1.png" class="shadow">
-  <img src="bun-2.png" class="shadow">
+  <img src="/bun-1.png" class="shadow">
+  <img src="/bun-2.png" class="shadow">
 </div>
 
 <div v-click="[3, 4]" class="absolute bottom-0 left-0 right-0 bottom-30 flex h-70 justify-center">
-  <img src="solidjs.png" class="shadow">
+  <img src="/solidjs.png" class="shadow">
 </div>
 
 <div v-click="[5, 6]" class="absolute bottom-0 left-0 right-0 bottom-30 flex h-90 justify-center">
-  <img src="unocss.png" class="shadow">
+  <img src="/unocss.png" class="shadow">
 </div>
 
 <div v-click="9" class="absolute bottom-0 left-0 right-0 flex h-70 justify-center">
