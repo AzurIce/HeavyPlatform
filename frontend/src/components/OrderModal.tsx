@@ -11,6 +11,7 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
   const [goods, setGoods] = createSignal<Good[]>([]);
   const [updatedItems, setUpdatedItems] = createSignal<CartItem[]>(props.items);
   const [paymentMethod, setPaymentMethod] = createSignal('alipay');
+  const [orderId, setOrderId] = createSignal<number | null>(null);
   const navigate = useNavigate();
 
   const { newErrorAlert } = AlertsStore();
@@ -23,11 +24,11 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
   });
 
   const handleNextStep = () => {
-    setStep(v => v+1);
+    setStep(v => v + 1);
   };
 
   const handlePreviousStep = () => {
-    setStep(v => v-1);
+    setStep(v => v - 1);
   };
 
   const handleQuantityChange = (id: number, quantity: number) => {
@@ -57,16 +58,15 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
   };
 
   const handlePaymentSuccess = () => {
-    // console.log(updatedItems());
-    // createOrder(props.user_id, updatedItems());
-    ordersApi.create(props.user_id, updatedItems()).then((res) => {
-      revalidate(getOrders.key)
+    ordersApi.create(props.user_id, updatedItems()).then((id) => {
+      revalidate(getOrders.key);
+      setOrderId(id); // Save the created order ID
+      setStep(3);
     }).catch((err) => {
-      console.log(err)
-      newErrorAlert(`订单创建失败：${err}`)
-      props.onClose
-    })
-    setStep(3);
+      console.log(err);
+      newErrorAlert(`订单创建失败：${err}`);
+      props.onClose();
+    });
   };
 
   return (
@@ -76,8 +76,8 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
         {step() === 2 && '支付'}
         {step() === 3 && '付款成功'}
       </DialogTitle>
-      <DialogContent sx={{ marginTop: '10px'}}>
-      {step() === 1 && (
+      <DialogContent sx={{ marginTop: '10px' }}>
+        {step() === 1 && (
           <Box>
             <Typography variant="h6" sx={{ textAlign: 'center', marginBottom: 2 }}>商品信息</Typography>
             <Box>
@@ -100,10 +100,7 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
           </Box>
         )}
         {step() === 2 && (
-          // <Box>
-          //   <Typography variant="h6">只存在于虚拟的支付页面</Typography>
-          // </Box>
-          <Box> 
+          <Box>
             <Typography variant="h4" color="error" sx={{ textAlign: 'center', marginTop: 1 }}>¥{calculateTotalPrice()}</Typography>
             <RadioGroup value={paymentMethod()} onChange={(event) => setPaymentMethod(event.target.value)} sx={{ marginTop: 2 }}>
               <FormControlLabel value="alipay" control={<Radio />} label="支付宝支付" />
@@ -124,12 +121,11 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
               感谢您的购买喵~ 💖 小猫娘会尽快处理您的订单喵~ 💖
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
-              <Button onClick={() => navigate('/orders')} variant="contained" color="primary" sx={{ width: '80%', marginBottom: 1 }}>查看订单</Button>
+              <Button onClick={() => navigate(`/orders/${orderId()}`)} variant="contained" color="primary" sx={{ width: '80%', marginBottom: 1 }}>查看订单</Button>
               <Button onClick={() => navigate('/')} color="secondary" sx={{ width: '80%' }}>返回主页</Button>
             </Box>
           </Box>
         )}
-
       </DialogContent>
     </Dialog>
   );
