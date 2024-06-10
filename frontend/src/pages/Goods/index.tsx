@@ -9,14 +9,13 @@ import AddToCartModal from "../../components/AddToCartModal"
 
 const GoodDetailPage: Component = () => {
   const params = useParams()
-  const { user } = LoginInfoStore()
-  // FIXME: 处理用户没有登录的情况
+  const { user, openLoginModal } = LoginInfoStore()
+
   const good = createAsync(() => getGood(Number(params.id)))
   const goodsInTheSameGroup = createAsync(() => getGoodsByGroupId(Number(good()?.parent_id)))
   const [currentImage, setCurrentImage] = createSignal(good()?.imgs[0])
 
   const [cur, setCur] = createSignal(0);
-  const [loginModalOpen, setLoginModalOpen] = createSignal(false)
   const [showOrderModal, setShowOrderModal] = createSignal(false)
   const [showAddToCartModal, setShowAddToCartModal] = createSignal(false)
 
@@ -37,39 +36,17 @@ const GoodDetailPage: Component = () => {
     }
   })
 
-  const handleBackClick = () => {
-    navigate('/')
-  }
-
-  const handleBuynowClick = () => {
-    if (user() == undefined) {
-      setLoginModalOpen(true)
-      return;
-    }
-    setShowOrderModal(true)
-  }
-
-  const handleAddToCart = () => {
-    if (user() == undefined) {
-      setLoginModalOpen(true)
-      return;
-    }
-    setShowAddToCartModal(true)
-  }
-
-
   return (
     <>
-      <Card elevation={0} sx={{ display: "flex", flexDirection: "column", gap: 2, padding: '30px', border: 'solid 2px rgba(0,0,0,0.2)', margin: '20px 20px' }}>
-        <LoginModal isOpen={loginModalOpen} setIsOpen={setLoginModalOpen} />
-        <Button onClick={handleBackClick} sx={{ alignSelf: 'flex-start' }}>
+      <Card elevation={0} sx={{ display: "flex", flexDirection: "column", alignItems: 'stretch', gap: 2, padding: '30px', border: 'solid 2px rgba(0,0,0,0.2)', margin: '20px 20px' }}>
+        <Button onClick={() => navigate(-1)} sx={{ alignSelf: 'flex-start' }}>
           返回
         </Button>
         <CardMedia
           component="img"
           src={currentImage()}
           alt="商品图片"
-          sx={{ width: '100%', height: 'auto' }}
+          sx={{ width: '60%', height: 'auto', objectFit: "contain", margin: 'auto' }}
         />
         <Typography variant="h6" component="div">
           {good()?.name}
@@ -91,11 +68,10 @@ const GoodDetailPage: Component = () => {
         </Typography>
 
         <div class="flex gap-2">
-          {/* TODO: 购物车 */}
-          <Button onClick={handleAddToCart} variant="outlined" color="primary" sx={{ flexGrow: 1 }}>
+          <Button onClick={user() == undefined ? openLoginModal : () => setShowOrderModal(true)} variant="outlined" color="primary" sx={{ flexGrow: 1 }}>
             加入购物车
           </Button>
-          <Button onClick={handleBuynowClick} variant="contained" color="primary" sx={{ flexGrow: 1 }}>
+          <Button onClick={user() == undefined ? openLoginModal : () => setShowOrderModal(true)} variant="contained" color="primary" sx={{ flexGrow: 1 }}>
             立即购买
           </Button>
         </div>

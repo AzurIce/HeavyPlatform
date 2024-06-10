@@ -8,21 +8,19 @@ interface CarouselProps {
 }
 
 const Carousel: Component<CarouselProps> = ({ ids }) => {
-  const [currentIndex, setCurrentIndex] = createSignal(0)
-  const [isLoaded, setIsLoaded] = createSignal(false)
   const navigate = useNavigate()
 
+  const [curIndex, setCurIndex] = createSignal(0)
+
   const nextImage = () => {
-    setIsLoaded(false)
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % ids.length)
+    setCurIndex((prevIndex) => (prevIndex + 1) % ids.length)
   }
 
   const prevImage = () => {
-    setIsLoaded(false)
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + ids.length) % ids.length)
+    setCurIndex((prevIndex) => (prevIndex - 1 + ids.length) % ids.length)
   }
 
-  const good = createAsync(() => getGood(ids[currentIndex()]))
+  const good = createAsync(() => getGood(ids[curIndex()]))
 
   // 自动翻页
   onMount(() => {
@@ -32,7 +30,7 @@ const Carousel: Component<CarouselProps> = ({ ids }) => {
 
   // Router Navigation
   const handleClick = () => {
-    navigate(`/goods/${ids[currentIndex()]}`)
+    navigate(`/goods/${ids[curIndex()]}`)
   }
 
   return (
@@ -62,10 +60,9 @@ const Carousel: Component<CarouselProps> = ({ ids }) => {
             src={good()?.imgs[0]}
             alt="carousel-img"
             sx={{
-              opacity: index() === currentIndex() ? 1 : 0,
-              zIndex: index() === currentIndex() ? 1 : 0,
+              opacity: index() === curIndex() ? 1 : 0,
+              zIndex: index() === curIndex() ? 1 : 0,
             }}
-            onLoad={() => setIsLoaded(true)}
             onClick={handleClick}
           />
         )}

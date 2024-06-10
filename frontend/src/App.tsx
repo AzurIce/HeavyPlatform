@@ -18,12 +18,14 @@ import GoodsWrapper from './pages/Goods/GoodsWrapper';
 import Goods from './pages/Goods';
 import OrdersWrapper from './pages/Orders/OrderWrapper';
 import Orders from './pages/Orders';
+import LoginModal from './components/LoginModal';
 
 // TODO: Orders
 
 const App: Component = () => {
   return <>
     <AlertList />
+    <LoginModal />
     <Router>
       <Route path="/" component={MainWrapper}>
         {/* 主页：轮播图+搜索框+商品列表 */}

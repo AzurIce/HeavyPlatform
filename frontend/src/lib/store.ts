@@ -51,6 +51,15 @@ loginInfoStoreInit();
 
 export const LoginInfoStore = () => {
   const [loginInfo, _setLoginInfo] = loginInfoStore;
+  const [showLoginModal, setShowLoginModal] = createSignal(false);
+
+  const openLoginModal = () => {
+    setShowLoginModal(true)
+  }
+
+  const closeLoginModal = () => {
+    setShowLoginModal(true)
+  }
 
   const user = () => loginInfo.user
 
@@ -64,7 +73,7 @@ export const LoginInfoStore = () => {
     localStorage.removeItem('user')
   }
 
-  return { user, setUser, logout }
+  return { user, setUser, logout, showLoginModal, openLoginModal, closeLoginModal }
 }
 
 export type Alert = {
@@ -239,6 +248,7 @@ import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";
 import { cartItemsApi, goodCategoriesApi, goodsApi, managersApi, menuItemsApi, ordersApi, userGroupsApi, usersApi } from "./axios/api";
 import { useMediaQuery } from "@suid/material";
+import { createSignal } from "solid-js";
 
 const iconsTrie = new Trie();
 const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);
