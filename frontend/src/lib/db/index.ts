@@ -305,11 +305,12 @@ export const cartItemsDb = {
   getById: async function (id: number) { return await getById(this, id) },
   delete: async function (id: number) { await deleteById(this, id); },
 
-  create: async function (user_id: number, good_id: number, quantity: number): Promise<void> {
+  create: async function (user_id: number, good_id: number, quantity: number): Promise<number> {
     const id = await newId(this);
 
     const element: CartItem = { id, user_id, good_id, quantity };
-    return await create(this, element);
+    await create(this, element);
+    return id;
   },
 
   update: async function (id: number, quantity: number): Promise<void> {
@@ -326,11 +327,12 @@ export const ordersDb = {
   getById: async function (id: number) { return await getById(this, id) },
   delete: async function (id: number) { await deleteById(this, id); },
 
-  create: async function (user_id: number, items: CartItem[]): Promise<void> {
+  create: async function (user_id: number, items: CartItem[]): Promise<number> {
     const id = await newId(this);
 
     const element: Order = { id, user_id, items };
-    return await create(this, element);
+    await create(this, element);
+    return id;
   },
 }
 
@@ -367,11 +369,12 @@ export const goodsDb = {
     return goods.filter((el) => el.category_id == category_id);
   },
 
-  create: async function (name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id: number): Promise<void> {
+  create: async function (name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id: number): Promise<number> {
     const id = await newId(this);
 
     const element: Good = { id, parent_id: id, category_id, name, price, imgs, description, specification, detail };
-    return await create(this, element);
+    await create(this, element);
+    return id;
   },
 
   update: async function (id: number, name: string, price: number, imgs: string[], description: string, specification: string, detail: string, category_id: number): Promise<void> {
@@ -411,11 +414,12 @@ export const goodCategoriesDb = {
     await deleteById(this, id);
   },
 
-  create: async function (name: string): Promise<void> {
+  create: async function (name: string): Promise<number> {
     const id = await newId(this);
 
     const element: GoodCategory = { id, name };
-    return await create(this, element);
+    await create(this, element);
+    return id;
   },
 
   update: async function (id: number, name: string): Promise<void> {
@@ -438,11 +442,12 @@ export const menuItemsDb = {
   getAll: async function () { return await getAll(this) },
   getById: async function (id: number) { return await getById(this, id) },
 
-  create: async function (name: string, icon: string, url: string): Promise<void> {
+  create: async function (name: string, icon: string, url: string): Promise<number> {
     const id = await newId(this);
 
     const element: MenuItem = { id, name, icon, url, enable: true };
-    return await create(this, element);
+    await create(this, element);
+    return id;
   },
 
   update: async function (id: number, name: string, icon: string, url: string, enable: boolean): Promise<void> {
@@ -484,7 +489,7 @@ export const usersDb = {
     return user;
   },
 
-  create: async function (username: string, password: string, nickname: string, avatar: string): Promise<void> {
+  create: async function (username: string, password: string, nickname: string, avatar: string): Promise<number> {
     try {
       await this.getByUsername(username)
     } catch {
@@ -493,7 +498,8 @@ export const usersDb = {
     const id = await newId(this);
 
     const user: User = { id, username, password, nickname, avatar };
-    return await create(this, user);
+    await create(this, user);
+    return id;
   },
 
   update: async function (id: number, username: string, nickname: string, avatar: string): Promise<void> {
@@ -536,7 +542,7 @@ export const usergroupsDb = {
   getAll: async function () { return await getAll(this); },
   getById: async function (id: number) { return await getById(this, id); },
 
-  create: async function (name: string, access: number[]): Promise<void> {
+  create: async function (name: string, access: number[]): Promise<number> {
     for (let id of access) {
       if (await menuItemsDb.getById(id) == undefined) {
         return Promise.reject("menu item not exist");
@@ -545,7 +551,8 @@ export const usergroupsDb = {
     const id = await newId(this);
 
     const element: Usergroup = { id, name, access };
-    return await create(this, element);
+    await create(this, element);
+    return id;
   },
 
   update: async function (id: number, name: string, access: number[]): Promise<void> {
@@ -592,7 +599,7 @@ export const managersDb = {
     return manager;
   },
 
-  create: async function (username: string, password: string, usergroup: number): Promise<void> {
+  create: async function (username: string, password: string, usergroup: number): Promise<number> {
     try {
       await this.getByUsername(username)
     } catch {
@@ -601,7 +608,8 @@ export const managersDb = {
     const id = await newId(this);
 
     const manager: Manager = { id, username, password, usergroup: usergroup || 0 };
-    return await create(this, manager);
+    await create(this, manager);
+    return id;
   },
 
   update: async function (id: number, username: string, usergroup: number): Promise<void> {
