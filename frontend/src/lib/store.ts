@@ -35,47 +35,36 @@ export const AdminLoginInfoStore = () => {
   return { manager, setManager, logout }
 }
 
-interface User {
-  id: number,
-  username: string,
-}
-
-const loginInfoStore = createStore<{ jwt?: string, user?: User }>()
+const loginInfoStore = createStore<{user?: User}>()
 const loginInfoStoreInit = () => {
   const [_, _setLoginInfo] = loginInfoStore;
 
   console.log("[LoginInfoStore/init]")
-  const jwt = localStorage.getItem('jwt')
-  const userString = localStorage.getItem('user')
-  if (!jwt || !userString) return
+  const s = localStorage.getItem('manager')
+  if (!s) return
 
   console.log('[LoginInfoStore/init]: loading from localStorage')
-  const user = JSON.parse(userString) as unknown as User
-  _setLoginInfo({ jwt, user})
+  const user = JSON.parse(s) as unknown as User
+  _setLoginInfo({ user })
 }
 loginInfoStoreInit();
 
 export const LoginInfoStore = () => {
   const [loginInfo, _setLoginInfo] = loginInfoStore;
 
-  const setLoginInfo = (jwt: string, user: User) => {
-    console.log('[LoginInfoStore/setLoginInfo]: ', loginInfo)
-    _setLoginInfo(() => {
-      return { jwt, user }
-    })
-    localStorage.setItem('jwt', jwt)
+  const user = () => loginInfo.user
+
+  const setUser = (user: User) => {
+    _setLoginInfo({ user })
     localStorage.setItem('user', JSON.stringify(user))
   }
 
-  const user = () => {
-    return loginInfo.user
+  const logout = () => {
+    _setLoginInfo({ user: undefined })
+    localStorage.removeItem('user')
   }
 
-  const jwt = () => {
-    return loginInfo.jwt
-  }
-
-  return { loginInfo, setLoginInfo, user, jwt }
+  return { user, setUser, logout }
 }
 
 export type Alert = {
@@ -125,6 +114,22 @@ export const getManagers = cache(async () => {
 export const getManager = cache(async (id: number) => {
   return await managersApi.getById(id);
 }, "manager");
+
+// User
+export type User = {
+  id: number,
+  nickname: string,
+  avatar: string,
+  username: string,
+}
+
+export const getUsers = cache(async () => {
+  return await usersApi.getAll();
+}, "users");
+
+export const getUser = cache(async (id: number) => {
+  return await usersApi.getById(id);
+}, "user");
 
 // MenuItem
 export type MenuItem = {
@@ -196,10 +201,41 @@ export const getGoodCategorie = cache(async (id: number) => {
   return await goodCategoriesApi.getById(id);
 }, "categorie")
 
+
+// CartItem
+export type CartItem = {
+  id: number,
+  good_id: number,
+  user_id: number,
+  quantity: number,
+}
+
+export type Order = {
+  id: number,
+  user_id: number,
+  items: CartItem[]
+}
+
+export const getCartItems = cache(async () => {
+  return await cartItemsApi.getAll();
+}, "cartItems")
+
+export const getCartItem = cache(async (id: number) => {
+  return await cartItemsApi.getById(id);
+}, "cartItem")
+
+export const getOrders = cache(async () => {
+  return await ordersApi.getAll();
+}, "orders")
+
+export const getOrder = cache(async (id: number) => {
+  return await ordersApi.getById(id);
+}, "order")
+
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";
-import { goodCategoriesApi, goodsApi, managersApi, menuItemsApi, userGroupsApi } from "./axios/api";
+import { cartItemsApi, goodCategoriesApi, goodsApi, managersApi, menuItemsApi, ordersApi, userGroupsApi, usersApi } from "./axios/api";
 import { useMediaQuery } from "@suid/material";
 
 const iconsTrie = new Trie();
