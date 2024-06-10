@@ -1,87 +1,64 @@
-import { Component, createSignal, For, createEffect } from "solid-js";
+
+import { Component, createSignal, createEffect, For, Show } from "solid-js";
+import { createAsync, revalidate } from "@solidjs/router";
 import { Box, Typography, Button } from "@suid/material";
-import { cartService, CartItemType } from "../../lib/cart";
-import CartItem from "../../components/CartItem";
+import { getCartItems, getGood, CartItem, Good, getGoods } from "../../lib/store";
+import CartItemCard from "../../components/CartItemCard";
+import { cartItemsApi } from "../../lib/axios/api";
 
 const Cart: Component = () => {
-  const [cartItems, setCartItems] = createSignal<CartItemType[]>(cartService.getCartItems());
-  const [selectedItems, setSelectedItems] = createSignal<{ [key: number]: boolean }>({});
-  const [quantities, setQuantities] = createSignal<{ [key: number]: number }>(cartItems().reduce((acc, item) => {
-    acc[item.id] = item.quantity;
-    return acc;
-  }, {} as { [key: number]: number }));
+  const userId = 0; // 假设当前用户ID为0
 
-  const handleRemoveItem = (itemId: number) => {
-    cartService.removeFromCart(itemId);
-    setCartItems(cartService.getCartItems());
-    setSelectedItems(prev => {
-      const { [itemId]: _, ...rest } = prev;
-      return rest;
-    });
-    setQuantities(prev => {
-      const { [itemId]: _, ...rest } = prev;
-      return rest;
-    });
-  };
-
-  const handleSelectItem = (itemId: number, checked: boolean) => {
-    setSelectedItems(prev => ({ ...prev, [itemId]: checked }));
-  };
-
-  const handleQuantityChange = (itemId: number, quantity: number) => {
-    setQuantities(prev => ({ ...prev, [itemId]: quantity }));
-    setCartItems(cartItems().map(item => item.id === itemId ? { ...item, quantity: quantity } : item));
-  };
-
+  const goods = createAsync(() => getGoods());
+  const cartItems = createAsync(() => getCartItems());
+  const curCartItems = () => {
+    return cartItems()?.filter(item => item.user_id === userId);
+  }
   const total = () => {
-    return cartItems().reduce((sum, item) => {
-      if (selectedItems()[item.id]) {
-        const good = cartService.getGoodById(item.good_id);
-        if (good) {
-          sum += good.price * (quantities()[item.id] || item.quantity);
-        }
-      }
-      return sum;
-    }, 0);
+    return selectedCartItems().reduce((acc, item) => {
+      return acc + item.quantity * goods()![item.good_id].price;
+    }, 0)
+  }
+
+  const handleRemoveItem = (id: number) => {
+    cartItemsApi.delete(id).then((res) => {
+      // TODO: toast
+    })
+    revalidate(getCartItems.key)
   };
 
-  createEffect(() => {
-    setQuantities(cartItems().reduce((acc, item) => {
-      acc[item.id] = item.quantity;
-      return acc;
-    }, {} as { [key: number]: number }));
-  });
+  const [selectedCartItems, setSelectedCartItems] = createSignal<CartItem[]>([]);
+
+  const handleCheckItemChanged = (id: number, checked: boolean) => {
+    if (checked) {
+      setSelectedCartItems([...selectedCartItems(), curCartItems()!.find(item => item.id === id)!]);
+    } else {
+      setSelectedCartItems(selectedCartItems().filter(item => item.id !== id));
+    }
+  }
 
   return (
     <Box class="p-4">
       <Typography variant="h6" component="div" class="mb-4">
         购物车
       </Typography>
-      {cartItems().length === 0 ? (
-        <Typography variant="body1" component="div">
-          您的购物车是空的。
-        </Typography>
-      ) : (
+      <Show when={cartItems() != undefined}>
         <Box class="flex flex-col gap-4">
-          <For each={cartItems()}>
-            {(item) => {
-              const good = cartService.getGoodById(item.good_id);
-              if (!good) return null;
-              return (
-                <CartItem 
-                  item={item} 
-                  good={good} 
-                  onRemove={() => handleRemoveItem(item.id)} 
-                  onSelect={(checked) => handleSelectItem(item.id, checked)}
-                  onQuantityChange={(quantity) => handleQuantityChange(item.id, quantity)}
-                  quantity={quantities()[item.id]}
-                  selected={!!selectedItems()[item.id]}
-                />
-              );
-            }}
-          </For>
+          <For each={curCartItems()}
+            fallback={
+              <Typography variant="body1" component="div">
+                您的购物车是空的。
+              </Typography>
+            }>{item => (
+              <CartItemCard
+                id={item.id}
+                onRemove={() => handleRemoveItem(item.id)}
+                onCheckedChanged={handleCheckItemChanged}
+              />
+            )}</For>
         </Box>
-      )}
+      </Show>
+
       <Box class="text-right mt-4">
         <Typography variant="h6" component="div">
           总价: {total()} 元
