@@ -234,21 +234,6 @@ export const getOrder = cache(async (id: number) => {
   return await ordersApi.getById(id);
 }, "order")
 
-export const createOrder = cache(async (user_id: number, items: CartItem[]) => {
-  await ordersApi.create(user_id, items);
-  // 更新缓存中的数据，确保缓存的一致性
-  const updatedOrders = await ordersApi.getAll();
-  cache.set("orders", updatedOrders);
-}, "createOrder");
-
-export const deleteOrder = cache(async (id: number) => {
-  await ordersApi.delete(id);
-  // 更新缓存中的数据，确保缓存的一致性
-  const updatedOrders = await ordersApi.getAll();
-  cache.set("orders", updatedOrders);
-}, "deleteOrder");
-
-
 // Icons trie for icon searching
 import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";

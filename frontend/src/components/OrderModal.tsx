@@ -1,9 +1,9 @@
 import { Component, createSignal, createEffect } from 'solid-js';
-import { useNavigate } from "@solidjs/router";
-import { isMobile, CartItem, getGood, Good } from '../lib/store';
+import { useNavigate, revalidate } from "@solidjs/router";
 import { Box, Typography, Button, Dialog, Divider, DialogContent, DialogTitle, Radio, RadioGroup, FormControlLabel } from '@suid/material';
-import { createOrder } from '../lib/store';
+import { AlertsStore, isMobile, CartItem, getGood, getOrders, Good } from '../lib/store';
 import OrderItemCard from './OrderItemCard';
+import { ordersApi } from '../lib/axios/api';
 
 export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id: number, items: CartItem[] }> = (props) => {
   const [step, setStep] = createSignal(1);
@@ -12,6 +12,8 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
   const [updatedItems, setUpdatedItems] = createSignal<CartItem[]>(props.items);
   const [paymentMethod, setPaymentMethod] = createSignal('alipay');
   const navigate = useNavigate();
+
+  const { newErrorAlert } = AlertsStore();
 
   createEffect(async () => {
     const goodsData = await Promise.all(props.items.map(item => getGood(item.id)));
@@ -56,7 +58,14 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
 
   const handlePaymentSuccess = () => {
     // console.log(updatedItems());
-    createOrder(props.user_id, updatedItems());
+    // createOrder(props.user_id, updatedItems());
+    ordersApi.create(props.user_id, updatedItems()).then((res) => {
+      revalidate(getOrders.key)
+    }).catch((err) => {
+      console.log(err)
+      newErrorAlert(`订单创建失败：${err}`)
+      navigate(-1)
+    })
     setStep(3);
   };
 
