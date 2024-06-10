@@ -48,7 +48,7 @@ const LoginModal: Component<LoginModalProps> = (props) => {
       "
         >
           <span class="mb-3 text-2xl">
-            商城管理后台登录
+            登录
           </span>
           <Box
             component="form"

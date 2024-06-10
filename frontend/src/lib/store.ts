@@ -40,7 +40,7 @@ const loginInfoStoreInit = () => {
   const [_, _setLoginInfo] = loginInfoStore;
 
   console.log("[LoginInfoStore/init]")
-  const s = localStorage.getItem('manager')
+  const s = localStorage.getItem('user')
   if (!s) return
 
   console.log('[LoginInfoStore/init]: loading from localStorage')
@@ -49,16 +49,19 @@ const loginInfoStoreInit = () => {
 }
 loginInfoStoreInit();
 
+const showLoginModalStore = createStore<{show: boolean}>({show: false})
 export const LoginInfoStore = () => {
   const [loginInfo, _setLoginInfo] = loginInfoStore;
-  const [showLoginModal, setShowLoginModal] = createSignal(false);
+  const [_showLoginModal, setShowLoginModal] = showLoginModalStore;
+
+  const showLoginModal = () => _showLoginModal.show
 
   const openLoginModal = () => {
-    setShowLoginModal(true)
+    setShowLoginModal("show", true)
   }
 
   const closeLoginModal = () => {
-    setShowLoginModal(true)
+    setShowLoginModal("show", false)
   }
 
   const user = () => loginInfo.user
