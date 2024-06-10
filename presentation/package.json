@@ -15,5 +15,8 @@
     "slidev-theme-light-icons": "^1.0.2",
     "slidev-theme-purplin": "^1.2.0",
     "vue": "^3.4.27"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.44.1"
   }
 }
