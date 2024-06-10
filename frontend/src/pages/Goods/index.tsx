@@ -3,6 +3,7 @@ import { createSignal } from "solid-js"
 import { Card, CardMedia, Box, Typography, Button } from "@suid/material"
 import { getGood, getGoodsByGroupId } from "../../lib/store"
 import { createAsync, useNavigate, useParams } from "@solidjs/router"
+import LoginModal from "../../components/LoginModal"
 
 const GoodDetailPage = () => {
   const params = useParams()
@@ -10,6 +11,7 @@ const GoodDetailPage = () => {
   const goodsInTheSameGroup = createAsync(() => getGoodsByGroupId(Number(good()?.parent_id)))
   const [currentImage, setCurrentImage] = createSignal(good()?.imgs[0])
   const [cur, setCur] = createSignal(0);
+  const [loginModalOpen, setLoginModalOpen] = createSignal(false)
   const navigate = useNavigate()
 
   createEffect(() => {
@@ -31,8 +33,13 @@ const GoodDetailPage = () => {
     navigate('/')
   }
 
+  const handleBuyClick = () => {
+    setLoginModalOpen(true)
+  }
+
   return (
       <Card elevation={0} sx={{ display: "flex", flexDirection: "column", gap: 2, padding: '30px', border: 'solid 2px rgba(0,0,0,0.2)', margin: '20px 20px' }}>
+        <LoginModal isOpen={loginModalOpen} setIsOpen={setLoginModalOpen} />
         <Button onClick={handleBackClick} sx={{ alignSelf: 'flex-start' }}>
           返回
         </Button>
@@ -57,7 +64,7 @@ const GoodDetailPage = () => {
         <Typography variant="h5" component="div" color="error">
           ¥{good()?.price}
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={handleBuyClick}>
           立即购买
         </Button>
         <Box sx={{ marginTop: 2 }}>

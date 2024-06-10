@@ -484,7 +484,7 @@ export const usersDb = {
   getByUsername: async function (username: string): Promise<User> {
     const user = this.data().find((user) => user?.username == username);
     if (user == undefined) {
-      return Promise.reject("manager not exist");
+      return Promise.reject("user not exist in usersDb-getByUsername()");
     }
     return user;
   },
@@ -594,7 +594,7 @@ export const managersDb = {
   getByUsername: async function (username: string): Promise<Manager> {
     const manager = db.data.managers.find((manager) => manager?.username == username);
     if (manager == undefined) {
-      return Promise.reject("manager not exist");
+      return Promise.reject("manager not exist in managersDb-getByUsername()");
     }
     return manager;
   },
@@ -615,7 +615,7 @@ export const managersDb = {
   update: async function (id: number, username: string, usergroup: number): Promise<void> {
     let manager = await this.getById(id);
     if (manager == undefined) {
-      return Promise.reject("manager not exist");
+      return Promise.reject("manager not exist in managersDb-update()");
     }
 
     const _manager: Manager = { ...manager, username, usergroup }
@@ -625,7 +625,7 @@ export const managersDb = {
   updatePassword: async function (id: number, password: string): Promise<void> {
     let manager = await this.getById(id);
     if (manager == undefined) {
-      return Promise.reject("manager not exist");
+      return Promise.reject("manager not exist in managersDb-updatePassword()");
     }
 
     // Have to reconstruct the object, otherwise <For> won't react
@@ -637,7 +637,7 @@ export const managersDb = {
   delete: async function (id: number): Promise<void> {
     if (id == 0) return Promise.reject("cannot delete default manager")
     if (await this.getById(id) == undefined) {
-      return Promise.reject("manager not exist");
+      return Promise.reject("manager not exist in managersDb-delete()");
     }
 
     db.data.managers[id] = undefined;
