@@ -1,4 +1,3 @@
-
 import { createSignal } from "solid-js";
 
 
@@ -21,9 +20,12 @@ export interface GoodType {
 
 
 const initialCartItems: CartItemType[] = [
-  { id: 0, user_id: 0, good_id: 1, quantity: 1 },
+  { id: 0, user_id: 1, good_id: 1, quantity: 1 },
   { id: 1, user_id: 0, good_id: 0, quantity: 300 },
-  { id: 1, user_id: 0, good_id: 6, quantity: 300 }
+  { id: 2, user_id: 0, good_id: 6, quantity: 330 },
+  { id: 2, user_id: 0, good_id: 5, quantity: 2 },
+  { id: 2, user_id: 0, good_id: 7, quantity: 3 },
+  { id: 2, user_id: 0, good_id: 2, quantity: 8 }
 ];
 
 

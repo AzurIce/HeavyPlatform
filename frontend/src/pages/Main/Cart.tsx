@@ -1,6 +1,5 @@
-// src/pages/Main/Cart.tsx
 import { Component, createSignal, For, createEffect } from "solid-js";
-import { Box, Card, Typography, useTheme } from "@suid/material";
+import { Box, Typography, Button } from "@suid/material";
 import { cartService, CartItemType } from "../../lib/cart";
 import CartItem from "../../components/CartItem";
 
@@ -11,7 +10,6 @@ const Cart: Component = () => {
     acc[item.id] = item.quantity;
     return acc;
   }, {} as { [key: number]: number }));
-  const theme = useTheme();
 
   const handleRemoveItem = (itemId: number) => {
     cartService.removeFromCart(itemId);
@@ -32,6 +30,7 @@ const Cart: Component = () => {
 
   const handleQuantityChange = (itemId: number, quantity: number) => {
     setQuantities(prev => ({ ...prev, [itemId]: quantity }));
+    setCartItems(cartItems().map(item => item.id === itemId ? { ...item, quantity: quantity } : item));
   };
 
   const total = () => {
@@ -54,8 +53,8 @@ const Cart: Component = () => {
   });
 
   return (
-    <Box sx={{ padding: '16px' }}>
-      <Typography variant="h6" component="div" sx={{ marginBottom: '16px' }}>
+    <Box class="p-4">
+      <Typography variant="h6" component="div" class="mb-4">
         购物车
       </Typography>
       {cartItems().length === 0 ? (
@@ -63,32 +62,31 @@ const Cart: Component = () => {
           您的购物车是空的。
         </Typography>
       ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <Box class="flex flex-col gap-4">
           <For each={cartItems()}>
             {(item) => {
               const good = cartService.getGoodById(item.good_id);
               if (!good) return null;
               return (
-                <Card sx={{ display: 'flex', alignItems: 'center', padding: '16px', backgroundColor: theme.palette.background.default }}>
-                  <CartItem 
-                    item={item} 
-                    good={good} 
-                    onRemove={() => handleRemoveItem(item.id)} 
-                    onSelect={(checked) => handleSelectItem(item.id, checked)}
-                    onQuantityChange={(quantity) => handleQuantityChange(item.id, quantity)}
-                    quantity={quantities()[item.id]}
-                    selected={!!selectedItems()[item.id]}
-                  />
-                </Card>
+                <CartItem 
+                  item={item} 
+                  good={good} 
+                  onRemove={() => handleRemoveItem(item.id)} 
+                  onSelect={(checked) => handleSelectItem(item.id, checked)}
+                  onQuantityChange={(quantity) => handleQuantityChange(item.id, quantity)}
+                  quantity={quantities()[item.id]}
+                  selected={!!selectedItems()[item.id]}
+                />
               );
             }}
           </For>
         </Box>
       )}
-      <Box sx={{ textAlign: 'right', marginTop: '16px' }}>
+      <Box class="text-right mt-4">
         <Typography variant="h6" component="div">
           总价: {total()} 元
         </Typography>
+        <Button variant="contained" color="primary" class="mt-2">结算</Button>
       </Box>
     </Box>
   );
