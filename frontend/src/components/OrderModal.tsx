@@ -1,9 +1,9 @@
 import { Component, createSignal, createEffect } from 'solid-js';
 import { useNavigate, revalidate } from "@solidjs/router";
 import { Box, Typography, Button, Dialog, Divider, DialogContent, DialogTitle, Radio, RadioGroup, FormControlLabel } from '@suid/material';
-import { AlertsStore, isMobile, CartItem, getGood, getOrders, Good } from '../lib/store';
-import OrderItemCard from './OrderItemCard';
+import { AlertsStore, CartItem, getGood, getOrders, Good } from '../lib/store';
 import { ordersApi } from '../lib/axios/api';
+import OrderItemCard from './OrderItemCard';
 
 export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id: number, items: CartItem[] }> = (props) => {
   const [step, setStep] = createSignal(1);
@@ -64,7 +64,7 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
     }).catch((err) => {
       console.log(err)
       newErrorAlert(`订单创建失败：${err}`)
-      navigate(-1)
+      props.onClose
     })
     setStep(3);
   };
