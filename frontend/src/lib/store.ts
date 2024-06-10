@@ -51,6 +51,15 @@ loginInfoStoreInit();
 
 export const LoginInfoStore = () => {
   const [loginInfo, _setLoginInfo] = loginInfoStore;
+  const [showLoginModal, setShowLoginModal] = createSignal(false);
+
+  const openLoginModal = () => {
+    setShowLoginModal(true)
+  }
+
+  const closeLoginModal = () => {
+    setShowLoginModal(true)
+  }
 
   const user = () => loginInfo.user
 
@@ -64,7 +73,7 @@ export const LoginInfoStore = () => {
     localStorage.removeItem('user')
   }
 
-  return { user, setUser, logout }
+  return { user, setUser, logout, showLoginModal, openLoginModal, closeLoginModal }
 }
 
 export type Alert = {
@@ -210,12 +219,6 @@ export type CartItem = {
   quantity: number,
 }
 
-export type Order = {
-  id: number,
-  user_id: number,
-  items: CartItem[]
-}
-
 export const getCartItems = cache(async () => {
   return await cartItemsApi.getAll();
 }, "cartItems")
@@ -223,6 +226,14 @@ export const getCartItems = cache(async () => {
 export const getCartItem = cache(async (id: number) => {
   return await cartItemsApi.getById(id);
 }, "cartItem")
+
+
+// Order
+export type Order = {
+  id: number,
+  user_id: number,
+  items: CartItem[]
+}
 
 export const getOrders = cache(async () => {
   return await ordersApi.getAll();
@@ -237,6 +248,7 @@ import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";
 import { cartItemsApi, goodCategoriesApi, goodsApi, managersApi, menuItemsApi, ordersApi, userGroupsApi, usersApi } from "./axios/api";
 import { useMediaQuery } from "@suid/material";
+import { createSignal } from "solid-js";
 
 const iconsTrie = new Trie();
 const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);

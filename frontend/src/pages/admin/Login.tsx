@@ -18,7 +18,6 @@ const LoginPage: Component = () => {
     console.log("[Login]: onLogin")
     managersApi.login(username(), password()).then((res) => {
       console.log(`[Login]: login success:`, res)
-
       newSuccessAlert('登录成功')
       setManager(res)
       setTimeout(() => {

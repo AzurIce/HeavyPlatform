@@ -45,7 +45,7 @@ export default function AlertList() {
         //   });
         //   a.finished.then(done);
         // }}>
-          <AlertCard alert={alert} index={index} />
+        <AlertCard alert={alert} index={index} />
         // </Transition>
       }</For>
     </div>
