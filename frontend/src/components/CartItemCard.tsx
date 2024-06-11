@@ -9,9 +9,12 @@ interface CartItemProps {
   id: number;
   onRemove: () => void;
   onCheckedChanged: (id: number, checked: boolean) => void;
+  selected: boolean;
 }
 
-const CartItemCard: Component<CartItemProps> = ({ id, onRemove, onCheckedChanged }) => {
+const CartItemCard: Component<CartItemProps> = (props) => {
+  const { id, onRemove, onCheckedChanged } = props;
+
   const cartItem = createAsync(() => getCartItem(id))
   const [good, setGood] = createSignal<Good | undefined>(undefined)
   createEffect(() => {
@@ -35,7 +38,7 @@ const CartItemCard: Component<CartItemProps> = ({ id, onRemove, onCheckedChanged
     })
   }
 
-  const [checked, setChecked] = createSignal(false);
+  const [checked, setChecked] = createSignal(props.selected);
 
 
   return (

@@ -37,14 +37,18 @@ const Cart: Component = () => {
     revalidate(getCartItems.key)
   };
 
-  const [selectedCartItems, setSelectedCartItems] = createSignal<CartItem[]>([]);
+  const [selectedIds, setSelectedIds] = createSignal<number[]>([]);
 
   const handleCheckItemChanged = (id: number, checked: boolean) => {
     if (checked) {
-      setSelectedCartItems([...selectedCartItems(), curCartItems()!.find(item => item.id === id)!]);
+      setSelectedIds([...selectedIds(), id]);
     } else {
-      setSelectedCartItems(selectedCartItems().filter(item => item.id !== id));
+      setSelectedIds(selectedIds().filter(item => item !== id));
     }
+  }
+
+  const selectedCartItems = () => {
+    return curCartItems()?.filter(item => selectedIds().findIndex(i => i === item.id) !== -1) || []
   }
 
   const onDone = () => {
@@ -75,6 +79,7 @@ const Cart: Component = () => {
                   id={item.id}
                   onRemove={() => handleRemoveItem(item.id)}
                   onCheckedChanged={handleCheckItemChanged}
+                  selected={selectedCartItems().findIndex(i => i.id === item.id) !== -1}
                 />
               )}</For>
           </ErrorBoundary>
