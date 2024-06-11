@@ -205,41 +205,48 @@ const Hello: Component = () => {
 <v-click><span v-mark.red="4">但是！没有虚拟 DOM，使用 fine-grained reactivity。</span></v-click>
 
 ---
-
-# 前台
-
+layout: two-cols
 ---
 
-## 首页
+# 实现功能与分工
 
----
+- 肖斌
+  - Github 仓库维护（Issue、分支、PR 审查）
+  - 技术选择
+  - 数据模型、db、api 设计与实现
+  - 后台实现
+  - 整体样式调整 & 修复疑难杂症
+- 俞贤皓
+  - 主页、商品详情页、分类页
+  - 商品组件
+  - 后端实现
+- 谷雅丰
+  - 浏览商品添加历史记录逻辑
+  - 历史记录页、前台登录组件
 
-## 分类
+::right::
 
----
-
-## 购物车
-
----
-
-## 我的
-
----
-
-## 响应式
-
-
-
----
-
-# 后台
-
+- 付家齐
+  - 提交订单 -> 支付 -> 支付成功组件
+  - 订单列表页、订单详情页
+  - 商品页提交订单逻辑
+- 杨鹏
+  - 商品页添加至购物车、购物车页结算逻辑
+  - 购物车页面
+  - 我的页面
 
 ---
 layout: center
 class: text-center
 ---
 
-# Learn More
+# 演示
+
+---
+layout: center
+class: text-center
+---
+
+# 完结撒花
 
 [GitHub](https://github.com/AzurIce/HeavyPlayform)
