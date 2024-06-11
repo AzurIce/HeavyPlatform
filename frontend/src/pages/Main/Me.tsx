@@ -36,14 +36,14 @@ const NotLoginedUserInfo: Component = () => {
 
 const Me: Component = () => {
   const navigate = useNavigate();
-  const { user, showLoginModal, logout } = LoginInfoStore();
+  const { user, openLoginModal, logout } = LoginInfoStore();
   const theme = useTheme();
 
   const handleMyOrders = () => {
     if (user() != undefined) {
       navigate(`/orders`);
     } else {
-      showLoginModal();
+      openLoginModal();
     }
   };
 
