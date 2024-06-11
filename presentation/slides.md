@@ -212,9 +212,7 @@ bun 是一个很新的东西，扬言要取代 nodejs。
 【2】
 SolidJS 它可以被简单地理解为去除虚拟 DOM 版本的 React。
 
-【3】
-它使用的是 Fine-Grained Reactivity，细粒度响应性。
-它做的是在使用响应性值时追踪对其的依赖，当发生更新时，仅重新更新依赖处的代码，而不会对整个组件进行重新执行。
+【3】性能也很优秀
 
 【4】
 然后是 unocss
@@ -229,13 +227,14 @@ SolidJS 它可以被简单地理解为去除虚拟 DOM 版本的 React。
 【7】
 因为这门课叫轻量化而不是重量化。
 
+「1:00」
 那为什么用这么多有意思的新东西？—— 因为有意思，
 而，有意思，是我学软件的原因
 
 有个词叫造轮子，这其实没什么，关键是不要重复地用相同的材料，相同的思路，相同的技术造相同的轮子。
 这前后端管理系统我从大一写到大三了，我要是一直拿一个东西搓，那真对意义和热情有极大的消磨。
 
-所以我们要干点我们人很擅长的一件事，如果在座的有打辩论的那应当更加擅长。
+所以我们要干点我们人很擅长的一件事。
 
 【8】
 那就是建构意义
@@ -247,64 +246,10 @@ SolidJS 它可以被简单地理解为去除虚拟 DOM 版本的 React。
 「看清世界的真相后仍热爱生活」
 
 
-另外再提一嘴，本 slide 也不是 ppt 做的，也前端技术的产物。
-
+「1:45」
 【9】
-用的是一个叫做 slidev 的东西，是 vue 团队的大佬 antonyfu 搓的。
-简单来说就是用 markdown 做 ppt，大家感兴趣也可以去玩玩。
--->
-
----
-clicks: 4
----
-
-# Solidjs 与 React
-
-````md magic-move {lines: true}
-```tsx
-// React
-const Hello = () => {
-  const [count, setCount] = useState(0);
-
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      Clicked {count} times
-    </button>
-  );
-}
-```
-
-```tsx
-// Solid
-const Hello: Component = () => {
-  const [count, setCount] = createSignal(0);
-
-  return (
-    <button onClick={() => setCount(count => count + 1)}>
-      Clicked {count()} times
-    </button>
-  );
-}
-```
-````
-
-<br/>
-<v-click>条件渲染、列表渲染、Context、ref...</v-click>
-
-<br/>
-<v-click><span v-mark.red="4">但是！没有虚拟 DOM，使用 fine-grained reactivity。</span></v-click>
-
-<!--
-由于这门课要求是用 React，而我们用的 Solid，所以这里再多提一嘴他们的差异。
-
-【0-1】
-Solid 的 API 几乎适合 React 一样的，比如这段代码，把它写成 Solid 就长这样。
-
-【2】
-其他的条件渲染、列表渲染、Context、ref 之类的东西，solid 也有，而且都和 react 很像。
-
-【3-4】
-但是！嗯这个之前提到了，就是 Solid 使用 fine-grained reactivity 而非虚拟 DOM 来实现响应性，这就会造成，很多地方写起来还是很 tricky 的，不过理解细粒度响应性的思想后就会发现很有意思。
+另外再提一嘴，本 slide 也不是 ppt 做的，也前端技术的产物。
+用的是一个叫做 slidev 的东西，简单来说就是用 Markdown 搓 ppt，大家感兴趣也可以去玩玩。
 -->
 
 ---
