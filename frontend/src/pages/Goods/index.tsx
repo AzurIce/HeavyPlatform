@@ -1,6 +1,6 @@
-import { Component, For, Show, createEffect } from "solid-js"
+import { Component, For, Show, createEffect, onMount } from "solid-js"
 import { createSignal } from "solid-js"
-import { getGood, getGoodsByGroupId, LoginInfoStore } from "../../lib/store"
+import { getGood, getGoodsByGroupId, HistoryStore, LoginInfoStore } from "../../lib/store"
 import { createAsync, useNavigate, useParams } from "@solidjs/router"
 import LoginModal from "../../components/LoginModal"
 import { Card, CardMedia, Box, Typography, Button, Container } from "@suid/material"
@@ -20,6 +20,12 @@ const GoodDetailPage: Component = () => {
   const [showAddToCartModal, setShowAddToCartModal] = createSignal(false)
 
   const navigate = useNavigate()
+
+  const { addToHistory } = HistoryStore();
+
+  onMount(() => {
+    addToHistory(Number(params.id));
+  })
 
   createEffect(() => {
     if (good()) {
