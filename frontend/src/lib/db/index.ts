@@ -269,7 +269,7 @@ const newId = async function <T extends { id: number }>(target: { data: () => (T
 }
 
 const create = async function <T extends { id: number }>(target: { data: () => (T | undefined)[] }, element: T): Promise<void> {
-  target.data().push(element);
+  target.data()[element.id] = element;
   db.write();
 }
 
@@ -307,12 +307,14 @@ export const cartItemsDb = {
 
   create: async function (user_id: number, good_id: number, quantity: number): Promise<number> {
     const cartItem = this.data().find((cartItem) => cartItem?.good_id == good_id)
+    // console.log(cartItem)
     if (cartItem != undefined) {
       const _cartItem = { ...cartItem, quantity: cartItem.quantity + quantity };
       await update(this, _cartItem);
       return cartItem.id;
     }
     const id = await newId(this);
+    // console.log(id)
 
     const element: CartItem = { id, user_id, good_id, quantity };
     await create(this, element);

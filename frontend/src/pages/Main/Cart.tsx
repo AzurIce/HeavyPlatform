@@ -1,5 +1,5 @@
 
-import { Component, createSignal, createEffect, For, Show, onMount } from "solid-js";
+import { Component, createSignal, createEffect, For, Show, onMount, ErrorBoundary } from "solid-js";
 import { createAsync, revalidate, useNavigate } from "@solidjs/router";
 import { Box, Typography, Button } from "@suid/material";
 import { getCartItems, getGood, CartItem, Good, getGoods, LoginInfoStore, AlertsStore, getOrders } from "../../lib/store";
@@ -64,18 +64,20 @@ const Cart: Component = () => {
       </Typography>
       <Show when={cartItems() != undefined}>
         <Box class="flex flex-col gap-4">
-          <For each={curCartItems()}
-            fallback={
-              <Typography variant="body1" component="div">
-                您的购物车是空的。
-              </Typography>
-            }>{item => (
-              <CartItemCard
-                id={item.id}
-                onRemove={() => handleRemoveItem(item.id)}
-                onCheckedChanged={handleCheckItemChanged}
-              />
-            )}</For>
+          <ErrorBoundary fallback={() => <>???</>}>
+            <For each={curCartItems()}
+              fallback={
+                <Typography variant="body1" component="div">
+                  您的购物车是空的。
+                </Typography>
+              }>{item => (
+                <CartItemCard
+                  id={item.id}
+                  onRemove={() => handleRemoveItem(item.id)}
+                  onCheckedChanged={handleCheckItemChanged}
+                />
+              )}</For>
+          </ErrorBoundary>
         </Box>
       </Show>
 

@@ -37,6 +37,12 @@ asd
 - <logos-tailwindcss-icon /> TailwindCSS
 - <logos-java /> Java + <logos-spring-icon /> Spring + <logos-mysql-icon /> MySQL
 
+<!--
+这里有很多技术
+blahblah...
+java spring mysql，啊这个肯定不会用，因为这是答辩
+-->
+
 ---
 hideInToc: true
 ---
@@ -51,6 +57,10 @@ hideInToc: true
 - <logos-go /> Golang + <logos-gin /> Gin + GORM + <logos-postgresql /> PostgreSQL
   <br/>优雅
 
+<!--
+与之对比 golang postgreSQL 就很优雅
+-->
+
 ---
 hideInToc: true
 ---
@@ -62,6 +72,10 @@ hideInToc: true
 - <logos-tailwindcss-icon /> TailwindCSS
 - <logos-go /> Golang + <logos-gin /> Gin + GORM + <logos-postgresql /> PostgreSQL
 
+<!--
+那么这些技术呢 ——
+-->
+
 ---
 hideInToc: true
 ---
@@ -72,6 +86,10 @@ hideInToc: true
 - <s><logos-react /> React + <logos-material-ui /> Mui</s>
 - <s><logos-tailwindcss-icon /> TailwindCSS </s>
 - <s><logos-go /> Golang + <logos-gin /> Gin + GORM + <logos-postgresql /> PostgreSQL</s>
+
+<!--
+我们都不用
+-->
 
 ---
 layout: two-cols
@@ -167,6 +185,13 @@ const final = {
 <div v-click="8" class="absolute bottom-0 left-0 right-0 bottom-20 text-center text-[32px] nb">
 生命的价值在于从无意义中「建构」意义
 </div>
+
+<!--
+这是我们所用的技术。
+
+bun 是一个很新的东西，扬言要取代 nodejs。
+它同时是一个 js 运行时、
+-->
 
 ---
 clicks: 4

@@ -41,6 +41,7 @@ export const AddToCartModal: Component<{ show: boolean, onClose: () => void, use
                 <OrderItemCard
                   id={props.good_id}
                   onQuantityChange={(v) => setQuantity(v)}
+                  cntChange={true}
                 />
               </Box>
               <Divider sx={{ marginY: 2 }} />
