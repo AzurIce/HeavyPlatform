@@ -1,18 +1,18 @@
 // import { LocalStoragePreset } from "lowdb/browser";
 import { GRBackendWrapper } from "./grBackendWrapper";
 
-import 寻访凭证 from "../../assets/寻访凭证.png";
-import 中坚寻访凭证 from "../../assets/中坚寻访凭证.png";
-import 商人星野 from "../../assets/商人星野.png";
-import 凑阿库娅1 from "../../assets/MinatoAqua1.png";
+import 寻访凭证 from "../../assets/寻访凭证.jpg";
+import 中坚寻访凭证 from "../../assets/中坚寻访凭证.jpg";
+import 商人星野 from "../../assets/商人星野.jpg";
+import 凑阿库娅1 from "../../assets/MinatoAqua1.jpg";
 import 凑阿库娅2 from "../../assets/MinatoAqua2.jpg";
 import 凑阿库娅3 from "../../assets/MinatoAqua3.jpg";
-import 未花 from "../../assets/未花.png";
-import 真纪 from "../../assets/真纪.png";
-import 梓 from "../../assets/梓.png";
-import 日富美 from "../../assets/日富美.png";
-import 玛丽 from "../../assets/玛丽.png";
-import 诺瓦 from "../../assets/诺瓦.png";
+import 未花 from "../../assets/未花.jpg";
+import 真纪 from "../../assets/真纪.jpg";
+import 梓 from "../../assets/梓.jpg";
+import 日富美 from "../../assets/日富美.jpg";
+import 玛丽 from "../../assets/玛丽.jpg";
+import 诺瓦 from "../../assets/诺瓦.jpg";
 
 import 德克萨斯 from "../../assets/德克萨斯.jpeg";
 

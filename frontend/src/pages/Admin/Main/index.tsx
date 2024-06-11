@@ -1,7 +1,7 @@
 import { Restore } from "@suid/icons-material";
 import { Button, Divider, Typography } from "@suid/material";
 import { Component } from "solid-js";
-import doc from "../../../assets/第三次作业.png";
+import doc from "../../../assets/第三次作业.jpg";
 import { resetAllData } from "../../../lib/store";
 
 const MainPage: Component = () => {
