@@ -1,5 +1,5 @@
-import { RouteSectionProps, useNavigate } from "@solidjs/router";
-import { Component, For, Match, Switch } from "solid-js";
+import { RouteSectionProps, useMatch, useNavigate } from "@solidjs/router";
+import { Component, For, Match, Switch, createEffect } from "solid-js";
 
 import { createSignal } from "solid-js"
 import { Container, BottomNavigation, BottomNavigationAction, Paper, AppBar, IconButton, Toolbar, Typography, Button } from "@suid/material"
@@ -21,6 +21,21 @@ const navigates = [
 const MobileNavigation: Component = () => {
   const [value, setValue] = createSignal(0)
   const navigate = useNavigate()
+
+  const isCategory = useMatch(() => '/category')
+  const isCart = useMatch(() => '/cart')
+  const isMe = useMatch(() => '/me')
+  createEffect(() => {
+    if (isMe()) {
+      setValue(3)
+    } else if (isCart()) {
+      setValue(2)
+    } else if (isCategory()) {
+      setValue(1)
+    } else {
+      setValue(0)
+    }
+  })
 
   return <Paper sx={{ width: "100%", order: 9999 }} elevation={3}>
     <BottomNavigation
