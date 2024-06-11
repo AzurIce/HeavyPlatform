@@ -1,6 +1,6 @@
 import { createAsync, useNavigate, useParams } from "@solidjs/router";
-import { Component, For } from "solid-js";
-import { getGoods, getOrder, getOrders, LoginInfoStore, Good, Order, CartItem } from "../../lib/store";
+import { Component, For, onMount } from "solid-js";
+import { getGoods, getOrder, getOrders, LoginInfoStore, Good, Order, CartItem, AlertsStore } from "../../lib/store";
 import { Box, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Card, CardContent, Divider, Button, AppBar, Toolbar, Container, IconButton } from "@suid/material";
 import NotFound from "../NotFound";
 import OrderCard from "../../components/OrderCard";
@@ -8,9 +8,17 @@ import { Home } from "@suid/icons-material";
 
 const Orders: Component = () => {
   const navigate = useNavigate();
+  const { newInfoAlert } = AlertsStore();
   const orders = createAsync(() => getOrders());
   const { user } = LoginInfoStore();
   const currentUser = user()?.id;
+
+  onMount(() => {
+    if (user() == undefined) {
+      navigate(`/`);
+      newInfoAlert("请先登录")
+    }
+  })
 
   return (
     <Box sx={{ flexGrow: 1 }}>

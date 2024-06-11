@@ -5,7 +5,8 @@ import { Box, Card, CardMedia, Typography, IconButton, useTheme } from '@suid/ma
 import AddIcon from '@suid/icons-material/Add';
 import RemoveIcon from '@suid/icons-material/Remove';
 
-const OrderItemCard: Component<{ id: number, onQuantityChange: (quantity: number) => void, quantity?: number }> = (props) => {
+const OrderItemCard: Component<{ id: number, onQuantityChange: (quantity: number) => void, quantity?: number, cntChange?: boolean }> = (props) => {
+  const cntChange = props.cntChange || false;
   const { id, onQuantityChange } = props;
   const good = createAsync(() => getGood(id));
   const [quantity, setQuantity] = createSignal(props.quantity || 1);
@@ -58,13 +59,17 @@ const OrderItemCard: Component<{ id: number, onQuantityChange: (quantity: number
       <Box sx={{ flex: 1 }}>
         <Typography variant="h6">{good()?.name}</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}>
-          <IconButton onClick={handleDecrease} disabled={quantity() === 0}>
-            <RemoveIcon />
-          </IconButton>
+          <Show when={cntChange}>
+            <IconButton onClick={handleDecrease} disabled={quantity() === 0}>
+              <RemoveIcon />
+            </IconButton>
+          </Show>
           <Typography variant="body1" sx={{ marginX: 2 }}>{quantity()}</Typography>
-          <IconButton onClick={handleIncrease}>
-            <AddIcon />
-          </IconButton>
+          <Show when={cntChange}>
+            <IconButton onClick={handleIncrease}>
+              <AddIcon />
+            </IconButton>
+          </Show>
         </Box>
         <Show when={good()?.price} fallback={<div>Loading...</div>}>
           <Typography variant="body1">价格: ¥{(good()?.price || 0) * quantity()}</Typography>

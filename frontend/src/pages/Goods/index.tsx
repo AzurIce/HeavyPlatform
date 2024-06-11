@@ -58,7 +58,7 @@ const GoodDetailPage: Component = () => {
         {/* 商品组 */}
         <div class="flex flex-wrap gap-4">
           <For each={goodsInTheSameGroup()}>{(item, index) => (
-            <Button onClick={() => navigate(`/goods/${item.id}`)} variant={index() == cur() ? "contained" : "outlined"}
+            <Button onClick={() => navigate(`/goods/${item.id}`, { replace: true })} variant={index() == cur() ? "contained" : "outlined"}
               sx={{ flexShrink: 0 }}>{item.name}</Button>
           )}</For>
         </div>
@@ -68,7 +68,7 @@ const GoodDetailPage: Component = () => {
         </Typography>
 
         <div class="flex gap-2">
-          <Button onClick={user() == undefined ? openLoginModal : () => setShowOrderModal(true)} variant="outlined" color="primary" sx={{ flexGrow: 1 }}>
+          <Button onClick={user() == undefined ? openLoginModal : () => setShowAddToCartModal(true)} variant="outlined" color="primary" sx={{ flexGrow: 1 }}>
             加入购物车
           </Button>
           <Button onClick={user() == undefined ? openLoginModal : () => setShowOrderModal(true)} variant="contained" color="primary" sx={{ flexGrow: 1 }}>
@@ -98,6 +98,7 @@ const GoodDetailPage: Component = () => {
           show={showOrderModal()}
           onClose={() => setShowOrderModal(false)}
           user_id={user()!.id}
+          cntChange={true}
           items={[{ id: good()!.id, good_id: good()!.id, user_id: user()!.id, quantity: 1 }]} />
         <AddToCartModal
           show={showAddToCartModal()}

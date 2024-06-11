@@ -306,6 +306,12 @@ export const cartItemsDb = {
   delete: async function (id: number) { await deleteById(this, id); },
 
   create: async function (user_id: number, good_id: number, quantity: number): Promise<number> {
+    const cartItem = this.data().find((cartItem) => cartItem?.good_id == good_id)
+    if (cartItem != undefined) {
+      const _cartItem = { ...cartItem, quantity: cartItem.quantity + quantity };
+      await update(this, _cartItem);
+      return cartItem.id;
+    }
     const id = await newId(this);
 
     const element: CartItem = { id, user_id, good_id, quantity };
