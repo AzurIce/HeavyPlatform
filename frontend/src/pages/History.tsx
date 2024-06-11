@@ -10,6 +10,10 @@ const History: Component = () => {
 
   const { history, clean } = HistoryStore();
 
+  const reversedHistroy = () => {
+    return history().toReversed();
+  }
+
   return <>
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='sticky'>
@@ -32,7 +36,7 @@ const History: Component = () => {
       <div class="flex flex-col p-4 gap-4">
         <Button color="error" variant="outlined" onClick={clean}>清空历史</Button>
         <div class="flex flex-wrap gap-4">
-          <For each={history()}>{(item) =>
+          <For each={reversedHistroy()}>{(item) =>
             <GoodCard id={item} />
           }</For>
         </div>
