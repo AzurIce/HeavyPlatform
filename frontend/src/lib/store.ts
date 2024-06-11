@@ -3,7 +3,7 @@ import { AlertColor } from "@suid/material/Alert";
 import { createStore } from "solid-js/store";
 import { Trie } from "./trie";
 
-const adminLoginInfoStore = createStore<{manager?: Manager}>()
+const adminLoginInfoStore = createStore<{ manager?: Manager }>()
 const adminLoginInfoStoreInit = () => {
   const [_, _setAdminLoginInfo] = adminLoginInfoStore;
 
@@ -35,7 +35,31 @@ export const AdminLoginInfoStore = () => {
   return { manager, setManager, logout }
 }
 
-const loginInfoStore = createStore<{user?: User}>()
+const historyStore = createStore<{ history: number[] }>({ history: [] });
+const historyStoreInit = () => {
+  const [_, _setHistory] = historyStore;
+
+  const s = localStorage.getItem('history')
+  if (!s) return
+
+  const history = JSON.parse(s) as unknown as number[]
+  _setHistory({ history });
+}
+export const HistoryStore = () => {
+  const [histroryState, _setHistory] = historyStore;
+  const history = () => histroryState.history;
+  const addToHistory = (id: number) => {
+    _setHistory({ history: [...history(), id] })
+    localStorage.setItem('history', JSON.stringify(history()))
+  }
+  const clean = () => {
+    _setHistory({ history: [] })
+    localStorage.setItem('history', JSON.stringify([]))
+  }
+  return { history, addToHistory, clean }
+}
+
+const loginInfoStore = createStore<{ user?: User }>()
 const loginInfoStoreInit = () => {
   const [_, _setLoginInfo] = loginInfoStore;
 
@@ -49,6 +73,7 @@ const loginInfoStoreInit = () => {
 }
 loginInfoStoreInit();
 
+const showLoginModalStore = createStore<{ show: boolean }>({ show: false })
 export const LoginInfoStore = () => {
   const [loginInfo, _setLoginInfo] = loginInfoStore;
   const [showLoginModal, setShowLoginModal] = createSignal(false);
