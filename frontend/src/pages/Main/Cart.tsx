@@ -47,12 +47,10 @@ const Cart: Component = () => {
     }
   }
 
-  const onSubmit = () => {
-    ordersApi.create(user()!.id, selectedCartItems()).then((res) => {
-      Promise.all(selectedCartItems().map((item) => cartItemsApi.delete(item.id))).then(() => {
-        revalidate(getCartItems.key)
-        revalidate(getOrders.key)
-      })
+  const onDone = () => {
+    Promise.all(selectedCartItems().map((item) => cartItemsApi.delete(item.id))).then(() => {
+      revalidate(getCartItems.key)
+      revalidate(getOrders.key)
     })
   }
 
@@ -60,7 +58,7 @@ const Cart: Component = () => {
 
   return (
     <Box class="p-4">
-      <OrderModal show={show()} onClose={() => setShow(false)} user_id={user()!.id} items={selectedCartItems()} />
+      <OrderModal show={show()} onClose={() => setShow(false)} user_id={user()!.id} items={selectedCartItems()} onDone={onDone} />
       <Typography variant="h6" component="div" class="mb-4">
         购物车
       </Typography>

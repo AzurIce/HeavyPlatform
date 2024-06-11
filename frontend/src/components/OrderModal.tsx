@@ -5,7 +5,8 @@ import { AlertsStore, CartItem, getGood, getGoods, getOrders, Good } from '../li
 import { ordersApi } from '../lib/axios/api';
 import OrderItemCard from './OrderItemCard';
 
-export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id: number, items: CartItem[], cntChange?: boolean }> = (props) => {
+export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id: number, items: CartItem[], cntChange?: boolean, onDone?: () => void }> = (props) => {
+  const onDone = props.onDone || (() => { });
   const cntChange = props.cntChange || false;
   const [step, setStep] = createSignal(1);
   const goods = createAsync(() => getGoods());
@@ -39,6 +40,7 @@ export const OrderModal: Component<{ show: boolean, onClose: () => void, user_id
 
   const handlePaymentSuccess = () => {
     ordersApi.create(props.user_id, updatedItems()).then((id) => {
+      onDone();
       revalidate(getOrders.key);
       setOrderId(id); // Save the created order ID
       setStep(3);
