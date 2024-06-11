@@ -38,7 +38,7 @@ mdc: true
 
 blahblah...
 
-java spring mysql，啊这个肯定不会用，因为这是答辩
+java ，啊这个肯定不会用，因为这是答辩
 -->
 
 ---
@@ -52,11 +52,25 @@ hideInToc: true
 - <logos-tailwindcss-icon /> TailwindCSS
 - <s><logos-java /> Java + <logos-spring-icon /> Spring + <logos-mysql-icon /> MySQL</s>
   <br/>答辩不用
+
+<!--
+与之对比
+-->
+
+---
+hideInToc: true
+---
+
+# 所用技术 {.inline-block.view-transition-title}
+
+- <logos-nodejs-icon /> NodeJS + <logos-pnpm /> pnpm
+- <logos-react /> React + <logos-material-ui /> Mui
+- <logos-tailwindcss-icon /> TailwindCSS
 - <logos-go /> Golang + <logos-gin /> Gin + GORM + <logos-postgresql /> PostgreSQL
   <br/>优雅
 
 <!--
-与之对比 golang postgreSQL 就很优雅
+golang postgreSQL 就很优雅
 -->
 
 ---
@@ -71,6 +85,7 @@ hideInToc: true
 - <logos-go /> Golang + <logos-gin /> Gin + GORM + <logos-postgresql /> PostgreSQL
 
 <!--
+golang postgreSQL 就很优雅
 那么这些技术呢 ——
 -->
 
@@ -195,11 +210,11 @@ bun 是一个很新的东西，扬言要取代 nodejs。
 并且使用一门很奇怪的 zig 语言实现，性能非常牛逼。
 
 【2】
-SolidJS 
+SolidJS 它可以被简单地理解为去除虚拟 DOM 版本的 React。
 
 【3】
-它可以被简单地理解为去除虚拟 DOM 版本的 React。
-也是因为没有采用虚拟DOM实现响应性，所以非常快。
+它使用的是 Fine-Grained Reactivity，细粒度响应性。
+它做的是在使用响应性值时追踪对其的依赖，当发生更新时，仅重新更新依赖处的代码，而不会对整个组件进行重新执行。
 
 【4】
 然后是 unocss
