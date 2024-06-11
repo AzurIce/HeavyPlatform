@@ -1,5 +1,5 @@
 import { Component, createSignal, createEffect, Switch, Match, Show } from "solid-js";
-import { getUser, LoginInfoStore, User } from "../../lib/store";
+import { getUser, HistoryStore, LoginInfoStore, User } from "../../lib/store";
 import { Box, Typography, Avatar, Button, Grid, Card, CardContent, useTheme } from "@suid/material";
 import { createAsync, useNavigate } from "@solidjs/router";
 import { Comment, CreditCard, CurrencyExchange, Inbox, Receipt, ReceiptLong } from "@suid/icons-material";
@@ -46,6 +46,8 @@ const Me: Component = () => {
       openLoginModal();
     }
   };
+
+  const { history, clean } = HistoryStore();
 
   return (
     <div class='flex flex-col h-full p-4 gap-4'>
@@ -101,8 +103,9 @@ const Me: Component = () => {
           <span class="text-xl font-bold">25</span>
           <span>店铺关注</span>
         </div>
-        <div class="flex-1 flex flex-col gap-2 items-center p-4 hover:bg-[#cccccc] cursor-pointer">
-          <span class="text-xl font-bold">126</span>
+        <div class="flex-1 flex flex-col gap-2 items-center p-4 hover:bg-[#cccccc] cursor-pointer"
+          onClick={() => { navigate(`/history`) }}>
+          <span class="text-xl font-bold">{history().length}</span>
           <span>浏览记录</span>
         </div>
       </Card>

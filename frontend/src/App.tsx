@@ -20,7 +20,7 @@ import OrdersWrapper from './pages/Orders/OrderWrapper';
 import Orders from './pages/Orders';
 import LoginModal from './components/LoginModal';
 
-// TODO: Orders
+import History from './pages/History';
 
 const App: Component = () => {
   return <>
@@ -32,9 +32,9 @@ const App: Component = () => {
         <Route path="/" component={Main} />
         {/* 分类：分类菜单+商品列表 */}
         <Route path="/category" component={Category} />
-        {/* TODO: 购物车 */}
+        {/* 购物车 */}
         <Route path="/cart" component={Cart} />
-        {/* TODO: 我的 */}
+        {/* 我的 */}
         <Route path="/me" component={Me} />
       </Route>
 
@@ -44,11 +44,12 @@ const App: Component = () => {
       </Route>
 
       <Route path="/orders" component={OrdersWrapper}>
-        {/* TODO: 订单列表页 */}
+        {/* 订单列表页 */}
         <Route path="/" component={Orders} />
-        {/* TODO: 订单详情页 */}
         <Route path="/:id" component={Orders} />
       </Route>
+
+      <Route path="/history" component={History} />
 
       <AdminRoute />
 

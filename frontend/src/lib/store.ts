@@ -45,6 +45,7 @@ const historyStoreInit = () => {
   const history = JSON.parse(s) as unknown as number[]
   _setHistory({ history });
 }
+historyStoreInit()
 export const HistoryStore = () => {
   const [histroryState, _setHistory] = historyStore;
   const history = () => histroryState.history;
@@ -275,7 +276,6 @@ import { icons as tablerIcons } from '@iconify-json/tabler'
 import { resetDb } from "./db";
 import { cartItemsApi, goodCategoriesApi, goodsApi, managersApi, menuItemsApi, ordersApi, userGroupsApi, usersApi } from "./axios/api";
 import { useMediaQuery } from "@suid/material";
-import { createSignal } from "solid-js";
 
 const iconsTrie = new Trie();
 const _icons = Object.keys(tablerIcons.icons).map(iconName => `${iconName}`);

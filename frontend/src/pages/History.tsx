@@ -25,18 +25,20 @@ const History: Component = () => {
             <ArrowBack />
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            全部订单
+            历史记录
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container sx={{ padding: 2 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <Button color="error" onClick={clean}>清空历史</Button>
+      <div class="flex flex-col p-4 gap-4">
+        <Button color="error" variant="outlined" onClick={clean}>清空历史</Button>
+        <div class="flex flex-wrap gap-4">
           <For each={history()}>{(item) =>
             <GoodCard id={item} />
           }</For>
-        </Box>
-      </Container>
+        </div>
+      </div>
     </Box>
   </>
 }
+
+export default History
