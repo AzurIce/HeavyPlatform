@@ -18,10 +18,6 @@ mdc: true
   <img src="/main-desktop.png" class="absolute transform top-20 rotate-10 shadow">
 </div>
 
-<!--
-asd
--->
-
 ---
 
 # 目录
@@ -39,7 +35,9 @@ asd
 
 <!--
 这里有很多技术
+
 blahblah...
+
 java spring mysql，啊这个肯定不会用，因为这是答辩
 -->
 
@@ -103,7 +101,7 @@ hideInToc: true
 - <s><logos-react /> React + <logos-material-ui /> Mui</s>
 - <s><logos-tailwindcss-icon /> TailwindCSS </s>
 - <s><logos-go /> Golang + <logos-gin /> Gin + GORM + <logos-postgresql /> PostgreSQL</s>
-  <span v-click="7"><br/>为了加两分确实不值</span>
+  <span v-click="7"><br/>那就真重量化了</span>
 
 ::right::
 
@@ -189,8 +187,56 @@ const final = {
 <!--
 这是我们所用的技术。
 
+【0】
 bun 是一个很新的东西，扬言要取代 nodejs。
-它同时是一个 js 运行时、
+
+【1】
+它同时是一个 js 运行时、包管理器、打包工具、测试工具。
+并且使用一门很奇怪的 zig 语言实现，性能非常牛逼。
+
+【2】
+SolidJS 它可以被简单地理解为去除虚拟 DOM 版本的 React。
+
+【3】
+它使用的是 Fine-Grained Reactivity，细粒度响应性。
+它做的是在使用响应性值时追踪对其的依赖，当发生更新时，仅重新更新依赖处的代码，而不会对整个组件进行重新执行。
+
+【4】
+然后是 unocss
+
+【5】
+性能更好，可拓展性更强的原子化 css 引擎。
+
+【6】
+然后是后端，我们用 express + lowdb 简单搓了个键值对存储的后端。
+为什么不写个正经后端，
+
+【7】
+因为这门课叫轻量化而不是重量化。
+
+那为什么用这么多有意思的新东西？—— 因为有意思，
+而，有意思，是我学软件的原因
+
+有个词叫造轮子，这其实没什么，关键是不要重复地用相同的材料，相同的思路，相同的技术造相同的轮子。
+这前后端管理系统我从大一写到大三了，我要是一直拿一个东西搓，那真对意义和热情有极大的消磨。
+
+所以我们要干点我们人很擅长的一件事，如果在座的有打辩论的那应当更加擅长。
+
+【8】
+那就是建构意义
+
+这项目能不写么？不能。
+那怎么办？写。
+怎么写？（指屏幕）用新东西写
+
+「看清世界的真相后仍热爱生活」
+
+
+另外再提一嘴，本 slide 也不是 ppt 做的，也前端技术的产物。
+
+【9】
+用的是一个叫做 slidev 的东西，是 vue 团队的大佬 antonyfu 搓的。
+简单来说就是用 markdown 做 ppt，大家感兴趣也可以去玩玩。
 -->
 
 ---
@@ -233,6 +279,19 @@ const Hello: Component = () => {
 <br/>
 <v-click><span v-mark.red="4">但是！没有虚拟 DOM，使用 fine-grained reactivity。</span></v-click>
 
+<!--
+由于这门课要求是用 React，而我们用的 Solid，所以这里再多提一嘴他们的差异。
+
+【0-1】
+Solid 的 API 几乎适合 React 一样的，比如这段代码，把它写成 Solid 就长这样。
+
+【2】
+其他的条件渲染、列表渲染、Context、ref 之类的东西，solid 也有，而且都和 react 很像。
+
+【3-4】
+但是！嗯这个之前提到了，就是 Solid 使用 fine-grained reactivity 而非虚拟 DOM 来实现响应性，这就会造成，很多地方写起来还是很 tricky 的，不过理解细粒度响应性的思想后就会发现很有意思。
+-->
+
 ---
 layout: two-cols
 ---
@@ -247,7 +306,7 @@ layout: two-cols
   - 整体样式调整 & 修复疑难杂症
 - 俞贤皓
   - 主页、商品详情页、分类页
-  - 商品组件
+  - 商品组件、商品组选择
   - 后端实现
 - 谷雅丰
   - 浏览商品添加历史记录逻辑
@@ -259,10 +318,15 @@ layout: two-cols
   - 提交订单 -> 支付 -> 支付成功组件
   - 订单列表页、订单详情页
   - 商品页提交订单逻辑
+  - 测试仙人
 - 杨鹏
   - 商品页添加至购物车、购物车页结算逻辑
   - 购物车页面
   - 我的页面
+
+<!--
+然后这里是我们的分工，接下来我们来做一下演示
+-->
 
 ---
 layout: center
