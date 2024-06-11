@@ -1,12 +1,12 @@
-import { RouteSectionProps } from "@solidjs/router";
-import { Container } from "@suid/material";
+import { RouteSectionProps, useNavigate } from "@solidjs/router";
+import { Button, Container } from "@suid/material";
 import { Component } from "solid-js";
 
 const OrdersWrapper: Component<RouteSectionProps> = (props) => {
+  const navigate = useNavigate();
+
   return <>
-    <Container sx={{ paddingBottom: '15px' }}>
-      {props.children}
-    </Container>
+    {props.children}
   </>
 }
 

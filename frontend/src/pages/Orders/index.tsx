@@ -4,7 +4,7 @@ import { getGoods, getOrder, getOrders, LoginInfoStore, Good, Order, CartItem, A
 import { Box, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Card, CardContent, Divider, Button, AppBar, Toolbar, Container, IconButton } from "@suid/material";
 import NotFound from "../NotFound";
 import OrderCard from "../../components/OrderCard";
-import { Home } from "@suid/icons-material";
+import { ArrowBack, Home } from "@suid/icons-material";
 
 const Orders: Component = () => {
   const navigate = useNavigate();
@@ -30,9 +30,9 @@ const Orders: Component = () => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate('/')}
+            onClick={() => navigate(-1)}
           >
-            <Home />
+            <ArrowBack />
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             全部订单
@@ -57,7 +57,7 @@ const OrderDetailPage: Component = () => {
   const goods = createAsync(() => getGoods());
 
   const handleBackClick = () => {
-    navigate('/orders');
+    navigate(-1);
   };
 
   const calculateTotalAmount = () => {
